@@ -15,11 +15,12 @@ Group:		Applications/System
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-make.patch
+URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	gettext-devel
+BuildRequires:	libtool
 BuildRequires:	ncurses-devel >= 5.0
-URL:		http://psmisc.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_bindir		/bin
@@ -84,7 +85,7 @@ göndermek için gerekli programlarý içerir.
 rm -f missing
 %{__libtoolize}
 %{__gettextize}
-aclocal
+%{__aclocal}
 %{__automake}
 autoheader
 %{__autoconf}
