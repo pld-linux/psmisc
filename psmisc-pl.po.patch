@@ -9,111 +9,113 @@
  AM_GNU_GETTEXT([external])
  
  dnl Checks for library functions.
---- psmisc-21.2/po/pl.po.orig	Thu Jan  1 01:00:00 1970
-+++ psmisc-21.2/po/pl.po	Thu Jan 16 19:55:45 2003
-@@ -0,0 +1,179 @@
+--- psmisc-21.4/po/pl.po.orig	1970-01-01 01:00:00.000000000 +0100
++++ psmisc-21.4/po/pl.po	2003-12-11 00:49:17.253392864 +0100
+@@ -0,0 +1,344 @@
 +# Polish translations for psmisc.
 +# Copyright (C) 2003 Free Software Foundation, Inc.
 +# This file is distributed under the same license as the psmisc package.
-+# Jakub Bogusz <qboosh@pld.org.pl>, 2003.
++# Jakub Bogusz <qboosh@pld-linux.org>, 2003.
 +#
 +msgid ""
 +msgstr ""
 +"Project-Id-Version: psmisc 21.2\n"
-+"POT-Creation-Date: 2003-01-16 19:32+0100\n"
-+"PO-Revision-Date: 2003-01-16 19:33+0100\n"
-+"Last-Translator: Jakub Bogusz <qboosh@pld.org.pl>\n"
-+"Language-Team: Polish <pl@li.org>\n"
++"POT-Creation-Date: 2003-12-11 00:33+0100\n"
++"PO-Revision-Date: 2003-12-11 00:35+0100\n"
++"Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
++"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 +"MIME-Version: 1.0\n"
 +"Content-Type: text/plain; charset=ISO-8859-2\n"
 +"Content-Transfer-Encoding: 8bit\n"
++"Report-Msgid-Bugs-To: csmall@small.dropbear.id.au\n"
 +
-+#: src/killall.c:50
++#: src/killall.c:51
 +#, c-format
 +msgid "Kill %s(%s%d) ? (y/n) "
 +msgstr "Zabiæ %s(%s%d)? (y/n) "
 +
-+#: src/killall.c:237
++#: src/killall.c:239
 +#, c-format
 +msgid "skipping partial match %s(%d)\n"
 +msgstr "pominiêto czê¶ciowe dopasowanie %s(%d)\n"
 +
-+#: src/killall.c:318
++#: src/killall.c:325
 +#, c-format
 +msgid "Killed %s(%s%d) with signal %d\n"
 +msgstr "Zabito %s(%s%d) sygna³em %d\n"
 +
-+#: src/killall.c:330 src/fuser.c:491
++#: src/killall.c:337 src/fuser.c:503 src/pstree.c:674
 +#, c-format
 +msgid "%s is empty (not mounted ?)\n"
 +msgstr "%s jest pusty (nie podmontowany?)\n"
 +
-+#: src/killall.c:336
++#: src/killall.c:343
 +#, c-format
 +msgid "%s: no process killed\n"
 +msgstr "%s: nie zabito ¿adnego procesu\n"
 +
-+#: src/killall.c:576
++#: src/killall.c:588
 +#, c-format
 +msgid "Maximum number of names is %d\n"
 +msgstr "Maksymalna liczba nazw to %d\n"
 +
-+#: src/fuser.c:243
++#: src/fuser.c:255
 +#, c-format
 +msgid "-4 flag used but proc file %s is not readable\n"
 +msgstr "U¿yto flagi -4, ale pliku proc %s nie da siê przeczytaæ\n"
 +
-+#: src/fuser.c:252
++#: src/fuser.c:264
 +#, c-format
 +msgid "-6 flag used but proc file %s is not readable\n"
 +msgstr "U¿yto flagi -6, ale pliku proc %s nie da siê przeczytaæ\n"
 +
-+#: src/fuser.c:589
++#: src/fuser.c:601
 +#, c-format
-+msgid "Kill process %d ? (y/n) "
-+msgstr "Zabiæ proces %d? (y/n) "
++msgid "Kill process %d ? (y/N) "
++msgstr "Zabiæ proces %d? (y/N) "
 +
-+#: src/fuser.c:619
++#: src/fuser.c:631
 +#, c-format
 +msgid "kill %d"
 +msgstr "zabicie %d"
 +
-+#: src/fuser.c:623 src/fuser.c:627
++#: src/fuser.c:635 src/fuser.c:639
 +#, c-format
 +msgid "No automatic removal. Please use  umount %s\n"
 +msgstr "Nie usuniêto automatycznie. Proszê u¿yæ  umount %s\n"
 +
-+#: src/fuser.c:631
++#: src/fuser.c:643
 +#, c-format
 +msgid "No automatic removal. Please use  swapoff %s\n"
-+msgstr "Nie usuniêto automatycznie. Proszê u¿yæ  umount %s\n"
++msgstr "Nie usuniêto automatycznie. Proszê u¿yæ  swapoff %s\n"
 +
-+#: src/fuser.c:734
++#: src/fuser.c:755
 +#, c-format
 +msgid "Internal error (type %d)\n"
 +msgstr "B³±d wewnêtrzny (typ %d)\n"
 +
-+#: src/fuser.c:764
++#: src/fuser.c:791
++#, c-format
 +msgid "kernel mount  "
 +msgstr "kernel mount  "
 +
-+#: src/fuser.c:767
++#: src/fuser.c:794
++#, c-format
 +msgid "kernel loop   "
 +msgstr "kernel loop   "
 +
-+#: src/fuser.c:770
++#: src/fuser.c:797
++#, c-format
 +msgid "kernel swap   "
 +msgstr "kernel swap   "
 +
-+#: src/fuser.c:790
-+msgid "No process references; use -v for the complete list\n"
-+msgstr "Nie u¿ywane przez procesy; -v poda pe³n± listê\n"
-+
-+#: src/fuser.c:928
++#: src/fuser.c:954
++#, c-format
 +msgid "can't find sockets' device number"
 +msgstr "nie mo¿na znale¼æ numeru urz±dzenia gniazd"
 +
-+#: src/fuser.c:937
++#: src/fuser.c:963
++#, c-format
 +msgid ""
 +"usage: fuser [ -a | -s ] [ -n space ] [ -signal ] [ -kimuv ] name ...\n"
 +"             [ - ] [ -n space ] [ -signal ] [ -kimuv ] name ...\n"
@@ -161,12 +163,13 @@
 +"  nazwy tcp/udp: [port_lokalny][,[zdalny_host][,[port_zdalny]]]\n"
 +"\n"
 +
-+#: src/fuser.c:961
++#: src/fuser.c:987
 +#, c-format
 +msgid "fuser (psmisc) %s\n"
 +msgstr "fuser (psmisc) %s\n"
 +
-+#: src/fuser.c:963
++#: src/fuser.c:989
++#, c-format
 +msgid ""
 +"Copyright (C) 1993-2002 Werner Almesberger and Craig Small\n"
 +"\n"
@@ -182,12 +185,174 @@
 +"Powszechnej Licencji Publicznej GNU (General Public License).\n"
 +"Wiêcej informacji znajduje siê w pliku o nazwie COPYING.\n"
 +
-+#: src/fuser.c:1141
++#: src/fuser.c:1167
 +#, c-format
 +msgid "ignoring -m in name space \"%s\"\n"
 +msgstr "zignorowano -m w przestrzeni nazw \"%s\"\n"
 +
-+#: src/fuser.c:1149
++#: src/fuser.c:1175
 +#, c-format
 +msgid "%s/%s: invalid specificiation\n"
 +msgstr "%s/%s: b³êdne okre¶lenie\n"
++
++#: src/pstree.c:378
++#, c-format
++msgid "MAX_DEPTH not big enough.\n"
++msgstr "MAX_DEPTH jest zbyt ma³e.\n"
++
++#: src/pstree.c:713
++#, c-format
++msgid "usage: pstree [ -a ] [ -c ] [ -h | -H pid ] [ -l ] [ -n ] [ -p ] [ -u ]\n"
++msgstr "sk³adnia: pstree [ -a ] [ -c ] [ -h | -H pid ] [ -l ] [ -n ] [ -p ] [ -u ]\n"
++
++#: src/pstree.c:714
++#, c-format
++msgid "              [ -G | -U ] [ pid | user]\n"
++msgstr "              [ -G | -U ] [ pid | u¿ytkownik ]\n"
++
++#: src/pstree.c:715
++#, c-format
++msgid ""
++"       pstree -V\n"
++"\n"
++msgstr ""
++"       pstree -V\n"
++"\n"
++
++#: src/pstree.c:716
++#, c-format
++msgid "    -a     show command line arguments\n"
++msgstr "    -a     wy¶wietlenie argumentów linii poleceñ\n"
++
++#: src/pstree.c:717
++#, c-format
++msgid "    -c     don't compact identical subtrees\n"
++msgstr "    -c     nie scalanie identycznych poddrzew\n"
++
++#: src/pstree.c:718
++#, c-format
++msgid "    -h     highlight current process and its ancestors\n"
++msgstr "    -h     pod¶wietlenie aktualnego procesu i jego przodków\n"
++
++#: src/pstree.c:719
++#, c-format
++msgid "    -H pid highlight process \"pid\" and its ancestors\n"
++msgstr "    -H pid pod¶wietlenie procesu \"pid\" i jego przodków\n"
++
++#: src/pstree.c:720
++#, c-format
++msgid "    -G     use VT100 line drawing characters\n"
++msgstr "    -G     u¿ycie znaków ramek VT100\n"
++
++#: src/pstree.c:721
++#, c-format
++msgid "    -l     don't truncate long lines\n"
++msgstr "    -l     nie obcinanie d³ugich linii\n"
++
++#: src/pstree.c:722
++#, c-format
++msgid "    -n     sort output by PID\n"
++msgstr "    -n     sortowanie wyj¶cia wg PID-u\n"
++
++#: src/pstree.c:723
++#, c-format
++msgid "    -p     show PIDs; implies -c\n"
++msgstr "    -p     wy¶wietlanie PID-ów; w³±cza tak¿e -c\n"
++
++#: src/pstree.c:724
++#, c-format
++msgid "    -u     show uid transitions\n"
++msgstr "    -u     wy¶wietlanie zmian uidów\n"
++
++#: src/pstree.c:726
++#, c-format
++msgid "    -s     show Flask SIDs\n"
++msgstr "    -s     wy¶wietlanie SID-ów Flask\n"
++
++#: src/pstree.c:727
++#, c-format
++msgid "    -x     show Flask security contexts\n"
++msgstr "    -x     wy¶wietlanie kontekstów bezpieczeñstwa Flask\n"
++
++#: src/pstree.c:729
++#, c-format
++msgid "    -U     use UTF-8 (Unicode)) line drawing characters\n"
++msgstr "    -U     u¿ycie znaków ramek UTF-8 (Unicode)\n"
++
++#: src/pstree.c:730
++#, c-format
++msgid "    -V     display version information\n"
++msgstr "    -V     wy¶wietlenie informacji o wersji\n"
++
++#: src/pstree.c:731
++#, c-format
++msgid "    pid    start at pid, default 1 (init))\n"
++msgstr "    pid    rozpoczêcie od tego pida, domy¶lnie 1 (init)\n"
++
++#: src/pstree.c:732
++#, c-format
++msgid ""
++"    user   show only trees rooted at processes of that user\n"
++"\n"
++msgstr ""
++" u¿ytkownik  tylko drzewa zaczynaj±ce siê od procesów tego u¿ytkownika\n"
++"\n"
++
++#: src/pstree.c:738
++#, c-format
++msgid "pstree (psmisc) %s\n"
++msgstr "pstree (psmisc) %s\n"
++
++#: src/pstree.c:739
++#, c-format
++msgid ""
++"Copyright (C) 1993-2002 Werner Almesberger and Craig Small\n"
++"\n"
++msgstr ""
++"Copyright (C) 1993-2002 Werner Almesberger i Craig Small\n"
++"\n"
++
++#: src/pstree.c:740
++#, c-format
++msgid "pstree comes with ABSOLUTELY NO WARRANTY.\n"
++msgstr "pstree jest rozpowszechniane BEZ ¯ADNEJ GWARANCJI.\n"
++
++#: src/pstree.c:741
++#, c-format
++msgid "This is free software, and you are welcome to redistribute it under the terms\n"
++msgstr "To oprogramowanie jest darmowe i mo¿e byæ dystrybuowane na warunkach\n"
++
++#: src/pstree.c:742
++#, c-format
++msgid "of the GNU General Public License.\n"
++msgstr "Powszechnej Licencji Publicznej GNU (General Public License).\n"
++
++#: src/pstree.c:743
++#, c-format
++msgid "For more information about these matters, see the files named COPYING.\n"
++msgstr "Wiêcej informacji znajduje siê w pliku o nazwie COPYING.\n"
++
++#: src/pstree.c:803
++#, c-format
++msgid "TERM is not set\n"
++msgstr "TERM nie ustawiony\n"
++
++#: src/pstree.c:808
++#, c-format
++msgid "Can't get terminal capabilities\n"
++msgstr "Nie mo¿na odczytaæ mo¿liwo¶ci terminala\n"
++
++#: src/pstree.c:854
++#, c-format
++msgid "No such user name: %s\n"
++msgstr "Nie ma u¿ytkownika o takiej nazwie: %s\n"
++
++#: src/pstree.c:878
++#, c-format
++msgid "No processes found.\n"
++msgstr "Nie znaleziono procesów.\n"
++
++#: src/pstree.c:883
++#, c-format
++msgid "Press return to close\n"
++msgstr "Naci¶niêcie return zamknie program\n"
