@@ -62,9 +62,9 @@ automake -a -c
 aclocal
 autoheader
 autoconf
-CFLAGS="%{rpmcflags} -D_GNU_SOURCE"
+CFLAGS="%{rpmcflags} -D_GNU_SOURCE" ; export CFLAGS
 %configure
-%{__make}
+%{__make} CFLAGS="%{rpmcflags} -D_GNU_SOURCE"
 
 %install
 rm -rf $RPM_BUILD_ROOT
