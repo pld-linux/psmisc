@@ -1,0 +1,4 @@
+- up to 21
+- add libtoolize to %build section
+- add more lang
+- STBR
