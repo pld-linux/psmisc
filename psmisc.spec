@@ -8,7 +8,7 @@ Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	20.2
 Release:	3
-License:	Distributable
+License:	distributable
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
