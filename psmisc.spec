@@ -62,6 +62,7 @@ automake -a -c
 aclocal
 autoheader
 autoconf
+CFLAGS="%{rpmcflags} -D_GNU_SOURCE"
 %configure
 %{__make}
 
