@@ -13,24 +13,22 @@ Summary(ru):	õÔÉÌÉÔÙ ÒÁÂÏÔÙ Ó ÐÒÏÃÅÓÓÁÍÉ
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk):	õÔÉÌ¦ÔÉ ÒÏÂÏÔÉ Ú ÐÒÏÃÅÓÁÍÉ
 Name:		psmisc
-Version:	21.5
-Release:	3
+Version:	21.6
+Release:	1
 License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
-# Source0-md5:	c62b09ad5129e2f7e4611019d1d3d4b8
+# Source0-md5:	6994f227b38b09cb3f3bdd3bc5fc65fe
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
-Patch0:		%{name}-missing-nls.patch
-Patch1:		%{name}-pl.po.patch
-Patch2:		%{name}-tinfo.patch
+Patch0:		%{name}-tinfo.patch
 # based on http://www.nsa.gov/selinux/patches/psmisc-selinux.patch.gz
-Patch3:		%{name}-selinux.patch
-Patch4:		%{name}-pstree-on-tty.patch
+Patch1:		%{name}-selinux.patch
+Patch2:		%{name}-pstree-on-tty.patch
 URL:		http://psmisc.sourceforge.net/
-BuildRequires:	autoconf
-BuildRequires:	automake
-BuildRequires:	gettext-devel
+BuildRequires:	autoconf >= 2.59
+BuildRequires:	automake >= 1.6
+BuildRequires:	gettext-devel >= 0.14.1
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel >= 5.0
@@ -93,10 +91,8 @@ göndermek için gerekli programlarý içerir.
 %prep
 %setup -q
 %patch0 -p1
-%patch1 -p1
+%{?with_selinux:%patch1 -p1}
 %patch2 -p1
-%{?with_selinux:%patch3 -p1}
-%patch4 -p1
 
 # allow *.gmo rebuilding
 rm -f po/stamp-po
