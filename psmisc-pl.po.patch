@@ -1,0 +1,193 @@
+--- psmisc-21.2/configure.in.orig	Thu Jan 16 19:31:02 2003
++++ psmisc-21.2/configure.in	Thu Jan 16 19:56:56 2003
+@@ -33,7 +33,7 @@
+ AC_TYPE_UID_T
+ 
+ dnl Check for language stuff
+-ALL_LINGUAS="de en fr it pt sv"
++ALL_LINGUAS="de en fr it pl pt sv"
+ AM_GNU_GETTEXT([external])
+ 
+ dnl Checks for library functions.
+--- psmisc-21.2/po/pl.po.orig	Thu Jan  1 01:00:00 1970
++++ psmisc-21.2/po/pl.po	Thu Jan 16 19:55:45 2003
+@@ -0,0 +1,179 @@
++# Polish translations for psmisc.
++# Copyright (C) 2003 Free Software Foundation, Inc.
++# This file is distributed under the same license as the psmisc package.
++# Jakub Bogusz <qboosh@pld.org.pl>, 2003.
++#
++msgid ""
++msgstr ""
++"Project-Id-Version: psmisc 21.2\n"
++"POT-Creation-Date: 2003-01-16 19:32+0100\n"
++"PO-Revision-Date: 2003-01-16 19:33+0100\n"
++"Last-Translator: Jakub Bogusz <qboosh@pld.org.pl>\n"
++"Language-Team: Polish <pl@li.org>\n"
++"MIME-Version: 1.0\n"
++"Content-Type: text/plain; charset=ISO-8859-2\n"
++"Content-Transfer-Encoding: 8bit\n"
++
++#: src/killall.c:50
++#, c-format
++msgid "Kill %s(%s%d) ? (y/n) "
++msgstr "Zabiæ %s(%s%d)? (y/n) "
++
++#: src/killall.c:237
++#, c-format
++msgid "skipping partial match %s(%d)\n"
++msgstr "pominiêto czê¶ciowe dopasowanie %s(%d)\n"
++
++#: src/killall.c:318
++#, c-format
++msgid "Killed %s(%s%d) with signal %d\n"
++msgstr "Zabito %s(%s%d) sygna³em %d\n"
++
++#: src/killall.c:330 src/fuser.c:491
++#, c-format
++msgid "%s is empty (not mounted ?)\n"
++msgstr "%s jest pusty (nie podmontowany?)\n"
++
++#: src/killall.c:336
++#, c-format
++msgid "%s: no process killed\n"
++msgstr "%s: nie zabito ¿adnego procesu\n"
++
++#: src/killall.c:576
++#, c-format
++msgid "Maximum number of names is %d\n"
++msgstr "Maksymalna liczba nazw to %d\n"
++
++#: src/fuser.c:243
++#, c-format
++msgid "-4 flag used but proc file %s is not readable\n"
++msgstr "U¿yto flagi -4, ale pliku proc %s nie da siê przeczytaæ\n"
++
++#: src/fuser.c:252
++#, c-format
++msgid "-6 flag used but proc file %s is not readable\n"
++msgstr "U¿yto flagi -6, ale pliku proc %s nie da siê przeczytaæ\n"
++
++#: src/fuser.c:589
++#, c-format
++msgid "Kill process %d ? (y/n) "
++msgstr "Zabiæ proces %d? (y/n) "
++
++#: src/fuser.c:619
++#, c-format
++msgid "kill %d"
++msgstr "zabicie %d"
++
++#: src/fuser.c:623 src/fuser.c:627
++#, c-format
++msgid "No automatic removal. Please use  umount %s\n"
++msgstr "Nie usuniêto automatycznie. Proszê u¿yæ  umount %s\n"
++
++#: src/fuser.c:631
++#, c-format
++msgid "No automatic removal. Please use  swapoff %s\n"
++msgstr "Nie usuniêto automatycznie. Proszê u¿yæ  umount %s\n"
++
++#: src/fuser.c:734
++#, c-format
++msgid "Internal error (type %d)\n"
++msgstr "B³±d wewnêtrzny (typ %d)\n"
++
++#: src/fuser.c:764
++msgid "kernel mount  "
++msgstr "kernel mount  "
++
++#: src/fuser.c:767
++msgid "kernel loop   "
++msgstr "kernel loop   "
++
++#: src/fuser.c:770
++msgid "kernel swap   "
++msgstr "kernel swap   "
++
++#: src/fuser.c:790
++msgid "No process references; use -v for the complete list\n"
++msgstr "Nie u¿ywane przez procesy; -v poda pe³n± listê\n"
++
++#: src/fuser.c:928
++msgid "can't find sockets' device number"
++msgstr "nie mo¿na znale¼æ numeru urz±dzenia gniazd"
++
++#: src/fuser.c:937
++msgid ""
++"usage: fuser [ -a | -s ] [ -n space ] [ -signal ] [ -kimuv ] name ...\n"
++"             [ - ] [ -n space ] [ -signal ] [ -kimuv ] name ...\n"
++"       fuser -l\n"
++"       fuser -V\n"
++"\n"
++"    -a        display unused files too\n"
++"    -k        kill processes accessing that file\n"
++"    -i        ask before killing (ignored without -k)\n"
++"    -l        list signal names\n"
++"    -m        mounted FS\n"
++"    -n space  search in the specified name space (file, udp, or tcp)\n"
++"    -s        silent operation\n"
++"    -signal   send signal instead of SIGKILL\n"
++"    -u        display user ids\n"
++"    -v        verbose output\n"
++"    -V        display version information\n"
++"    -4        search IPv4 sockets only\n"
++"    -6        search IPv6 sockets only\n"
++"    -         reset options\n"
++"\n"
++"  udp/tcp names: [local_port][,[rmt_host][,[rmt_port]]]\n"
++"\n"
++msgstr ""
++"sk³adnia: fuser [ -a | -s ] [ -n przestrzeñ ] [ -sygna³ ] [ -kimuv ] nazwa ...\n"
++"                [ - ] [ -n przestrzeñ ] [ -sygna³ ] [ -kimuv ] nazwa ...\n"
++"          fuser -l\n"
++"          fuser -V\n"
++"\n"
++"    -a             wy¶wietlenie tak¿e nie u¿ywanych plików\n"
++"    -k             zabicie procesów u¿ywaj±cych tego pliku\n"
++"    -i             pytanie przed zabiciem (ignorowane bez -k)\n"
++"    -l             lista nazw sygna³ów\n"
++"    -m             plik na podmontowanym systemie plików\n"
++"    -n przestrzeñ  szukanie w podanej przestrzeni nazw (file, udp lub tcp)\n"
++"    -s             dzia³anie po cichu\n"
++"    -sygna³        wys³anie sygna³u zamiast SIGKILL\n"
++"    -u             wy¶wietlenie identyfikatorów u¿ytkowników\n"
++"    -v             podanie wiêkszej ilo¶ci informacji\n"
++"    -V             wy¶wietlenie informacji o wersji\n"
++"    -4             szukanie tylko gniazd IPv4\n"
++"    -6             szukanie tylko gniazd IPv6\n"
++"    -              wyzerowanie opcji\n"
++"\n"
++"  nazwy tcp/udp: [port_lokalny][,[zdalny_host][,[port_zdalny]]]\n"
++"\n"
++
++#: src/fuser.c:961
++#, c-format
++msgid "fuser (psmisc) %s\n"
++msgstr "fuser (psmisc) %s\n"
++
++#: src/fuser.c:963
++msgid ""
++"Copyright (C) 1993-2002 Werner Almesberger and Craig Small\n"
++"\n"
++"PSmisc comes with ABSOLUTELY NO WARRANTY.\n"
++"This is free software, and you are welcome to redistribute it under the terms\n"
++"of the GNU General Public License.\n"
++"For more information about these matters, see the files named COPYING.\n"
++msgstr ""
++"Copyright (C) 1993-2002 Werner Almesberger i Craig Small\n"
++"\n"
++"PSmisc jest rozpowszechniany BEZ ¯ADNEJ GWARANCJI.\n"
++"To oprogramowanie jest darmowe i mo¿e byæ dystrybuowane na warunkach\n"
++"Powszechnej Licencji Publicznej GNU (General Public License).\n"
++"Wiêcej informacji znajduje siê w pliku o nazwie COPYING.\n"
++
++#: src/fuser.c:1141
++#, c-format
++msgid "ignoring -m in name space \"%s\"\n"
++msgstr "zignorowano -m w przestrzeni nazw \"%s\"\n"
++
++#: src/fuser.c:1149
++#, c-format
++msgid "%s/%s: invalid specificiation\n"
++msgstr "%s/%s: b³êdne okre¶lenie\n"

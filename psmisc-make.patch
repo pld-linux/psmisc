@@ -20,16 +20,8 @@
  
  BUILT_SOURCES = signames.h
  
---- psmisc-21/doc/Makefile.am	Thu Dec 14 00:47:30 2000
-+++ psmisc-21/doc/Makefile.am.org	Sun May 19 22:31:42 2002
-@@ -1,4 +1,4 @@
- 
--man_MANS = fuser.1 killall.1 pidof.1 pstree.1
-+man_MANS = fuser.1 killall.1  pstree.1
- 
- EXTRA_DIST = $(man_MANS)
---- psmisc-21/configure.in	Wed May 15 13:52:24 2002
-+++ psmisc-21/configure.in.org	Sun May 19 22:34:29 2002
+--- psmisc-21.2/configure.in	Wed May 15 13:52:24 2002
++++ psmisc-21.2/configure.in.org	Sun May 19 22:34:29 2002
 @@ -10,9 +10,10 @@
  AM_PROG_LIBTOOL
  
@@ -44,3 +36,9 @@
  AC_SUBST(TERMCAP_LIB)
  
  dnl Checks for header files.
+@@ -42,4 +42,4 @@
+ dnl Checks for Large File System
+ AC_SYS_LARGEFILE
+ 
+-AC_OUTPUT(Makefile doc/Makefile src/Makefile po/Makefile.in po/Makefile.in )
++AC_OUTPUT(Makefile doc/Makefile src/Makefile po/Makefile.in )
