@@ -1,3 +1,6 @@
+
+%bcond_without	selinux # do not enable selinux support
+
 Summary:	Utilities for managing processes on your system
 Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
 Summary(es):	Más herramientas de tipo ps para el sistema de archivos /proc
@@ -25,7 +28,7 @@ URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	gettext-devel
-BuildRequires:	libselinux-devel
+%{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel >= 5.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -103,7 +106,7 @@ rm -f po/stamp-po
 %{__autoconf}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure \
-	--enable-selinux
+	%{?with_selinux:--enable-selinux}
 %{__make}
 
 %install
