@@ -32,8 +32,8 @@ diff -urN psmisc-20.1.org/doc/Makefile.am psmisc-20.1/doc/Makefile.am
 +DEFS = @DEFS@ -DLOCALEDIR=\"/usr/share/locale\"
  
 -bin_PROGRAMS = fuser killall pstree
-+bin_PROGRAMS = fuser
-+sbin_PROGRAMS = killall pstree
++sbin_PROGRAMS = fuser
++bin_PROGRAMS = killall pstree
  
  fuser_SOURCES = fuser.c comm.h signals.c signals.h signames.h loop.h
  
