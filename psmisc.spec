@@ -1,7 +1,4 @@
 #
-# Conditional build:
-# _with_selinux - selinux support
-#
 Summary:	Utilities for managing processes on your system
 Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
 Summary(es):	Más herramientas de tipo ps para el sistema de archivos /proc
@@ -14,7 +11,7 @@ Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk):	õÔÉÌ¦ÔÉ ÒÏÂÏÔÉ Ú ÐÒÏÃÅÓÁÍÉ
 Name:		psmisc
 Version:	21.3
-Release:	1
+Release:	2
 License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
@@ -30,7 +27,7 @@ BuildRequires:	automake
 BuildRequires:	gettext-devel
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel >= 5.0
-%{?_with_selinux:BuildRequires:	libselinux-devel}
+BuildRequires:	libselinux-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_bindir		/bin
@@ -91,7 +88,7 @@ göndermek için gerekli programlarý içerir.
 %setup -q
 %patch0 -p1
 %patch1 -p1
-%{?_with_selinux:%patch2 -p1}
+%patch2 -p1
 
 %build
 rm -f missing
@@ -103,7 +100,7 @@ rm -f missing
 %{__autoconf}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I%{_includedir}/ncurses"
 %configure \
-	%{?_with_selinux:--enable-selinux}
+	--enable-selinux
 %{__make}
 
 %install
