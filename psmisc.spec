@@ -10,7 +10,8 @@ Copyright:	distributable
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
 Source:		ftp://lrcftp.epfl.ch/pub/linux/local/%{name}-%{version}.tar.gz
-Patch0:		%{name}.patch
+Patch0:		psmisc-opt.patch
+Patch1:		psmisc-ncurses.patch
 Buildroot:	/tmp/%{name}-%{version}-root
 
 %description
@@ -38,8 +39,9 @@ dosyasý olduðunu bulmak ve süreçlere isimleri ile sinyal göndermek için
 gerekli programlarý içerir.
 
 %prep
-%setup -q -n %{name}
-%patch -p1 
+%setup  -q -n %{name}
+%patch0 -p1 
+%patch1 -p1 
 
 %build
 make 'LDFLAGS=-s' OPTIMIZE="$RPM_OPT_FLAGS"
