@@ -24,17 +24,17 @@
  .SH FILES
  .nf
  /proc	location of the proc file system
---- psmisc-21.3/doc/pstree.1.selinux	2002-09-04 18:16:49.000000000 -0400
-+++ psmisc-21.3/doc/pstree.1	2003-08-28 14:01:59.000000000 -0400
-@@ -11,6 +11,7 @@
- .RB [ \-n ]
+--- psmisc-21.5/doc/pstree.1.orig	2004-04-24 14:44:27.000000000 +0200
++++ psmisc-21.5/doc/pstree.1	2004-07-16 07:50:24.316589960 +0200
+@@ -12,6 +12,7 @@
  .RB [ \-p ]
  .RB [ \-u ]
+ .RB [ \-A | \-G | \-U ]
 +.RB [ \-Z ]
- .RB [ \-G | \-U ]
  .RB [ \fIpid\fB | \fIuser\fB]
  .br
-@@ -74,10 +75,8 @@
+ .B pstree
+@@ -81,10 +82,8 @@
  with \fBecho -e '\\033%@'\fP
  .IP \fB\-V\fP
  Display version information.
@@ -47,8 +47,8 @@
  .SH FILES
  .nf
  /proc	location of the proc file system
---- psmisc-21.3/src/killall.c.selinux	2003-05-23 08:47:47.000000000 -0400
-+++ psmisc-21.3/src/killall.c	2003-08-28 14:03:54.000000000 -0400
+--- psmisc-21.5/src/killall.c.orig	2004-07-16 07:49:07.227309312 +0200
++++ psmisc-21.5/src/killall.c	2004-07-16 07:58:59.775228336 +0200
 @@ -21,10 +21,11 @@
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -62,10 +62,10 @@
 +#include <selinux/selinux.h>
 +#endif /*WITH_SELINUX*/
 +
+ #ifdef ENABLE_NLS
  #include <libintl.h>
  #include <locale.h>
- #define _(String) gettext (String)
-@@ -64,13 +65,13 @@
+@@ -68,13 +69,13 @@
    return ch == 'y' || ch == 'Y';
  }
  
@@ -83,7 +83,7 @@
  {
    DIR *dir;
    struct dirent *de;
-@@ -85,11 +86,11 @@
+@@ -89,11 +90,11 @@
    int empty, i, j, okay, length, got_long, error;
    int pids, max_pids, pids_killed;
    unsigned long found;
@@ -98,7 +98,7 @@
  
    if (!(name_len = malloc (sizeof (int) * names)))
      {
-@@ -102,19 +103,14 @@
+@@ -106,19 +107,14 @@
  	sts[i].st_dev = 0;
  	name_len[i] = strlen (namelist[i]);
        }
@@ -126,7 +126,7 @@
    self = getpid ();
    found = 0;
    if (!(dir = opendir (PROC_BASE)))
-@@ -256,37 +252,39 @@
+@@ -268,37 +264,39 @@
  	      else if (got_long ? strcmp (namelist[j], command) :
  		       strncmp (namelist[j], comm, COMM_LEN - 1))
  		continue;
@@ -184,7 +184,7 @@
  
  	      if (sts[j].st_dev != st.st_dev || sts[j].st_ino != st.st_ino)
  		continue;
-@@ -383,13 +381,16 @@
+@@ -395,13 +393,16 @@
  static void
  usage_killall (void)
  {
@@ -203,9 +203,9 @@
 +  fprintf (stderr, _("  -Z,--context        kill only process(es) having scontext\n"));
 +#endif /*WITH_SELINUX*/
    fprintf (stderr, _("  -e,--exact          require exact match for very long names\n"));
+   fprintf (stderr, _("  -I,--ignore-case-   case insensitive process name match\n"));
    fprintf (stderr, _("  -g,--process-group  kill process group instead of process\n"));
-   fprintf (stderr, _("  -i,--interactive    ask for confirmation before killing\n"));
-@@ -399,11 +400,6 @@
+@@ -412,11 +413,6 @@
    fprintf (stderr, _("  -v,--verbose        report if the signal was successfully sent\n"));
    fprintf (stderr, _("  -V,--version        display version information\n"));
    fprintf (stderr, _("  -w,--wait           wait for processes to die\n\n"));
@@ -217,12 +217,12 @@
  }
  
  
-@@ -445,18 +441,17 @@
+@@ -459,18 +455,17 @@
      {"signal", 1, NULL, 's'},
      {"verbose", 0, NULL, 'v'},
      {"wait", 0, NULL, 'w'},
 -#ifdef FLASK_LINUX
--    {"Sid", 1, NULL, 'S'},
+-    {"Sid", 1, NULL, 'd'},
 +#ifdef WITH_SELINUX
      {"context", 1, NULL, 'c'},
 -#endif /*FLASK_LINUX*/
@@ -241,18 +241,18 @@
  
    name = strrchr (*argv, '/');
    if (name)
-@@ -472,8 +467,8 @@
-   textdomain(PACKAGE);
+@@ -488,8 +483,8 @@
+ #endif
  
    opterr = 0;
 -#ifdef FLASK_LINUX
--  while ( (optc = getopt_long_only(argc,argv,"egilqs:vwd:c:V",options,NULL)) != EOF) {
+-  while ( (optc = getopt_long_only(argc,argv,"egilqs:vwd:c:VI",options,NULL)) != EOF) {
 +#ifdef WITH_SELINUX
-+  while ( (optc = getopt_long_only(argc,argv,"egilqs:vwZ:V",options,NULL)) != EOF) {
++  while ( (optc = getopt_long_only(argc,argv,"egilqs:vwZ:VI",options,NULL)) != EOF) {
  #else
-   while ( (optc = getopt_long_only(argc,argv,"egilqs:vwV",options,NULL)) != EOF) {
+   while ( (optc = getopt_long_only(argc,argv,"egilqs:vwVI",options,NULL)) != EOF) {
  #endif
-@@ -517,48 +512,14 @@
+@@ -536,48 +531,14 @@
          print_version();
          return 0;
          break;
@@ -300,7 +300,7 @@
 -#endif /*FLASK_LINUX*/
 +#ifdef WITH_SELINUX
 +	case 'Z': 
-+	  if( is_selinux_enabled()) 
++	  if( is_selinux_enabled() > 0)
 +	    scontext=optarg;
 +	  else 
 +	    fprintf(stderr, _("Warning: -Z (--context) ignored. Requires an SELinux enabled kernel\n"));
@@ -309,7 +309,7 @@
        case '?':
          /* Signal names are in uppercase, so check to see if the argv
           * is upper case */
-@@ -590,9 +551,9 @@
+@@ -609,9 +570,9 @@
      }
    argv = argv + myoptind;
    /*printf("sending signal %d to procs\n", sig_num);*/
@@ -339,9 +339,9 @@
  
  BUILT_SOURCES = signames.h
  
---- psmisc-21.4/src/pstree.c.orig	2003-09-26 15:42:43.000000000 +0200
-+++ psmisc-21.4/src/pstree.c	2003-12-10 23:58:54.375940088 +0100
-@@ -27,9 +27,9 @@
+--- psmisc-21.5/src/pstree.c.orig	2004-07-16 07:49:07.232308552 +0200
++++ psmisc-21.5/src/pstree.c	2004-07-16 07:59:51.907303056 +0200
+@@ -33,9 +33,9 @@
  
  #include "comm.h"
  
@@ -354,7 +354,7 @@
  
  #ifndef MAX_DEPTH
  #define MAX_DEPTH    100
-@@ -58,9 +58,9 @@
+@@ -64,9 +64,9 @@
    int argc;			/* with -a   : number of arguments, -1 if swapped    */
    pid_t pid;
    uid_t uid;
@@ -367,7 +367,7 @@
    int highlight;
    struct _child *children;
    struct _proc *parent;
-@@ -108,10 +108,9 @@
+@@ -114,10 +114,9 @@
  static int width[MAX_DEPTH], more[MAX_DEPTH];
  static int print_args = 0, compact = 1, user_change = 0, pids = 0, by_pid = 0,
    trunc = 1, wait_end = 0;
@@ -380,7 +380,7 @@
  static int output_width = 132;
  static int cur_x = 1;
  static char last_char = 0;
-@@ -161,38 +160,16 @@
+@@ -167,38 +166,16 @@
    return digits;
  }
  
@@ -425,7 +425,7 @@
  
  static void
  out_newline (void)
-@@ -216,13 +193,13 @@
+@@ -222,13 +199,13 @@
    return walk;
  }
  
@@ -443,7 +443,7 @@
  {
    PROC *new;
  
-@@ -235,9 +212,9 @@
+@@ -241,9 +218,9 @@
    new->pid = pid;
    new->uid = uid;
    new->highlight = 0;
@@ -456,7 +456,7 @@
    new->children = NULL;
    new->parent = NULL;
    new->next = list;
-@@ -306,24 +283,24 @@
+@@ -312,24 +289,24 @@
      this->argv[i] = start = strchr (start, 0) + 1;
  }
  
@@ -489,7 +489,7 @@
    else
      {
        strcpy (this->comm, comm);
-@@ -334,11 +311,11 @@
+@@ -340,11 +317,11 @@
    if (pid == ppid)
      ppid = 0;
    if (!(parent = find_proc (ppid)))
@@ -505,7 +505,7 @@
    add_child (parent, this);
    this->parent = parent;
  }
-@@ -430,25 +407,17 @@
+@@ -436,25 +413,17 @@
        else
  	(void) out_int (current->uid);
      }
@@ -534,7 +534,7 @@
      {
        for (i = 0; i < current->argc; i++)
  	{
-@@ -473,20 +442,20 @@
+@@ -479,20 +448,20 @@
  	    }
  	}
      }
@@ -561,7 +561,7 @@
  	{
  	  more[level] = !last;
  	  width[level] = swapped + (comm_len > 1 ? 0 : -1);
-@@ -576,9 +545,10 @@
+@@ -582,9 +551,10 @@
    pid_t pid, ppid;
    int fd, size;
    int empty;
@@ -570,12 +570,12 @@
 -#endif /*FLASK_LINUX*/
 +#ifdef WITH_SELINUX
 +  security_context_t scontext = NULL;
-+  int selinux_enabled=is_selinux_enabled();
++  int selinux_enabled=(is_selinux_enabled() > 0);
 +#endif /*WITH_SELINUX*/
  
    if (!print_args)
      buffer = NULL;
-@@ -603,11 +573,15 @@
+@@ -609,11 +579,15 @@
  	  {
  	    empty = 0;
  	    sprintf (path, "%s/%d", PROC_BASE, pid);
@@ -595,7 +595,7 @@
  	    {
  		perror (path);
  		exit (1);
-@@ -632,11 +606,11 @@
+@@ -638,11 +612,11 @@
  		 &ppid) == 4)
   */
  		if (!print_args)
@@ -611,7 +611,7 @@
  		else
  		  {
  		    sprintf (path, "%s/%d/cmdline", PROC_BASE, pid);
-@@ -653,11 +627,11 @@
+@@ -659,11 +633,11 @@
  		    (void) close (fd);
  		    if (size)
  		      buffer[size++] = 0;
@@ -627,7 +627,7 @@
  		  }
  		}
  	      }
-@@ -696,11 +670,11 @@
+@@ -702,11 +676,11 @@
  	cmd = comm;
        if (*cmd == '-')
  	cmd++;
@@ -643,7 +643,7 @@
      }
  }
  
-@@ -722,10 +696,9 @@
+@@ -729,10 +703,9 @@
    fprintf (stderr, _("    -n     sort output by PID\n"));
    fprintf (stderr, _("    -p     show PIDs; implies -c\n"));
    fprintf (stderr, _("    -u     show uid transitions\n"));
@@ -657,23 +657,23 @@
    fprintf (stderr, _("    -U     use UTF-8 (Unicode) line drawing characters\n"));
    fprintf (stderr, _("    -V     display version information\n"));
    fprintf (stderr, _("    pid    start at pid, default 1 (init)\n"));
-@@ -771,11 +744,11 @@
+@@ -802,11 +775,11 @@
+     sym = &sym_ascii;
    }
  
- 
 -#ifdef FLASK_LINUX
--  while ((c = getopt (argc, argv, "acGhH:npluUVsx")) != EOF)
+-  while ((c = getopt (argc, argv, "aAcGhH:npluUVsx")) != EOF)
 -#else  /*FLASK_LINUX*/
 +#ifdef WITH_SELINUX
-+  while ((c = getopt (argc, argv, "acGhH:npluUVZ")) != EOF)
++  while ((c = getopt (argc, argv, "aAcGhH:npluUVZ")) != EOF)
 +#else  /*WITH_SELINUX*/
-   while ((c = getopt (argc, argv, "acGhH:npluUV")) != EOF)
+   while ((c = getopt (argc, argv, "aAcGhH:npluUV")) != EOF)
 -#endif /*FLASK_LINUX*/
 +#endif /*WITH_SELINUX*/
      switch (c)
        {
        case 'a':
-@@ -832,14 +805,14 @@
+@@ -862,14 +835,14 @@
        case 'V':
        print_version();
  	return 0;
@@ -685,7 +685,7 @@
 -        show_scontext = 1;
 +#ifdef WITH_SELINUX
 +      case 'Z':
-+	if (is_selinux_enabled())
++	if (is_selinux_enabled() > 0)
 +	  show_scontext = 1;
 +	else
 +	  fprintf(stderr, _("Warning: -Z ignored. Requires an SELinux enabled kernel\n"));
