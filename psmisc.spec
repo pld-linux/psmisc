@@ -1,6 +1,7 @@
-
+#
+# Conditional build:
 # _with_selinux - selinux support
-
+#
 Summary:	Utilities for managing processes on your system
 Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
 Summary(es):	Más herramientas de tipo ps para el sistema de archivos /proc
@@ -21,7 +22,8 @@ Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 Patch0:		%{name}-pl.po.patch
-Patch1:		%{name}-selinux.patch
+Patch1:		%{name}-tinfo.patch
+Patch2:		%{name}-selinux.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -86,9 +88,10 @@ göndermek için gerekli programlarý içerir.
 ×¦ÄËÒÉ× ÆÁÊÌ.
 
 %prep
-%setup  -q
-%patch0 -p1
-%{?_with_selinux:%patch1 -p1}
+%setup -q
+%patch0 -p1 
+%patch1 -p1
+%{?_with_selinux:%patch2 -p1}
 
 %build
 rm -f missing
