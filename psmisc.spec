@@ -7,7 +7,7 @@ Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	20.2
-Release:	1
+Release:	2
 License:	Distributable
 Group:		Applications/System
 Group(de):	Applikationen/System
