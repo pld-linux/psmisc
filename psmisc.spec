@@ -66,7 +66,7 @@ processus, trouver quel utilisateur a un fichier ouvert et envoyer des
 signaux aux processes par leurs noms.
 
 %description -l pl
-Ten pakiet zawiera programy umo¿liwiaj±ce wy¶wietlienie drzewa
+Ten pakiet zawiera programy umo¿liwiaj±ce wy¶wietlenie drzewa
 procesów, znalezienie u¿ytkownika, który otworzy³ dany plik i wys³anie
 sygna³u do procesu o zadanej nazwie.
 
