@@ -5,14 +5,14 @@ Summary(pl):	Narzêdzia do kontroli procesów
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	18
-Release:	5
+Release:	6
 Copyright:	distributable
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
 Source:		ftp://lrcftp.epfl.ch/pub/linux/local/psmisc/%{name}-%{version}.tar.gz
 Patch0:		psmisc-opt.patch
 Patch1:		psmisc-ncurses.patch
-BuildRequires:	ncurses-devel
+BuildRequires:	ncurses-devel >= 5.0
 Buildroot:	/tmp/%{name}-%{version}-root
 
 %define		_sbindir	/sbin
