@@ -6,14 +6,13 @@ Summary(pl):	Narzêdzia do kontroli procesów
 Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
-Version:	20.2
-Release:	4
+Version:	21
+Release:	1
 License:	distributable
 Group:		Applications/System
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-make.patch
-Patch1:		%{name}-signal-names-glibc.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	gettext-devel
@@ -68,10 +67,10 @@ göndermek için gerekli programlarý içerir.
 %prep
 %setup  -q
 %patch0 -p1 
-%patch1 -p1
 
 %build
 rm -f missing
+libtoolize --copy --force
 gettextize --copy --force
 aclocal
 automake -a -c -f
@@ -109,4 +108,5 @@ rm -rf $RPM_BUILD_ROOT
 %lang(ja) %{_mandir}/ja/man1/*
 %lang(ko) %{_mandir}/ko/man1/*
 %lang(nl) %{_mandir}/nl/man1/*
+%lang(de) %{_mandir}/de/man1/*
 %lang(pl) %{_mandir}/pl/man1/*
