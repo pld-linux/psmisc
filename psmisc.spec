@@ -5,13 +5,14 @@ Summary(pl):	Narzêdzia do kontroli procesów
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	19
-Release:	2
-Copyright:	distributable
-Group:		Utilities/System
-Group(pl):	Narzêdzia/System
+Release:	5
+License:	distributable
+Group:		Applications/System
+Group(de):	Applikationen/System
+Group(pl):	Aplikacje/System
 Source0:	ftp://lrcftp.epfl.ch/pub/linux/local/psmisc/%{name}-%{version}.tar.gz
-Patch0:		psmisc-opt.patch
-Patch1:		psmisc-ncurses.patch
+Patch0:		%{name}-opt.patch
+Patch1:		%{name}-ncurses.patch
 BuildRequires:	ncurses-devel >= 5.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -54,18 +55,17 @@ göndermek için gerekli programlarý içerir.
 %patch1 -p1
 
 %build
-%{__make} LDFLAGS="-s" OPTIMIZE="$RPM_OPT_FLAGS"
+%{__make} LDFLAGS="%{!?debug:-s}" \
+	OPTIMIZE="%{!?debug:$RPM_OPT_FLAGS}%{?debug:-O -g}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/{bin,%{_sbindir},%{_bindir},%{_mandir}/man1}
 
-install -s fuser $RPM_BUILD_ROOT%{_sbindir}
-install -s {killall,pstree} $RPM_BUILD_ROOT%{_bindir}
+install fuser $RPM_BUILD_ROOT%{_sbindir}
+install {killall,pstree} $RPM_BUILD_ROOT%{_bindir}
 
 install {fuser,killall,pstree}.1 $RPM_BUILD_ROOT%{_mandir}/man1
-
-gzip -9nf $RPM_BUILD_ROOT%{_mandir}/man1/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
