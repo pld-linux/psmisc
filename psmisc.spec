@@ -50,7 +50,7 @@ rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT/{bin,usr/{sbin,bin,man/man1}}
 
 install -s fuser $RPM_BUILD_ROOT/usr/sbin
-install -s {killall,pstree} $RPM_BUILD_ROOT/usr/bin
+install -s {killall,pstree} $RPM_BUILD_ROOT%{_bindir}
 
 install {fuser,killall,pstree}.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
@@ -63,7 +63,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 
 %attr(755,root,root) /usr/sbin/fuser
-%attr(755,root,root) /usr/bin/*
+%attr(755,root,root) %{_bindir}/*
 
 %{_mandir}/man1/*
 
