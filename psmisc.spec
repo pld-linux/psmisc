@@ -14,7 +14,7 @@ Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk):	õÔÉÌ¦ÔÉ ÒÏÂÏÔÉ Ú ĞÒÏÃÅÓÁÍÉ
 Name:		psmisc
 Version:	21.5
-Release:	1
+Release:	2
 License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
@@ -26,6 +26,7 @@ Patch1:		%{name}-pl.po.patch
 Patch2:		%{name}-tinfo.patch
 # based on http://www.nsa.gov/selinux/patches/psmisc-selinux.patch.gz
 Patch3:		%{name}-selinux.patch
+Patch4:		%{name}-pstree-on-tty.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -95,6 +96,7 @@ göndermek için gerekli programları içerir.
 %patch1 -p1
 %patch2 -p1
 %patch3 -p1
+%patch4 -p1
 
 # allow *.gmo rebuilding
 rm -f po/stamp-po
