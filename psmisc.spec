@@ -4,19 +4,21 @@ Summary(fr):	Autres outils du type ps pour le système de fichiers /proc
 Summary(pl):	Narzêdzia do kontroli procesów
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
-Version:	19
-Release:	5
+Version:	20.1
+Release:	1
 License:	distributable
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
-Source0:	ftp://lrcftp.epfl.ch/pub/linux/local/psmisc/%{name}-%{version}.tar.gz
-Patch0:		%{name}-opt.patch
-Patch1:		%{name}-ncurses.patch
+Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Patch0:		%{name}-make.patch
 BuildRequires:	ncurses-devel >= 5.0
+BuildRequires:	autoconf
+BuildRequires:	automake
+URL:		http://psmisc.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_sbindir	/sbin
+%define		_bindir	/bin
 
 %description
 The psmisc package contains utilities for managing processes on your
@@ -50,30 +52,32 @@ açýk dosyasý olduðunu bulmak ve süreçlere isimleri ile sinyal
 göndermek için gerekli programlarý içerir.
 
 %prep
-%setup  -q -n %{name}
+%setup  -q
 %patch0 -p1 
-%patch1 -p1
 
 %build
-%{__make} LDFLAGS="%{!?debug:-s}" \
-	OPTIMIZE="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}"
+rm missing
+automake -a -c
+aclocal
+autoheader
+autoconf
+%configure
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
-install -d $RPM_BUILD_ROOT/{bin,%{_sbindir},%{_bindir},%{_mandir}/man1}
 
-install fuser $RPM_BUILD_ROOT%{_sbindir}
-install {killall,pstree} $RPM_BUILD_ROOT%{_bindir}
+%{__make} install \
+	DESTDIR=$RPM_BUILD_ROOT
 
-install {fuser,killall,pstree}.1 $RPM_BUILD_ROOT%{_mandir}/man1
+gzip -9nf AUTHORS Chang* NEWS README
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
 %files
 %defattr(644,root,root,755)
-
-%attr(755,root,root) %{_sbindir}/fuser
+%doc *.gz
+%attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_bindir}/*
-
 %{_mandir}/man1/*
