@@ -106,7 +106,7 @@ rm -f po/stamp-po
 %{__automake}
 %{__autoheader}
 %{__autoconf}
-CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
+CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I%{_includedir}/ncurses"
 %configure \
 	%{?with_selinux:--enable-selinux}
 %{__make}
@@ -117,8 +117,8 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-mkdir $RPM_BUILD_ROOT/sbin
-mv $RPM_BUILD_ROOT/bin/fuser $RPM_BUILD_ROOT/sbin
+mkdir $RPM_BUILD_ROOT%{_sbindir}
+mv $RPM_BUILD_ROOT%{_bindir}/fuser $RPM_BUILD_ROOT%{_sbindir}
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 
