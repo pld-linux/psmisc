@@ -12,7 +12,7 @@ Group(pl):	Narzêdzia/System
 Source:		ftp://lrcftp.epfl.ch/pub/linux/local/psmisc/%{name}-%{version}.tar.gz
 Patch0:		psmisc-opt.patch
 Patch1:		psmisc-ncurses.patch
-BuildPrereq:	ncurses-devel
+BuildRequires:	ncurses-devel
 Buildroot:	/tmp/%{name}-%{version}-root
 
 %description
