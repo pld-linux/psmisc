@@ -1,6 +1,6 @@
 #
 # Conditional build:
-%bcond_without	selinux		# do not enable SELinux support
+%bcond_without	selinux		# build without SELinux support
 #
 Summary:	Utilities for managing processes on your system
 Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
@@ -14,7 +14,7 @@ Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk):	õÔÉÌ¦ÔÉ ÒÏÂÏÔÉ Ú ĞÒÏÃÅÓÁÍÉ
 Name:		psmisc
 Version:	21.5
-Release:	2
+Release:	3
 License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
@@ -95,7 +95,7 @@ göndermek için gerekli programları içerir.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
-%patch3 -p1
+%{?with_selinux:%patch3 -p1}
 %patch4 -p1
 
 # allow *.gmo rebuilding
