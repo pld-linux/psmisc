@@ -5,7 +5,7 @@ Summary(pl):	Narzêdzia do kontroli procesów
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	20.1
-Release:	1
+Release:	2
 License:	distributable
 Group:		Applications/System
 Group(de):	Applikationen/System
@@ -18,7 +18,8 @@ BuildRequires:	automake
 URL:		http://psmisc.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
-%define		_bindir	/bin
+%define		_bindir		/bin
+%define		_sbindir	/sbin
 
 %description
 The psmisc package contains utilities for managing processes on your
