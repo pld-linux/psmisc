@@ -13,7 +13,7 @@ Version:	21.2
 Release:	1
 License:	distributable
 Group:		Applications/System
-Source0:	ftp://ftp.sourceforge.net/pub/sourceforge/%{name}/%{name}-%{version}.tar.gz
+Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-pl.po.patch
