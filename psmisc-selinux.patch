@@ -1,0 +1,686 @@
+diff -Nur psmisc-21.2/config.h.in psmisc-21.2.new/config.h.in
+--- psmisc-21.2/config.h.in	2002-09-05 01:10:50.000000000 +0200
++++ psmisc-21.2.new/config.h.in	2003-06-20 18:25:54.000000000 +0200
+@@ -5,7 +5,7 @@
+ #undef ENABLE_NLS
+ 
+ /* Use Security-Enhanced Linux features */
+-#undef FLASK_LINUX
++#undef WITH_SELINUX
+ 
+ /* Define if the GNU dcgettext() function is already present or preinstalled.
+    */
+diff -Nur psmisc-21.2/configure.in psmisc-21.2.new/configure.in
+--- psmisc-21.2/configure.in	2003-06-20 18:27:29.000000000 +0200
++++ psmisc-21.2.new/configure.in	2003-06-20 18:25:54.000000000 +0200
+@@ -4,9 +4,9 @@
+ AM_INIT_AUTOMAKE(psmisc,21.2)
+ 
+ dnl checks for options
+-AC_SUBST(FLASK_LINUX)
+-AC_ARG_ENABLE(flask,[  --enable-flask  Enable Security-Enhanced Linux features],
+-	AC_DEFINE([FLASK_LINUX],1,[Use Security-Enhanced Linux features]),)
++AC_SUBST(WITH_SELINUX)
++AC_ARG_ENABLE(selinux,[  --enable-selinux  Enable Security-Enhanced Linux features],
++	AC_DEFINE([WITH_SELINUX],1,[Use Security-Enhanced Linux features]),)
+ 
+ dnl Checks for programs.
+ AC_PROG_CC
+diff -Nur psmisc-21.2/doc/killall.1 psmisc-21.2.new/doc/killall.1
+--- psmisc-21.2/doc/killall.1	2002-09-05 00:16:49.000000000 +0200
++++ psmisc-21.2.new/doc/killall.1	2003-06-20 18:25:53.000000000 +0200
+@@ -11,7 +11,6 @@
+ .RB [ \-v , \-\-verbose ]
+ .RB [ \-w , \-\-wait ]
+ .RB [ \-V, \-\-version ]
+-.RB [ \-S , \-\-sid ]
+ .RB [ \-c , \-\-context ] 
+ .RB [ \-s , \-\-signal
+ .IR signal ]
+diff -Nur psmisc-21.2/doc/pstree.1 psmisc-21.2.new/doc/pstree.1
+--- psmisc-21.2/doc/pstree.1	2002-09-05 00:16:49.000000000 +0200
++++ psmisc-21.2.new/doc/pstree.1	2003-06-20 18:25:53.000000000 +0200
+@@ -11,6 +11,7 @@
+ .RB [ \-n ]
+ .RB [ \-p ]
+ .RB [ \-u ]
++.RB [ \-x ]
+ .RB [ \-G | \-U ]
+ .RB [ \fIpid\fB | \fIuser\fB]
+ .br
+@@ -74,10 +75,8 @@
+ with \fBecho -e '\\033%@'\fP
+ .IP \fB\-V\fP
+ Display version information.
+-.IP \fB\-s\fP
+-(Flask) Show Security ID (SID) for each process.
+ .IP \fB\-x\fP
+-(Flask) Show security context for each process.
++(SELinux) Show security context for each process.
+ .SH FILES
+ .nf
+ /proc	location of the proc file system
+diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
+--- psmisc-21.2/src/killall.c	2002-09-05 00:22:39.000000000 +0200
++++ psmisc-21.2.new/src/killall.c	2003-06-20 18:25:53.000000000 +0200
+@@ -20,10 +20,9 @@
+ #include <sys/types.h>
+ #include <sys/stat.h>
+ #include <getopt.h>
+-#ifdef FLASK_LINUX
+-#include <fs_secure.h>
+-#include <ss.h>
+-#endif /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++#include <selinux/selinux.h>
++#endif /*WITH_SELINUX*/
+ #include <libintl.h>
+ #include <locale.h>
+ #define _(String) gettext (String)
+@@ -63,13 +62,13 @@
+   return ch == 'y' || ch == 'Y';
+ }
+ 
+-#ifdef FLASK_LINUX
++#ifdef WITH_SELINUX
+ static int
+-kill_all(int signal, int names, char **namelist, security_id_t sid )
+-#else  /*FLASK_LINUX*/
++kill_all(int signal, int names, char **namelist, security_context_t scontext )
++#else  /*WITH_SELINUX*/
+ static int
+ kill_all (int signal, int names, char **namelist)
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ {
+   DIR *dir;
+   struct dirent *de;
+@@ -84,11 +83,11 @@
+   int empty, i, j, okay, length, got_long, error;
+   int pids, max_pids, pids_killed;
+   unsigned long found;
+-#ifdef FLASK_LINUX
+-  security_id_t lsid;
++#ifdef WITH_SELINUX
++  security_context_t lcontext=NULL;
+ 
+   if ( names == 0 || ! namelist ) exit( 1 ); /* do the obvious thing...*/
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ 
+   if (!(name_len = malloc (sizeof (int) * names)))
+     {
+@@ -101,19 +100,14 @@
+ 	sts[i].st_dev = 0;
+ 	name_len[i] = strlen (namelist[i]);
+       }
+-#ifdef FLASK_LINUX
+-      else if (stat_secure(namelist[i],&sts[i], &lsid) < 0) {
+-              perror(namelist[i]);
+-              exit(1);
+-          }
+-#else  /*FLASK_LINUX*/
+-    else if (stat (namelist[i], &sts[i]) < 0)
+-      {
+-	perror (namelist[i]);
+-	exit (1);
+-      }
+-#endif /*FLASK_LINUX*/
+-   } 
++    else {
++      if (stat (namelist[i], &sts[i]) < 0)
++	{
++	  perror (namelist[i]);
++	  exit (1);
++	}
++    }
++  } 
+   self = getpid ();
+   found = 0;
+   if (!(dir = opendir (PROC_BASE)))
+@@ -254,31 +248,40 @@
+ 	      else if (got_long ? strcmp (namelist[j], command) :
+ 		       strncmp (namelist[j], comm, COMM_LEN - 1))
+ 		continue;
+-#ifdef FLASK_LINUX
+-              if ( (int) sid > 0 ) {
+-                if ( stat_secure(path, &st, &lsid) < 0 )
++#ifdef WITH_SELINUX
++              if ( scontext != NULL ) {
++                if ( getpidcon(pid_table[i], &lcontext) < 0 )
+                   continue;
+-                if ( lsid != sid )
++                if (strcmp(lcontext,scontext)!=0) {
++		  freecon(lcontext);
+                   continue;
++		}
++		freecon(lcontext);
+               }
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ 	    }
+ 	  else
+ 	    {
+ 	      if (asprintf (&path, PROC_BASE "/%d/exe", pid_table[i]) < 0)
+ 		continue;
+-#ifdef FLASK_LINUX
+-              if (stat_secure(path,&st,&lsid) < 0) continue;
+-              if (sts[j].st_dev != st.st_dev ||
+-                  sts[j].st_ino != st.st_ino ||
+-                  ((int) sid > 0 && (lsid != sid)) )
+-                  continue;
+-#else  /*FLASK_LINUX*/
+ 	      if (stat (path, &st) < 0) {
+ 		free (path);
+ 		continue;
+-#endif /*FLASK_LINUX*/
+ 	      }
++#ifdef WITH_SELINUX
++              if ( scontext != NULL ) {
++		if ( getpidcon(pid_table[i], &lcontext) < 0 ) {
++		  free (path);
++		  continue;
++		}
++		if (strcmp( lcontext,scontext )!=0) {
++		  freecon(lcontext);
++		  free (path);
++		  continue;
++		}
++		freecon(lcontext);
++	      }
++#endif /*WITH_SELINUX*/
+ 	      free (path);
+ 
+ 	      if (sts[j].st_dev != st.st_dev || sts[j].st_ino != st.st_ino)
+@@ -376,13 +379,16 @@
+ static void
+ usage_killall (void)
+ {
+-#ifdef FLASK_LINUX
+-  fprintf(stderr,"Usage: killall [-s sid] [-c context] [ -egiqvw ] [ -signal ] name ...\n");
+-#else  /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++  fprintf(stderr,"Usage: killall [-c context] [ -egiqvw ] [ -signal ] name ...\n");
++#else  /*WITH_SELINUX*/
+   fprintf (stderr, "usage: killall [ OPTIONS ] [ -- ] name ...\n");
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+   fprintf (stderr, "       killall -l, --list\n");
+   fprintf (stderr, "       killall -V --version\n\n");
++#ifdef WITH_SELINUX
++  fprintf (stderr, "  -c,--context        kill only process(es) having scontext\n");
++#endif /*WITH_SELINUX*/
+   fprintf (stderr, "  -e,--exact          require exact match for very long names\n");
+   fprintf (stderr, "  -g,--process-group  kill process group instead of process\n");
+   fprintf (stderr, "  -i,--interactive    ask for confirmation before killing\n");
+@@ -392,12 +398,6 @@
+   fprintf (stderr, "  -v,--verbose        report if the signal was successfully sent\n");
+   fprintf (stderr, "  -V,--version        display version information\n");
+   fprintf (stderr, "  -w,--wait           wait for processes to die\n\n");
+-#ifdef FLASK_LINUX
+-  fprintf (stderr, "  -S,--Sid            kill only process(es) having sid\n");
+-  fprintf (stderr, "  -c,--context        kill only process(es) having scontext\n");
+-  fprintf(stderr, "   (-s, -c are mutually exclusive and must precede other
+-arguments)\n\n");
+-#endif /*FLASK_LINUX*/
+ }
+ 
+ 
+@@ -439,18 +439,17 @@
+     {"signal", 1, NULL, 's'},
+     {"verbose", 0, NULL, 'v'},
+     {"wait", 0, NULL, 'w'},
+-#ifdef FLASK_LINUX
+-    {"Sid", 1, NULL, 'S'},
++#ifdef WITH_SELINUX
+     {"context", 1, NULL, 'c'},
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+     {"version", 0, NULL, 'V'},
+     {0,0,0,0 }};
+ 
+-#ifdef FLASK_LINUX
+-  security_id_t sid = -1;
++#ifdef WITH_SELINUX
++  security_context_t scontext = NULL;
+ 
+   if ( argc < 2 ) usage(); /* do the obvious thing... */
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ 
+   name = strrchr (*argv, '/');
+   if (name)
+@@ -507,46 +506,14 @@
+         print_version();
+         return 0;
+         break;
+-#ifdef FLASK_LINUX
+-      case 'S': {
+-          char **buf, *calloc();
+-          int strlen(), rv;
+-          security_id_t lsid;
+-
+-          buf = (char **) calloc(1, strlen(optarg));
+-          if ( ! buf ) {
+-             (void) fprintf(stderr, "%s: %s\n", name, strerror(errno));
+-             return( 1 );
+-          }
+-
+-	  lsid = strtol(optarg, buf, 0);
+-          if ( **buf ) {
+-              (void) fprintf(stderr, "%s: SID (%s) must be numeric\n", name, *argv);
+-              (void) fflush(stderr);
+-              return( 1 );
+-          }
+-
+-          sid = (security_id_t) lsid;
+-          /* sanity check */
+-          rv = security_sid_to_context(sid, buf, strlen(optarg));
+-          if ( rv < 0 && (errno != ENOSPC) ) {
+-              (void) fprintf(stderr, "%s: security_sid_to_context(%d) %s\n", name, (int) sid, strerror(errno));
+-              (void) fflush(stderr);
+-              free(buf);
+-              return( 1 );
+-          }
+-          free(buf);
+-          break;
+-      }
+-      case 'c': {
+-          if ( security_context_to_sid(optarg, strlen(optarg)+1, &sid) ) {
+-              (void) fprintf(stderr, "%s: security_context_to_sid(%s): %s\n",
+-                     name, optarg, strerror(errno));
+-              (void) fflush(stderr);
+-              return( 1 );
+-          }
+-      }
+-#endif /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++      case 'c': 
++	if( is_selinux_enabled()) 
++	  scontext=optarg;
++	else 
++	  fprintf(stderr, "Warning: -c (--context) ignored. Requires an SELinux enabled kernel\n");
++	break;
++#endif /*WITH_SELINUX*/
+       case '?':
+         /* Signal names are in uppercase, so check to see if the argv
+          * is upper case */
+@@ -578,9 +545,9 @@
+     }
+   argv = argv + myoptind;
+   /*printf("sending signal %d to procs\n", sig_num);*/
+-#ifdef FLASK_LINUX
+-  return kill_all(sig_num,argc - myoptind, argv, sid);
+-#else  /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++  return kill_all(sig_num,argc - myoptind, argv, scontext);
++#else  /*WITH_SELINUX*/
+   return kill_all(sig_num,argc - myoptind, argv );
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ }
+diff -Nur psmisc-21.2/src/Makefile.am psmisc-21.2.new/src/Makefile.am
+--- psmisc-21.2/src/Makefile.am	2003-06-20 18:27:29.000000000 +0200
++++ psmisc-21.2.new/src/Makefile.am	2003-06-20 18:25:53.000000000 +0200
+@@ -16,6 +16,8 @@
+ 
+ CLEANFILES = signames.h
+ 
++LIBS=-lselinux -lattr
++
+ signames.h: signames.c
+ 		@CPP@ -dM $< |\
+ 		tr -s '\t ' ' ' | sort -n +2 | sed \
+diff -Nur psmisc-21.2/src/pstree.c psmisc-21.2.new/src/pstree.c
+--- psmisc-21.2/src/pstree.c	2002-09-27 13:44:17.000000000 +0200
++++ psmisc-21.2.new/src/pstree.c	2003-06-20 18:25:54.000000000 +0200
+@@ -25,9 +25,9 @@
+ 
+ #include "comm.h"
+ 
+-#ifdef FLASK_LINUX
+-#include <fs_secure.h>
+-#endif /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++#include <selinux/selinux.h>
++#endif /*WITH_SELINUX*/
+ 
+ #ifndef MAX_DEPTH
+ #define MAX_DEPTH    100
+@@ -56,9 +56,9 @@
+   int argc;			/* with -a   : number of arguments, -1 if swapped    */
+   pid_t pid;
+   uid_t uid;
+-#ifdef FLASK_LINUX
+-  security_id_t sid;
+-#endif /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++  security_context_t scontext;
++#endif /*WITH_SELINUX*/
+   int highlight;
+   struct _child *children;
+   struct _proc *parent;
+@@ -106,10 +106,9 @@
+ static int width[MAX_DEPTH], more[MAX_DEPTH];
+ static int print_args = 0, compact = 1, user_change = 0, pids = 0, by_pid = 0,
+   trunc = 1;
+-#ifdef FLASK_LINUX
+-static int show_sids    = 0;
++#ifdef WITH_SELINUX
+ static int show_scontext = 0;
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ static int output_width = 132;
+ static int cur_x = 1;
+ static char last_char = 0;
+@@ -159,37 +158,15 @@
+   return digits;
+ }
+ 
+-#ifdef FLASK_LINUX
++#ifdef WITH_SELINUX
+ static void 
+-out_sid ( security_id_t sid )
++out_scontext ( security_context_t scontext )
+ {
+-  if ( (int) sid >= 0 )
+-    out_int((int) sid);
+-  else
+-    out_string("??");
+-}
+-
+-static void 
+-out_scontext ( security_id_t sid )
+-{
+-  static char buf[256];
+-  int security_sid_to_context();
+-  int len = sizeof(buf);
+-  int rv;
+-
+-  bzero(buf,256);
+-
+-  rv = security_sid_to_context((int)sid, buf, &len);
+-  if ( rv ) {
+-    out_string("`??'"); /* punt */
+-  }
+-  else {
+     out_string("`");
+-    out_string(buf);
++    out_string(scontext);
+     out_string("'");
+-  }
+ }
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ 
+ 
+ static void
+@@ -214,13 +191,13 @@
+   return walk;
+ }
+ 
+-#ifdef FLASK_LINUX
++#ifdef WITH_SELINUX
+ static PROC *
+-new_proc(const char *comm, pid_t pid, uid_t uid, security_id_t sid)
+-#else  /*FLASK_LINUX*/
++new_proc(const char *comm, pid_t pid, uid_t uid, security_context_t scontext)
++#else  /*WITH_SELINUX*/
+ static PROC *
+ new_proc (const char *comm, pid_t pid, uid_t uid)
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ {
+   PROC *new;
+ 
+@@ -233,9 +210,9 @@
+   new->pid = pid;
+   new->uid = uid;
+   new->highlight = 0;
+-#ifdef FLASK_LINUX
+-  new->sid = sid;
+-#endif /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++  new->scontext = scontext;
++#endif /*WITH_SELINUX*/
+   new->children = NULL;
+   new->parent = NULL;
+   new->next = list;
+@@ -304,24 +281,24 @@
+     this->argv[i] = start = strchr (start, 0) + 1;
+ }
+ 
+-#ifdef FLASK_LINUX
++#ifdef WITH_SELINUX
+ static void
+ add_proc(const char *comm, pid_t pid, pid_t ppid, uid_t uid,
+-         const char *args, int size, security_id_t sid)
+-#else  /*FLASK_LINUX*/
++         const char *args, int size, security_context_t scontext)
++#else  /*WITH_SELINUX*/
+ static void
+ add_proc (const char *comm, pid_t pid, pid_t ppid, uid_t uid,
+ 	  const char *args, int size)
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ {
+   PROC *this, *parent;
+ 
+   if (!(this = find_proc (pid)))
+-#ifdef FLASK_LINUX
+-    this = new_proc(comm, pid, uid, sid);
+-#else  /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++    this = new_proc(comm, pid, uid, scontext);
++#else  /*WITH_SELINUX*/
+     this = new_proc (comm, pid, uid);
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+   else
+     {
+       strcpy (this->comm, comm);
+@@ -332,11 +309,11 @@
+   if (pid == ppid)
+     ppid = 0;
+   if (!(parent = find_proc (ppid)))
+-#ifdef FLASK_LINUX
+-    parent = new_proc("?", ppid, 0, sid);
+-#else  /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++    parent = new_proc("?", ppid, 0, scontext);
++#else  /*WITH_SELINUX*/
+     parent = new_proc ("?", ppid, 0);
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+   add_child (parent, this);
+   this->parent = parent;
+ }
+@@ -428,25 +405,17 @@
+       else
+ 	(void) out_int (current->uid);
+     }
+-#ifdef FLASK_LINUX
+-  if ( show_sids ) {
+-    out_char (info++ ? ',' : '(');
+-    out_sid(current->sid);
+-  }
++#ifdef WITH_SELINUX
+   if ( show_scontext ) {
+     out_char (info++ ? ',' : '(');
+-    out_scontext(current->sid);
++    out_scontext(current->scontext);
+   }
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+   if ((swapped && print_args && current->argc < 0) || (!swapped && info))
+     out_char (')');
+   if (current->highlight && (tmp = tgetstr ("me", NULL)))
+     tputs (tmp, 1, putchar);
+-#ifdef FLASK_LINUX
+-  if (show_scontext || print_args)
+-#else  /*FLASK_LINUX*/
+   if (print_args)
+-#endif /*FLASK_LINUX*/
+     {
+       for (i = 0; i < current->argc; i++)
+ 	{
+@@ -470,20 +439,20 @@
+ 	    }
+ 	}
+     }
+-#ifdef FLASK_LINUX
++#ifdef WITH_SELINUX
+   if ( show_scontext || print_args || ! current->children )
+-#else  /*FLASK_LINUX*/
++#else  /*WITH_SELINUX*/
+   if (print_args || !current->children)
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+     {
+       while (closing--)
+ 	out_char (']');
+       out_newline ();
+-#ifdef FLASK_LINUX
++#ifdef WITH_SELINUX
+       if ( show_scontext || print_args )
+-#else /*FLASK_LINUX*/
++#else /*WITH_SELINUX*/
+       if (print_args)
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ 	{
+ 	  more[level] = !last;
+ 	  width[level] = swapped + (comm_len > 1 ? 0 : -1);
+@@ -573,9 +542,10 @@
+   pid_t pid, ppid;
+   int fd, size;
+   int empty;
+-#ifdef FLASK_LINUX
+-  security_id_t sid = -1;
+-#endif /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++  security_context_t scontext = NULL;
++  int selinux_enabled=is_selinux_enabled();
++#endif /*WITH_SELINUX*/
+ 
+   if (!print_args)
+     buffer = NULL;
+@@ -600,11 +570,15 @@
+ 	  {
+ 	    empty = 0;
+ 	    sprintf (path, "%s/%d", PROC_BASE, pid);
+-#ifdef FLASK_LINUX
+-            if (fstat_secure(fileno(file),&st,&sid) < 0)
+-#else /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++	    if (selinux_enabled)
++	      if (getpidcon(pid,&scontext) < 0)
++		{
++		  perror (path);
++		  exit (1);
++		}
++#endif /*WITH_SELINUX*/
+             if (stat (path, &st) < 0)
+-#endif /*FLASK_LINUX*/
+ 	    {
+ 		perror (path);
+ 		exit (1);
+@@ -629,11 +603,11 @@
+ 		 &ppid) == 4)
+ 	      */
+ 		if (!print_args)
+-#ifdef FLASK_LINUX
+-		  add_proc(comm, pid, ppid, st.st_uid, NULL, 0, sid);
+-#else  /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++		  add_proc(comm, pid, ppid, st.st_uid, NULL, 0, scontext);
++#else  /*WITH_SELINUX*/
+ 		  add_proc (comm, pid, ppid, st.st_uid, NULL, 0);
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ 		else
+ 		  {
+ 		    sprintf (path, "%s/%d/cmdline", PROC_BASE, pid);
+@@ -650,11 +624,11 @@
+ 		    (void) close (fd);
+ 		    if (size)
+ 		      buffer[size++] = 0;
+-#ifdef FLASK_LINUX
+-		    add_proc(comm, pid, ppid, st.st_uid, buffer, size, sid);
+-#else  /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++		    add_proc(comm, pid, ppid, st.st_uid, buffer, size, scontext);
++#else  /*WITH_SELINUX*/
+ 		    add_proc (comm, pid, ppid, st.st_uid, buffer, size);
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+ 		  }
+ 		}
+ 	      }
+@@ -693,11 +667,11 @@
+ 	cmd = comm;
+       if (*cmd == '-')
+ 	cmd++;
+-#ifdef FLASK_LINUX
+-      add_proc(cmd, pid, ppid, uid, NULL, 0, -1);
+-#else  /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++      add_proc(cmd, pid, ppid, uid, NULL, 0, NULL);
++#else  /*WITH_SELINUX*/
+       add_proc (cmd, pid, ppid, uid, NULL, 0);
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+     }
+ }
+ 
+@@ -722,10 +696,9 @@
+   fprintf (stderr, "    -n     sort output by PID\n");
+   fprintf (stderr, "    -p     show PIDs; implies -c\n");
+   fprintf (stderr, "    -u     show uid transitions\n");
+-#ifdef FLASK_LINUX
+-  fprintf (stderr, "    -s     show Flask SIDs\n");
+-  fprintf (stderr, "    -x     show Flask security contexts\n");
+-#endif /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++  fprintf (stderr, "    -x     show SELinux security contexts\n");
++#endif /*WITH_SELINUX*/
+   fprintf (stderr,
+ 	   "    -U     use UTF-8 (Unicode) line drawing characters\n");
+   fprintf (stderr, "    -V     display version information\n");
+@@ -765,11 +738,11 @@
+   
+   setlocale(LC_ALL, "");
+   
+-#ifdef FLASK_LINUX
+-  while ((c = getopt (argc, argv, "acGhH:npluUVsx")) != EOF)
+-#else  /*FLASK_LINUX*/
++#ifdef WITH_SELINUX
++  while ((c = getopt (argc, argv, "acGhH:npluUVx")) != EOF)
++#else  /*WITH_SELINUX*/
+   while ((c = getopt (argc, argv, "acGhH:npluUV")) != EOF)
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+     switch (c)
+       {
+       case 'a':
+@@ -826,14 +799,14 @@
+       case 'V':
+       print_version();
+ 	return 0;
+-#ifdef FLASK_LINUX
+-      case 's':
+-        show_sids = 1;
+-        break;
++#ifdef WITH_SELINUX
+       case 'x':
+-        show_scontext = 1;
++	if (is_selinux_enabled())
++	  show_scontext = 1;
++	else
++	  fprintf(stderr, "Warning: -x ignored. Requires anx SELinux enabled kernel\n");
+         break;
+-#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
+       default:
+ 	usage ();
+       }
