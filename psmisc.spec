@@ -82,7 +82,7 @@ göndermek için gerekli programlarý içerir.
 
 %build
 rm -f missing
-libtoolize --copy --force
+%{__libtoolize}
 gettextize --copy --force
 aclocal
 %{__automake}
