@@ -30,7 +30,7 @@ BuildRequires:	automake
 BuildRequires:	gettext-devel
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel >= 5.0
-%{?_with_selinux:BuildRequires: libselinux-devel}
+%{?_with_selinux:BuildRequires:	libselinux-devel}
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_bindir		/bin
@@ -89,7 +89,7 @@ göndermek için gerekli programlarý içerir.
 
 %prep
 %setup -q
-%patch0 -p1 
+%patch0 -p1
 %patch1 -p1
 %{?_with_selinux:%patch2 -p1}
 
