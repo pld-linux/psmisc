@@ -13,7 +13,7 @@ Source:		ftp://lrcftp.epfl.ch/pub/linux/local/psmisc/%{name}-%{version}.tar.gz
 Patch0:		psmisc-opt.patch
 Patch1:		psmisc-ncurses.patch
 BuildRequires:	ncurses-devel >= 5.0
-Buildroot:	/tmp/%{name}-%{version}-root
+BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_sbindir	/sbin
 
