@@ -1,6 +1,7 @@
-
-%bcond_without	selinux # do not enable selinux support
-
+#
+# Conditional build:
+%bcond_without	selinux		# do not enable SELinux support
+#
 Summary:	Utilities for managing processes on your system
 Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
 Summary(es):	MАs herramientas de tipo ps para el sistema de archivos /proc
@@ -12,17 +13,19 @@ Summary(ru):	Утилиты работы с процессами
 Summary(tr):	/proc dosya sistemi iГin ps tipi araГlar
 Summary(uk):	Утил╕ти роботи з процесами
 Name:		psmisc
-Version:	21.4
-Release:	1
+Version:	21.5
+Release:	0.1
 License:	distributable
 Group:		Applications/System
-Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-# Source0-md5:	8449269fdc8ae5d7d494df745e1180d3
+Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
+# Source0-md5:	c62b09ad5129e2f7e4611019d1d3d4b8
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 Patch0:		%{name}-missing-nls.patch
+# needs update
 Patch1:		%{name}-pl.po.patch
 Patch2:		%{name}-tinfo.patch
+# needs update
 Patch3:		%{name}-selinux.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
