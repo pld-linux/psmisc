@@ -85,9 +85,9 @@ rm -f missing
 libtoolize --copy --force
 gettextize --copy --force
 aclocal
-automake -a -c -f
+%{__automake}
 autoheader
-autoconf
+%{__autoconf}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I%{_includedir}/ncurses"
 %configure
 %{__make}
