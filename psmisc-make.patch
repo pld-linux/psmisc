@@ -24,17 +24,31 @@ diff -urN psmisc-20.1.org/doc/Makefile.am psmisc-20.1/doc/Makefile.am
 +man_MANS = fuser.1 killall.1 pstree.1
  
  EXTRA_DIST = $(man_MANS)
-diff -urN psmisc-20.1.org/src/Makefile.am psmisc-20.1/src/Makefile.am
---- psmisc-20.1.org/src/Makefile.am	Sat Mar 31 18:45:47 2001
-+++ psmisc-20.1/src/Makefile.am	Sat Mar 31 18:57:56 2001
-@@ -1,7 +1,9 @@
+--- psmisc-20.2/src/Makefile.am.orig	Fri Jun 15 14:17:55 2001
++++ psmisc-20.2/src/Makefile.am	Sun Oct 21 02:56:54 2001
+@@ -1,7 +1,8 @@
  
- CFLAGS = -Wall
-+DEFS = -I/usr/include/ncurses -I$(top_builddir) @DEFS@
+-CFLAGS = -Wall -DLOCALEDIR=\"/usr/share/locale\"
++DEFS = @DEFS@ -DLOCALEDIR=\"/usr/share/locale\"
  
 -bin_PROGRAMS = fuser killall pstree
-+sbin_PROGRAMS = fuser
-+bin_PROGRAMS = killall pstree
++bin_PROGRAMS = fuser
++sbin_PROGRAMS = killall pstree
  
  fuser_SOURCES = fuser.c comm.h signals.c signals.h signames.h loop.h
  
+@@ -9,7 +10,7 @@
+ 
+ pstree_SOURCES = pstree.c comm.h
+ 
+-pstree_LDADD = @TERMCAP_LIB@
++pstree_LDADD = $(TERMCAP_LIB)
+ 
+ BUILT_SOURCES = signames.h
+ 
+@@ -24,5 +25,3 @@
+ 		  { rm -f signames.h; exit 1; }
+ 		grep '^{ 1,"HUP" },$$' signames.h >/dev/null || \
+ 		  { rm -f signames.h; exit 1; }
+-
+-
