@@ -1,4 +1,3 @@
-#
 Summary:	Utilities for managing processes on your system
 Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
 Summary(es):	Más herramientas de tipo ps para el sistema de archivos /proc
@@ -10,12 +9,12 @@ Summary(ru):	õÔÉÌÉÔÙ ÒÁÂÏÔÙ Ó ÐÒÏÃÅÓÓÁÍÉ
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk):	õÔÉÌ¦ÔÉ ÒÏÂÏÔÉ Ú ÐÒÏÃÅÓÁÍÉ
 Name:		psmisc
-Version:	21.3
-Release:	2
+Version:	21.4
+Release:	1
 License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-# Source0-md5:	df5aef7438a00d4f41bc0c5e91e4ec7d
+# Source0-md5:	8449269fdc8ae5d7d494df745e1180d3
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 Patch0:		%{name}-pl.po.patch
@@ -25,9 +24,9 @@ URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	gettext-devel
+BuildRequires:	libselinux-devel
 BuildRequires:	libtool
 BuildRequires:	ncurses-devel >= 5.0
-BuildRequires:	libselinux-devel
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %define		_bindir		/bin
@@ -91,14 +90,13 @@ göndermek için gerekli programlarý içerir.
 %patch2 -p1
 
 %build
-rm -f missing
 %{__libtoolize}
 %{__gettextize}
 %{__aclocal}
 %{__automake}
 %{__autoheader}
 %{__autoconf}
-CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I%{_includedir}/ncurses"
+CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure \
 	--enable-selinux
 %{__make}
