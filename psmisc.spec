@@ -1,20 +1,23 @@
 Summary:	Utilities for managing processes on your system
 Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
+Summary(es):	Más herramientas de tipo ps para el sistema de archivos /proc
 Summary(fr):	Autres outils du type ps pour le système de fichiers /proc
 Summary(pl):	Narzêdzia do kontroli procesów
+Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
-Version:	20.1
-Release:	3
+Version:	20.2
+Release:	1
 License:	Distributable
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
+BuildRequires:	autoconf
+BuildRequires:	automake
+BuildRequires:	gettext-devel
 BuildRequires:	ncurses-devel >= 5.0
-BuildRequires:  autoconf
-BuildRequires:  automake
 URL:		http://psmisc.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -37,6 +40,11 @@ angegebenen Programmen ein Signal (SIGTERM, falls nichts anderes
 angegeben wird). fuser identifiziert die PIDs (Prozess-IDs) von
 Prozessen, die bestimmte Dateien oder Dateisysteme benutzen.
 
+%description -l es
+Este paquete contiene programas para enseñar un árbol de procesos,
+saber que usuarios tienen archivo abierto y mandar señales a los
+procesos por nombre.
+
 %description -l fr
 Ce paquetage contient les programmes pour afficher une arborescence de
 processus, trouver quel utilisateur a un fichier ouvert et envoyer des
@@ -46,6 +54,11 @@ signaux aux processes par leurs noms.
 Ten pakiet zawiera programy umo¿liwiaj±ce wy¶wietlienie drzewa
 procesów, znalezienie u¿ytkownika, który otworzy³ dany plik i wys³anie
 sygna³u do procesu o zadanej nazwie.
+
+%description -l pt_BR
+Este pacote contém programas para mostrar uma árvore de processos,
+saber quais usuários têm arquivo aberto e mandar sinais aos processos
+por nome.
 
 %description -l tr
 Bu paket, süreçlerin aðaç yapýsýný göstermek, hangi kullanýcýlarýn
@@ -58,13 +71,14 @@ göndermek için gerekli programlarý içerir.
 
 %build
 rm -f missing
+gettextize --copy --force
 aclocal
 automake -a -c
 autoheader
 autoconf
-CFLAGS="%{rpmcflags} -D_GNU_SOURCE" ; export CFLAGS
+CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure
-%{__make} CFLAGS="%{rpmcflags} -D_GNU_SOURCE"
+%{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
@@ -74,10 +88,12 @@ rm -rf $RPM_BUILD_ROOT
 
 gzip -9nf AUTHORS Chang* NEWS README
 
+%find_lang %{name}
+
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc *.gz
 %attr(755,root,root) %{_sbindir}/*
