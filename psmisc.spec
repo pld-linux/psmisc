@@ -89,6 +89,8 @@ rm -rf $RPM_BUILD_ROOT
 
 gzip -9nf AUTHORS Chang* NEWS README
 
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
+
 %find_lang %{name}
 
 %clean
@@ -100,11 +102,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
-%lang(fi) %{_mandir}//man1/*
-%lang(fr) %{_mandir}//man1/*
-%lang(hu) %{_mandir}//man1/*
-%lang(it) %{_mandir}//man1/*
-%lang(ja) %{_mandir}//man1/*
-%lang(ko) %{_mandir}//man1/*
-%lang(nl) %{_mandir}//man1/*
-%lang(pl) %{_mandir}//man1/*
+%lang(fi) %{_mandir}/fi/man1/*
+%lang(fr) %{_mandir}/fr/man1/*
+%lang(hu) %{_mandir}/hu/man1/*
+%lang(it) %{_mandir}/it/man1/*
+%lang(ja) %{_mandir}/ja/man1/*
+%lang(ko) %{_mandir}/ko/man1/*
+%lang(nl) %{_mandir}/nl/man1/*
+%lang(pl) %{_mandir}/pl/man1/*
