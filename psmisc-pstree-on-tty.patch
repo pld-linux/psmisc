@@ -1,0 +1,13 @@
+diff -urN psmisc-21.5.org/src/pstree.c psmisc-21.5/src/pstree.c
+--- psmisc-21.5.org/src/pstree.c	2004-08-12 20:15:43.776611872 +0200
++++ psmisc-21.5/src/pstree.c	2004-08-12 20:16:15.779746656 +0200
+@@ -788,7 +788,8 @@
+   if (!strcmp(nl_langinfo(CODESET), "UTF-8")) {
+     /* Use UTF-8 symbols if the locale's character set is UTF-8. */
+     sym = &sym_utf;
+-  } else if ((termname = getenv ("TERM")) && \
++  } else if (isatty(1) && \
++	     (termname = getenv ("TERM")) && \
+              (strlen (termname) > 0) && \
+              (setupterm (NULL, 1 /* stdout */, NULL) == OK) && \
+              (tigetstr ("acsc") > 0)) {
