@@ -5,6 +5,8 @@ Summary(fr):	Autres outils du type ps pour le systХme de fichiers /proc
 Summary(pl):	NarzЙdzia do kontroli procesСw
 Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
 Summary(tr):	/proc dosya sistemi iГin ps tipi araГlar
+Summary(ru):	Утилиты работы с процессами
+Summary(uk):	Утил╕ти роботи з процесами
 Name:		psmisc
 Version:	21
 Release:	1
@@ -64,9 +66,19 @@ Bu paket, sЭreГlerin aПaГ yapЩsЩnЩ gЖstermek, hangi kullanЩcЩlarЩn
 aГЩk dosyasЩ olduПunu bulmak ve sЭreГlere isimleri ile sinyal
 gЖndermek iГin gerekli programlarЩ iГerir.
 
+%description -l ru
+В этот пакет включены программы для отображения дерева процессов,
+получения информации о том, кем открыт файл и для посылки сигналов
+процессам по имени процесса.
+
+%description -l uk
+Цей пакет м╕стить програми для в╕дображення дерева процес╕в, посилки
+сигнал╕в процесам по ╕мен╕ процеса та отримання ╕нформац╕╖ про те, хто
+в╕дкрив файл.
+
 %prep
 %setup  -q
-%patch0 -p1 
+%patch0 -p1
 
 %build
 rm -f missing
@@ -76,7 +88,7 @@ aclocal
 automake -a -c -f
 autoheader
 autoconf
-CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
+CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I%{_includedir}/ncurses"
 %configure
 %{__make}
 
