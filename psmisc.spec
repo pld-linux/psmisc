@@ -83,7 +83,7 @@ göndermek için gerekli programlarý içerir.
 %build
 rm -f missing
 %{__libtoolize}
-gettextize --copy --force
+%{__gettextize}
 aclocal
 %{__automake}
 autoheader
