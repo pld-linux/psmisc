@@ -14,7 +14,7 @@ Summary(tr):	/proc dosya sistemi iГin ps tipi araГlar
 Summary(uk):	Утил╕ти роботи з процесами
 Name:		psmisc
 Version:	21.3
-Release:	0.1
+Release:	1
 License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
