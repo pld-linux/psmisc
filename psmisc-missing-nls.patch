@@ -116,6 +116,15 @@
    fprintf (stderr, _("    user   show only trees rooted at processes of that user\n\n"));
    exit (1);
  }
+@@ -745,6 +745,8 @@
+   
+ #ifdef ENABLE_NLS
+   setlocale(LC_ALL, "");
++  bindtextdomain(PACKAGE, LOCALEDIR);
++  textdomain(PACKAGE);
+ #endif
+   
+   if ( (tmpstr = strrchr(argv[0],'/'))) {
 --- psmisc-21.4/src/signals.c.orig	2003-04-03 06:29:21.000000000 +0200
 +++ psmisc-21.4/src/signals.c	2003-12-11 22:31:37.258306496 +0100
 @@ -8,6 +8,10 @@
