@@ -67,7 +67,7 @@ rm -rf $RPM_BUILD_ROOT
 %changelog
 * Tue Dec  1 1998 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
   [17-5]
-- added gziping man pages,
+- added gzipping man pages,
 - build agains libncurses instead libtermcap.
 
 * Tue Sep 29 1998 Marcin Korzonek <mkorz@shadow.eu.org>
