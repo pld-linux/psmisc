@@ -58,9 +58,8 @@ göndermek için gerekli programlarý içerir.
 
 %build
 rm -f missing
-touch src/depcomp
-automake -a -c
 aclocal
+automake -a -c
 autoheader
 autoconf
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE" ; export CFLAGS
