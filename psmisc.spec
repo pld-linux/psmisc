@@ -4,8 +4,8 @@ Summary(fr):	Autres outils du type ps pour le système de fichiers /proc
 Summary(pl):	Narzêdzia do kontroli procesów
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
-Version:	18
-Release:	6
+Version:	19
+Release:	1
 Copyright:	distributable
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
