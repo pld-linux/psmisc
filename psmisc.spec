@@ -54,7 +54,7 @@ göndermek için gerekli programlarý içerir.
 %patch1 -p1
 
 %build
-make LDFLAGS="-s" OPTIMIZE="$RPM_OPT_FLAGS"
+%{__make} LDFLAGS="-s" OPTIMIZE="$RPM_OPT_FLAGS"
 
 %install
 rm -rf $RPM_BUILD_ROOT
