@@ -68,25 +68,3 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_bindir}/*
 
 %{_mandir}/man1/*
-
-%changelog
-* Sat Jun 26 1999 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
-  [18-3]
-- added BuildPrereq rules.
-
-* Sat Mar 13 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
-  [18-2]
-- fixed Group(pl),
-- commpressed man pages,
-- cosmetic changes.
-
-* Tue Sep 29 1998 Marcin Korzonek <mkorz@shadow.eu.org>
-  [17-4d]
-- translations modified for pl
-- defined files permission
-- allow building from non-root account
-
-* Thu Jul 23 1998 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
-  [17-4]
-- build against glibc-2.1,
-- start at invalid RH spec file.
