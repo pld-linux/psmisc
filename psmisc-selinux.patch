@@ -1,50 +1,36 @@
-diff -Nur psmisc-21.2/config.h.in psmisc-21.2.new/config.h.in
---- psmisc-21.2/config.h.in	2002-09-05 01:10:50.000000000 +0200
-+++ psmisc-21.2.new/config.h.in	2003-06-20 18:25:54.000000000 +0200
-@@ -5,7 +5,7 @@
- #undef ENABLE_NLS
- 
- /* Use Security-Enhanced Linux features */
--#undef FLASK_LINUX
-+#undef WITH_SELINUX
- 
- /* Define if the GNU dcgettext() function is already present or preinstalled.
-    */
-diff -Nur psmisc-21.2/configure.in psmisc-21.2.new/configure.in
---- psmisc-21.2/configure.in	2003-06-20 18:27:29.000000000 +0200
-+++ psmisc-21.2.new/configure.in	2003-06-20 18:25:54.000000000 +0200
-@@ -4,9 +4,9 @@
- AM_INIT_AUTOMAKE(psmisc,21.2)
- 
- dnl checks for options
--AC_SUBST(FLASK_LINUX)
--AC_ARG_ENABLE(flask,[  --enable-flask  Enable Security-Enhanced Linux features],
--	AC_DEFINE([FLASK_LINUX],1,[Use Security-Enhanced Linux features]),)
-+AC_SUBST(WITH_SELINUX)
-+AC_ARG_ENABLE(selinux,[  --enable-selinux  Enable Security-Enhanced Linux features],
-+	AC_DEFINE([WITH_SELINUX],1,[Use Security-Enhanced Linux features]),)
- 
- dnl Checks for programs.
- AC_PROG_CC
-diff -Nur psmisc-21.2/doc/killall.1 psmisc-21.2.new/doc/killall.1
---- psmisc-21.2/doc/killall.1	2002-09-05 00:16:49.000000000 +0200
-+++ psmisc-21.2.new/doc/killall.1	2003-06-20 18:25:53.000000000 +0200
-@@ -11,7 +11,6 @@
- .RB [ \-v , \-\-verbose ]
- .RB [ \-w , \-\-wait ]
- .RB [ \-V, \-\-version ]
--.RB [ \-S , \-\-sid ]
+--- psmisc-21.3/doc/killall.1.selinux	2003-05-23 08:04:22.000000000 -0400
++++ psmisc-21.3/doc/killall.1	2003-08-28 14:01:12.000000000 -0400
+@@ -4,7 +4,6 @@
+ .SH SYNOPSIS
+ .ad l
+ .B killall
+-.RB [ \-d , \-\-sid ]
  .RB [ \-c , \-\-context ] 
- .RB [ \-s , \-\-signal
- .IR signal ]
-diff -Nur psmisc-21.2/doc/pstree.1 psmisc-21.2.new/doc/pstree.1
---- psmisc-21.2/doc/pstree.1	2002-09-05 00:16:49.000000000 +0200
-+++ psmisc-21.2.new/doc/pstree.1	2003-06-20 18:25:53.000000000 +0200
+ .RB [ \-e , --exact ]
+ .RB [ \-g , \-\-process-group ]
+@@ -67,12 +66,9 @@
+ any of the killed processes still exist and only returns if none are left.
+ Note that \fBkillall\fP may wait forever if the signal was ignored, had no
+ effect, or if the process stays in zombie state.
+-.IP \fB\-d\fP
+-(Flask only) Specify SID: kill only processes with given SID. Mutually exclusive
+-with \fB-c\fP argument.  Must precede other arguments on command line.
+-.IP \fB\-c\fP
+-(Flask only) Specify security context: kill only processes with given security context.
+-Mutually exclusive with \fB-d\fP.  Must precede other arguments on the command line.
++.IP \fB\-Z\fP
++(SELinux Only) Specify security context: kill only processes with given security context.
++Must precede other arguments on the command line.
+ .SH FILES
+ .nf
+ /proc	location of the proc file system
+--- psmisc-21.3/doc/pstree.1.selinux	2002-09-04 18:16:49.000000000 -0400
++++ psmisc-21.3/doc/pstree.1	2003-08-28 14:01:59.000000000 -0400
 @@ -11,6 +11,7 @@
  .RB [ \-n ]
  .RB [ \-p ]
  .RB [ \-u ]
-+.RB [ \-x ]
++.RB [ \-Z ]
  .RB [ \-G | \-U ]
  .RB [ \fIpid\fB | \fIuser\fB]
  .br
@@ -54,30 +40,45 @@ diff -Nur psmisc-21.2/doc/pstree.1 psmisc-21.2.new/doc/pstree.1
  Display version information.
 -.IP \fB\-s\fP
 -(Flask) Show Security ID (SID) for each process.
- .IP \fB\-x\fP
+-.IP \fB\-x\fP
 -(Flask) Show security context for each process.
++.IP \fB\-Z\fP
 +(SELinux) Show security context for each process.
  .SH FILES
  .nf
  /proc	location of the proc file system
-diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
---- psmisc-21.2/src/killall.c	2002-09-05 00:22:39.000000000 +0200
-+++ psmisc-21.2.new/src/killall.c	2003-06-20 18:25:53.000000000 +0200
-@@ -20,10 +20,9 @@
+--- psmisc-21.3/doc/Makefile.in.selinux	2003-05-28 19:45:41.000000000 -0400
++++ psmisc-21.3/doc/Makefile.in	2003-08-28 14:00:20.000000000 -0400
+@@ -69,8 +69,8 @@
+ DLLTOOL = @DLLTOOL@
+ ECHO = @ECHO@
+ EXEEXT = @EXEEXT@
+-FLASK_LIB = @FLASK_LIB@
+-FLASK_LINUX = @FLASK_LINUX@
++SELINUX_LIB = @SELINUX_LIB@
++WITH_SELINUX = @WITH_SELINUX@
+ GENCAT = @GENCAT@
+ GLIBC21 = @GLIBC21@
+ GMSGFMT = @GMSGFMT@
+--- psmisc-21.3/src/killall.c.selinux	2003-05-23 08:47:47.000000000 -0400
++++ psmisc-21.3/src/killall.c	2003-08-28 14:03:54.000000000 -0400
+@@ -21,10 +21,11 @@
  #include <sys/types.h>
  #include <sys/stat.h>
  #include <getopt.h>
 -#ifdef FLASK_LINUX
--#include <fs_secure.h>
--#include <ss.h>
+-#include <selinux/fs_secure.h>
+-#include <selinux/ss.h>
 -#endif /*FLASK_LINUX*/
++
 +#ifdef WITH_SELINUX
 +#include <selinux/selinux.h>
 +#endif /*WITH_SELINUX*/
++
  #include <libintl.h>
  #include <locale.h>
  #define _(String) gettext (String)
-@@ -63,13 +62,13 @@
+@@ -64,13 +65,13 @@
    return ch == 'y' || ch == 'Y';
  }
  
@@ -95,7 +96,7 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
  {
    DIR *dir;
    struct dirent *de;
-@@ -84,11 +83,11 @@
+@@ -85,11 +86,11 @@
    int empty, i, j, okay, length, got_long, error;
    int pids, max_pids, pids_killed;
    unsigned long found;
@@ -110,7 +111,7 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
  
    if (!(name_len = malloc (sizeof (int) * names)))
      {
-@@ -101,19 +100,14 @@
+@@ -102,19 +103,14 @@
  	sts[i].st_dev = 0;
  	name_len[i] = strlen (namelist[i]);
        }
@@ -138,7 +139,7 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
    self = getpid ();
    found = 0;
    if (!(dir = opendir (PROC_BASE)))
-@@ -254,31 +248,40 @@
+@@ -256,37 +252,39 @@
  	      else if (got_long ? strcmp (namelist[j], command) :
  		       strncmp (namelist[j], comm, COMM_LEN - 1))
  		continue;
@@ -164,35 +165,39 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
  	      if (asprintf (&path, PROC_BASE "/%d/exe", pid_table[i]) < 0)
  		continue;
 -#ifdef FLASK_LINUX
--              if (stat_secure(path,&st,&lsid) < 0) continue;
--              if (sts[j].st_dev != st.st_dev ||
--                  sts[j].st_ino != st.st_ino ||
--                  ((int) sid > 0 && (lsid != sid)) )
--                  continue;
+-          if (stat_secure(path,&st,&lsid) < 0) {
+-            free(path);
+-            continue;
+-          }
+-          if (sts[j].st_dev != st.st_dev ||
+-              sts[j].st_ino != st.st_ino ||
+-              ((int) sid > 0 && (lsid != sid)) ) {
+-            free(path);
+-            continue;
+-          }
 -#else  /*FLASK_LINUX*/
++
  	      if (stat (path, &st) < 0) {
- 		free (path);
- 		continue;
--#endif /*FLASK_LINUX*/
+ 		    free (path);
+ 		    continue;
  	      }
+-#endif /*FLASK_LINUX*/
+ 	      free (path);
 +#ifdef WITH_SELINUX
 +              if ( scontext != NULL ) {
-+		if ( getpidcon(pid_table[i], &lcontext) < 0 ) {
-+		  free (path);
-+		  continue;
-+		}
-+		if (strcmp( lcontext,scontext )!=0) {
++                if ( getpidcon(pid_table[i], &lcontext) < 0 )
++                  continue;
++                if (strcmp(lcontext,scontext)!=0) {
 +		  freecon(lcontext);
-+		  free (path);
-+		  continue;
++                  continue;
 +		}
 +		freecon(lcontext);
-+	      }
++              }
 +#endif /*WITH_SELINUX*/
- 	      free (path);
  
  	      if (sts[j].st_dev != st.st_dev || sts[j].st_ino != st.st_ino)
-@@ -376,13 +379,16 @@
+ 		continue;
+@@ -383,13 +381,16 @@
  static void
  usage_killall (void)
  {
@@ -200,7 +205,7 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
 -  fprintf(stderr,"Usage: killall [-s sid] [-c context] [ -egiqvw ] [ -signal ] name ...\n");
 -#else  /*FLASK_LINUX*/
 +#ifdef WITH_SELINUX
-+  fprintf(stderr,"Usage: killall [-c context] [ -egiqvw ] [ -signal ] name ...\n");
++  fprintf(stderr,"Usage: killall [-Z context] [ -egiqvw ] [ -signal ] name ...\n");
 +#else  /*WITH_SELINUX*/
    fprintf (stderr, "usage: killall [ OPTIONS ] [ -- ] name ...\n");
 -#endif /*FLASK_LINUX*/
@@ -208,25 +213,24 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
    fprintf (stderr, "       killall -l, --list\n");
    fprintf (stderr, "       killall -V --version\n\n");
 +#ifdef WITH_SELINUX
-+  fprintf (stderr, "  -c,--context        kill only process(es) having scontext\n");
++  fprintf (stderr, "  -Z,--context        kill only process(es) having scontext\n");
 +#endif /*WITH_SELINUX*/
    fprintf (stderr, "  -e,--exact          require exact match for very long names\n");
    fprintf (stderr, "  -g,--process-group  kill process group instead of process\n");
    fprintf (stderr, "  -i,--interactive    ask for confirmation before killing\n");
-@@ -392,12 +398,6 @@
+@@ -399,11 +400,6 @@
    fprintf (stderr, "  -v,--verbose        report if the signal was successfully sent\n");
    fprintf (stderr, "  -V,--version        display version information\n");
    fprintf (stderr, "  -w,--wait           wait for processes to die\n\n");
 -#ifdef FLASK_LINUX
--  fprintf (stderr, "  -S,--Sid            kill only process(es) having sid\n");
+-  fprintf (stderr, "  -d,--sid            kill only process(es) having sid\n");
 -  fprintf (stderr, "  -c,--context        kill only process(es) having scontext\n");
--  fprintf(stderr, "   (-s, -c are mutually exclusive and must precede other
--arguments)\n\n");
+-  fprintf(stderr, "   (-s, -c are mutually exclusive and must precede other arguments)\n\n");
 -#endif /*FLASK_LINUX*/
  }
  
  
-@@ -439,18 +439,17 @@
+@@ -445,18 +441,17 @@
      {"signal", 1, NULL, 's'},
      {"verbose", 0, NULL, 'v'},
      {"wait", 0, NULL, 'w'},
@@ -250,14 +254,26 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
  
    name = strrchr (*argv, '/');
    if (name)
-@@ -507,46 +506,14 @@
+@@ -472,8 +467,8 @@
+   textdomain(PACKAGE);
+ 
+   opterr = 0;
+-#ifdef FLASK_LINUX
+-  while ( (optc = getopt_long_only(argc,argv,"egilqs:vwd:c:V",options,NULL)) != EOF) {
++#ifdef WITH_SELINUX
++  while ( (optc = getopt_long_only(argc,argv,"egilqs:vwZ:V",options,NULL)) != EOF) {
+ #else
+   while ( (optc = getopt_long_only(argc,argv,"egilqs:vwV",options,NULL)) != EOF) {
+ #endif
+@@ -517,48 +512,14 @@
          print_version();
          return 0;
          break;
 -#ifdef FLASK_LINUX
--      case 'S': {
+-      case 'd': {
 -          char **buf, *calloc();
 -          int strlen(), rv;
+-          __u32 len;
 -          security_id_t lsid;
 -
 -          buf = (char **) calloc(1, strlen(optarg));
@@ -275,7 +291,8 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
 -
 -          sid = (security_id_t) lsid;
 -          /* sanity check */
--          rv = security_sid_to_context(sid, buf, strlen(optarg));
+-          len = strlen(optarg);
+-          rv = security_sid_to_context(sid, buf, &len);
 -          if ( rv < 0 && (errno != ENOSPC) ) {
 -              (void) fprintf(stderr, "%s: security_sid_to_context(%d) %s\n", name, (int) sid, strerror(errno));
 -              (void) fflush(stderr);
@@ -295,17 +312,17 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
 -      }
 -#endif /*FLASK_LINUX*/
 +#ifdef WITH_SELINUX
-+      case 'c': 
-+	if( is_selinux_enabled()) 
-+	  scontext=optarg;
-+	else 
-+	  fprintf(stderr, "Warning: -c (--context) ignored. Requires an SELinux enabled kernel\n");
-+	break;
++	case 'Z': 
++	  if( is_selinux_enabled()) 
++	    scontext=optarg;
++	  else 
++	    fprintf(stderr, "Warning: -Z (--context) ignored. Requires an SELinux enabled kernel\n");
++	  break;
 +#endif /*WITH_SELINUX*/
        case '?':
          /* Signal names are in uppercase, so check to see if the argv
           * is upper case */
-@@ -578,9 +545,9 @@
+@@ -590,9 +551,9 @@
      }
    argv = argv + myoptind;
    /*printf("sending signal %d to procs\n", sig_num);*/
@@ -319,10 +336,9 @@ diff -Nur psmisc-21.2/src/killall.c psmisc-21.2.new/src/killall.c
 -#endif /*FLASK_LINUX*/
 +#endif /*WITH_SELINUX*/
  }
-diff -Nur psmisc-21.2/src/Makefile.am psmisc-21.2.new/src/Makefile.am
---- psmisc-21.2/src/Makefile.am	2003-06-20 18:27:29.000000000 +0200
-+++ psmisc-21.2.new/src/Makefile.am	2003-06-20 18:25:53.000000000 +0200
-@@ -16,6 +16,8 @@
+--- psmisc-21.3/src/Makefile.am.selinux	2003-05-23 08:26:48.000000000 -0400
++++ psmisc-21.3/src/Makefile.am	2003-08-28 14:00:20.000000000 -0400
+@@ -19,6 +19,8 @@
  
  CLEANFILES = signames.h
  
@@ -331,9 +347,44 @@ diff -Nur psmisc-21.2/src/Makefile.am psmisc-21.2.new/src/Makefile.am
  signames.h: signames.c
  		@CPP@ -dM $< |\
  		tr -s '\t ' ' ' | sort -n +2 | sed \
-diff -Nur psmisc-21.2/src/pstree.c psmisc-21.2.new/src/pstree.c
---- psmisc-21.2/src/pstree.c	2002-09-27 13:44:17.000000000 +0200
-+++ psmisc-21.2.new/src/pstree.c	2003-06-20 18:25:54.000000000 +0200
+--- psmisc-21.3/src/Makefile.in.selinux	2003-05-28 19:45:41.000000000 -0400
++++ psmisc-21.3/src/Makefile.in	2003-08-28 14:00:20.000000000 -0400
+@@ -69,8 +69,8 @@
+ DLLTOOL = @DLLTOOL@
+ ECHO = @ECHO@
+ EXEEXT = @EXEEXT@
+-FLASK_LIB = @FLASK_LIB@
+-FLASK_LINUX = @FLASK_LINUX@
++SELINUX_LIB = @SELINUX_LIB@
++WITH_SELINUX = @WITH_SELINUX@
+ GENCAT = @GENCAT@
+ GLIBC21 = @GLIBC21@
+ GMSGFMT = @GMSGFMT@
+@@ -114,11 +114,11 @@
+ 
+ killall_SOURCES = killall.c comm.h signals.c signals.h signames.h
+ 
+-killall_LDADD = @FLASK_LIB@
++killall_LDADD = @SELINUX_LIB@
+ 
+ pstree_SOURCES = pstree.c comm.h
+ 
+-pstree_LDADD = @TERMCAP_LIB@ @FLASK_LIB@
++pstree_LDADD = @TERMCAP_LIB@ @SELINUX_LIB@
+ 
+ BUILT_SOURCES = signames.h
+ 
+@@ -150,7 +150,7 @@
+ DEFAULT_INCLUDES =  -I. -I$(srcdir) -I$(top_builddir)
+ CPPFLAGS = @CPPFLAGS@
+ LDFLAGS = @LDFLAGS@
+-LIBS = @LIBS@
++LIBS = @LIBS@ -lselinux -lattr
+ depcomp = $(SHELL) $(top_srcdir)/depcomp
+ @AMDEP_TRUE@DEP_FILES = $(DEPDIR)/fuser.Po $(DEPDIR)/killall.Po \
+ @AMDEP_TRUE@	$(DEPDIR)/pstree.Po $(DEPDIR)/signals.Po
+--- psmisc-21.3/src/pstree.c.selinux	2003-08-28 14:00:20.000000000 -0400
++++ psmisc-21.3/src/pstree.c	2003-08-28 14:04:42.000000000 -0400
 @@ -25,9 +25,9 @@
  
  #include "comm.h"
@@ -373,7 +424,7 @@ diff -Nur psmisc-21.2/src/pstree.c psmisc-21.2.new/src/pstree.c
  static int output_width = 132;
  static int cur_x = 1;
  static char last_char = 0;
-@@ -159,37 +158,15 @@
+@@ -159,38 +158,16 @@
    return digits;
  }
  
@@ -401,20 +452,23 @@ diff -Nur psmisc-21.2/src/pstree.c psmisc-21.2.new/src/pstree.c
 -
 -  rv = security_sid_to_context((int)sid, buf, &len);
 -  if ( rv ) {
--    out_string("`??'"); /* punt */
+-    out_string("`??\'"); /* punt */
 -  }
 -  else {
      out_string("`");
 -    out_string(buf);
-+    out_string(scontext);
-     out_string("'");
+-    out_string("\'");
 -  }
++    out_string(scontext);
++    out_string("'");
  }
 -#endif /*FLASK_LINUX*/
+-
 +#endif /*WITH_SELINUX*/
- 
++  
  
  static void
+ out_newline (void)
 @@ -214,13 +191,13 @@
    return walk;
  }
@@ -587,7 +641,7 @@ diff -Nur psmisc-21.2/src/pstree.c psmisc-21.2.new/src/pstree.c
  		exit (1);
 @@ -629,11 +603,11 @@
  		 &ppid) == 4)
- 	      */
+  */
  		if (!print_args)
 -#ifdef FLASK_LINUX
 -		  add_proc(comm, pid, ppid, st.st_uid, NULL, 0, sid);
@@ -642,7 +696,7 @@ diff -Nur psmisc-21.2/src/pstree.c psmisc-21.2.new/src/pstree.c
 -  fprintf (stderr, "    -x     show Flask security contexts\n");
 -#endif /*FLASK_LINUX*/
 +#ifdef WITH_SELINUX
-+  fprintf (stderr, "    -x     show SELinux security contexts\n");
++  fprintf (stderr, "    -Z     show SELinux security contexts\n");
 +#endif /*WITH_SELINUX*/
    fprintf (stderr,
  	   "    -U     use UTF-8 (Unicode) line drawing characters\n");
@@ -655,7 +709,7 @@ diff -Nur psmisc-21.2/src/pstree.c psmisc-21.2.new/src/pstree.c
 -  while ((c = getopt (argc, argv, "acGhH:npluUVsx")) != EOF)
 -#else  /*FLASK_LINUX*/
 +#ifdef WITH_SELINUX
-+  while ((c = getopt (argc, argv, "acGhH:npluUVx")) != EOF)
++  while ((c = getopt (argc, argv, "acGhH:npluUVZ")) != EOF)
 +#else  /*WITH_SELINUX*/
    while ((c = getopt (argc, argv, "acGhH:npluUV")) != EOF)
 -#endif /*FLASK_LINUX*/
@@ -671,16 +725,590 @@ diff -Nur psmisc-21.2/src/pstree.c psmisc-21.2.new/src/pstree.c
 -      case 's':
 -        show_sids = 1;
 -        break;
-+#ifdef WITH_SELINUX
-       case 'x':
+-      case 'x':
 -        show_scontext = 1;
++#ifdef WITH_SELINUX
++      case 'Z':
 +	if (is_selinux_enabled())
 +	  show_scontext = 1;
 +	else
-+	  fprintf(stderr, "Warning: -x ignored. Requires anx SELinux enabled kernel\n");
++	  fprintf(stderr, "Warning: -Z ignored. Requires anx SELinux enabled kernel\n");
          break;
 -#endif /*FLASK_LINUX*/
 +#endif /*WITH_SELINUX*/
        default:
  	usage ();
        }
+--- psmisc-21.3/config.h.in.selinux	2002-09-27 08:54:00.000000000 -0400
++++ psmisc-21.3/config.h.in	2003-08-28 14:00:20.000000000 -0400
+@@ -5,7 +5,7 @@
+ #undef ENABLE_NLS
+ 
+ /* Use Security-Enhanced Linux features */
+-#undef FLASK_LINUX
++#undef WITH_SELINUX
+ 
+ /* Define if the GNU dcgettext() function is already present or preinstalled.
+    */
+--- psmisc-21.3/configure.selinux	2003-05-28 19:45:53.000000000 -0400
++++ psmisc-21.3/configure	2003-08-28 14:00:20.000000000 -0400
+@@ -467,7 +467,7 @@
+ # include <unistd.h>
+ #endif"
+ 
+-ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION EXEEXT OBJEXT ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh INSTALL_STRIP_PROGRAM AWK SET_MAKE AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH DEPDIR CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC am__include am__quote CCDEPMODE CPP build build_cpu build_vendor build_os host host_cpu host_vendor host_os LN_S ECHO RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP EGREP LIBTOOL FLASK_LINUX FLASK_LIB TERMCAP_LIB INO_T_IS_LONG_LONG INO_T_IS_INT MKINSTALLDIRS MSGFMT GMSGFMT XGETTEXT MSGMERGE USE_NLS LIBICONV LTLIBICONV INTLLIBS LIBINTL LTLIBINTL POSUB LIBOBJS LTLIBOBJS'
++ac_subst_vars='SHELL PATH_SEPARATOR PACKAGE_NAME PACKAGE_TARNAME PACKAGE_VERSION PACKAGE_STRING PACKAGE_BUGREPORT exec_prefix prefix program_transform_name bindir sbindir libexecdir datadir sysconfdir sharedstatedir localstatedir libdir includedir oldincludedir infodir mandir build_alias host_alias target_alias DEFS ECHO_C ECHO_N ECHO_T LIBS INSTALL_PROGRAM INSTALL_SCRIPT INSTALL_DATA PACKAGE VERSION EXEEXT OBJEXT ACLOCAL AUTOCONF AUTOMAKE AUTOHEADER MAKEINFO AMTAR install_sh INSTALL_STRIP_PROGRAM AWK SET_MAKE AMDEP_TRUE AMDEP_FALSE AMDEPBACKSLASH DEPDIR CC CFLAGS LDFLAGS CPPFLAGS ac_ct_CC am__include am__quote CCDEPMODE CPP build build_cpu build_vendor build_os host host_cpu host_vendor host_os LN_S ECHO RANLIB ac_ct_RANLIB STRIP ac_ct_STRIP EGREP LIBTOOL WITH_SELINUX SELINUX_LIB TERMCAP_LIB INO_T_IS_LONG_LONG INO_T_IS_INT MKINSTALLDIRS MSGFMT GMSGFMT XGETTEXT MSGMERGE USE_NLS LIBICONV LTLIBICONV INTLLIBS LIBINTL LTLIBINTL POSUB LIBOBJS LTLIBOBJS'
+ ac_subst_files=''
+ 
+ # Initialize some variables set by options.
+@@ -1013,7 +1013,7 @@
+   --enable-static=PKGS  build static libraries default=yes
+   --enable-fast-install=PKGS  optimize for fast installation default=yes
+   --disable-libtool-lock  avoid locking (might break parallel builds)
+-  --enable-flask  Enable Security-Enhanced Linux features
++  --enable-selinux  Enable Security-Enhanced Linux features
+   --disable-rpath         do not hardcode runtime library paths
+   --disable-nls           do not use Native Language Support
+   --disable-largefile     omit support for large files
+@@ -2555,12 +2555,12 @@
+   (exit $ac_status); }; }; then
+   for ac_declaration in \
+    ''\
++   '#include <stdlib.h>' \
+    'extern "C" void std::exit (int) throw (); using std::exit;' \
+    'extern "C" void std::exit (int); using std::exit;' \
+    'extern "C" void exit (int) throw ();' \
+    'extern "C" void exit (int);' \
+-   'void exit (int);' \
+-   '#include <stdlib.h>'
++   'void exit (int);'
+ do
+   cat >conftest.$ac_ext <<_ACEOF
+ #line $LINENO "configure"
+@@ -7669,21 +7669,21 @@
+ 
+ 
+ 
+-# Check whether --enable-flask or --disable-flask was given.
+-if test "${enable_flask+set}" = set; then
+-  enableval="$enable_flask"
++# Check whether --enable-selinux or --disable-selinux was given.
++if test "${enable_selinux+set}" = set; then
++  enableval="$enable_selinux"
+ 
+ cat >>confdefs.h <<\_ACEOF
+-#define FLASK_LINUX 1
++#define WITH_SELINUX 1
+ _ACEOF
+ 
+-	echo "$as_me:$LINENO: checking for avc_toggle in -lsecure" >&5
+-echo $ECHO_N "checking for avc_toggle in -lsecure... $ECHO_C" >&6
+-if test "${ac_cv_lib_secure_avc_toggle+set}" = set; then
++	echo "$as_me:$LINENO: checking for getfilecon in -lselinux" >&5
++echo $ECHO_N "checking for getfilecon in -lselinux... $ECHO_C" >&6
++if test "${ac_cv_lib_selinux_getfilecon+set}" = set; then
+   echo $ECHO_N "(cached) $ECHO_C" >&6
+ else
+   ac_check_lib_save_LIBS=$LIBS
+-LIBS="-lsecure  $LIBS"
++LIBS="-lselinux  $LIBS"
+ cat >conftest.$ac_ext <<_ACEOF
+ #line $LINENO "configure"
+ /* confdefs.h.  */
+@@ -7698,11 +7698,11 @@
+ #endif
+ /* We use char because int might match the return type of a gcc2
+    builtin and then its argument prototype would still apply.  */
+-char avc_toggle ();
++char getfilecon ();
+ int
+ main ()
+ {
+-avc_toggle ();
++getfilecon ();
+   ;
+   return 0;
+ }
+@@ -7719,23 +7719,23 @@
+   ac_status=$?
+   echo "$as_me:$LINENO: \$? = $ac_status" >&5
+   (exit $ac_status); }; }; then
+-  ac_cv_lib_secure_avc_toggle=yes
++  ac_cv_lib_selinux_getfilecon=yes
+ else
+   echo "$as_me: failed program was:" >&5
+ sed 's/^/| /' conftest.$ac_ext >&5
+ 
+-ac_cv_lib_secure_avc_toggle=no
++ac_cv_lib_selinux_getfilecon=no
+ fi
+ rm -f conftest.$ac_objext conftest$ac_exeext conftest.$ac_ext
+ LIBS=$ac_check_lib_save_LIBS
+ fi
+-echo "$as_me:$LINENO: result: $ac_cv_lib_secure_avc_toggle" >&5
+-echo "${ECHO_T}$ac_cv_lib_secure_avc_toggle" >&6
+-if test $ac_cv_lib_secure_avc_toggle = yes; then
+-  FLASK_LIB=-lsecure
++echo "$as_me:$LINENO: result: $ac_cv_lib_selinux_getfilecon" >&5
++echo "${ECHO_T}$ac_cv_lib_selinux_getfilecon" >&6
++if test $ac_cv_lib_selinux_getfilecon = yes; then
++  SELINUX_LIB=-lselinux
+ else
+-  { { echo "$as_me:$LINENO: error: Cannot find selinux/ secure static library" >&5
+-echo "$as_me: error: Cannot find selinux/ secure static library" >&2;}
++  { { echo "$as_me:$LINENO: error: Cannot find selinux secure static library" >&5
++echo "$as_me: error: Cannot find selinux secure static library" >&2;}
+    { (exit 1); exit 1; }; }
+ 
+ fi
+@@ -12883,8 +12883,8 @@
+ s,@ac_ct_STRIP@,$ac_ct_STRIP,;t t
+ s,@EGREP@,$EGREP,;t t
+ s,@LIBTOOL@,$LIBTOOL,;t t
+-s,@FLASK_LINUX@,$FLASK_LINUX,;t t
+-s,@FLASK_LIB@,$FLASK_LIB,;t t
++s,@WITH_SELINUX@,$WITH_SELINUX,;t t
++s,@SELINUX_LIB@,$SELINUX_LIB,;t t
+ s,@TERMCAP_LIB@,$TERMCAP_LIB,;t t
+ s,@INO_T_IS_LONG_LONG@,$INO_T_IS_LONG_LONG,;t t
+ s,@INO_T_IS_INT@,$INO_T_IS_INT,;t t
+--- psmisc-21.3/configure.in.selinux	2003-05-28 19:45:24.000000000 -0400
++++ psmisc-21.3/configure.in	2003-08-28 14:00:20.000000000 -0400
+@@ -9,14 +9,14 @@
+ AM_PROG_LIBTOOL
+ 
+ dnl checks for options
+-AC_SUBST(FLASK_LINUX)
+-AC_ARG_ENABLE(flask,[  --enable-flask  Enable Security-Enhanced Linux features],
+-	AC_DEFINE([FLASK_LINUX],1,[Use Security-Enhanced Linux features])
+-	AC_CHECK_LIB(secure, avc_toggle, FLASK_LIB=-lsecure,
+-	   AC_MSG_ERROR(Cannot find selinux/ secure static library)
++AC_SUBST(WITH_SELINUX)
++AC_ARG_ENABLE(selinux,[  --enable-selinux  Enable Security-Enhanced Linux features],
++	AC_DEFINE([WITH_SELINUX],1,[Use Security-Enhanced Linux features])
++	AC_CHECK_LIB(selinux,getfilecon, SELINUX_LIB=-lselinux,
++	   AC_MSG_ERROR(Cannot find selinux secure static library)
+ 	)
+ ,)
+-AC_SUBST(FLASK_LIB)
++AC_SUBST(SELINUX_LIB)
+ 
+ dnl Checks for libraries.
+ AC_CHECK_LIB(ncurses, tgetent, TERMCAP_LIB=-lncurses,
+--- psmisc-21.3/Makefile.in.selinux	2003-05-28 19:45:49.000000000 -0400
++++ psmisc-21.3/Makefile.in	2003-08-28 14:00:20.000000000 -0400
+@@ -1,6 +1,7 @@
+-# Makefile.in generated automatically by automake 1.5 from Makefile.am.
++# Makefile.in generated by automake 1.6.3 from Makefile.am.
++# @configure_input@
+ 
+-# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001
++# Copyright 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002
+ # Free Software Foundation, Inc.
+ # This Makefile.in is free software; the Free Software Foundation
+ # gives unlimited permission to copy and/or distribute it,
+@@ -12,7 +13,6 @@
+ # PARTICULAR PURPOSE.
+ 
+ @SET_MAKE@
+-
+ SHELL = @SHELL@
+ 
+ srcdir = @srcdir@
+@@ -43,9 +43,13 @@
+ AUTOMAKE = @AUTOMAKE@
+ AUTOHEADER = @AUTOHEADER@
+ 
++am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
+ INSTALL = @INSTALL@
+ INSTALL_PROGRAM = @INSTALL_PROGRAM@
+ INSTALL_DATA = @INSTALL_DATA@
++install_sh_DATA = $(install_sh) -c -m 644
++install_sh_PROGRAM = $(install_sh) -c
++install_sh_SCRIPT = $(install_sh) -c
+ INSTALL_SCRIPT = @INSTALL_SCRIPT@
+ INSTALL_HEADER = $(INSTALL_DATA)
+ transform = @program_transform_name@
+@@ -57,6 +61,10 @@
+ POST_UNINSTALL = :
+ host_alias = @host_alias@
+ host_triplet = @host@
++
++EXEEXT = @EXEEXT@
++OBJEXT = @OBJEXT@
++PATH_SEPARATOR = @PATH_SEPARATOR@
+ AMTAR = @AMTAR@
+ AS = @AS@
+ AWK = @AWK@
+@@ -69,8 +77,8 @@
+ DLLTOOL = @DLLTOOL@
+ ECHO = @ECHO@
+ EXEEXT = @EXEEXT@
+-FLASK_LIB = @FLASK_LIB@
+-FLASK_LINUX = @FLASK_LINUX@
++SELINUX_LIB = @SELINUX_LIB@
++WITH_SELINUX = @WITH_SELINUX@
+ GENCAT = @GENCAT@
+ GLIBC21 = @GLIBC21@
+ GMSGFMT = @GMSGFMT@
+@@ -93,7 +101,6 @@
+ LTLIBINTL = @LTLIBINTL@
+ MKINSTALLDIRS = @MKINSTALLDIRS@
+ OBJDUMP = @OBJDUMP@
+-OBJEXT = @OBJEXT@
+ PACKAGE = @PACKAGE@
+ POSUB = @POSUB@
+ RANLIB = @RANLIB@
+@@ -102,6 +109,7 @@
+ USE_INCLUDED_LIBINTL = @USE_INCLUDED_LIBINTL@
+ USE_NLS = @USE_NLS@
+ VERSION = @VERSION@
++WITH_SELINUX = @WITH_SELINUX@
+ am__include = @am__include@
+ am__quote = @am__quote@
+ install_sh = @install_sh@
+@@ -120,31 +128,23 @@
+ 	uninstall-info-recursive all-recursive install-data-recursive \
+ 	install-exec-recursive installdirs-recursive install-recursive \
+ 	uninstall-recursive check-recursive installcheck-recursive
+-DIST_COMMON = README ./stamp-h.in ABOUT-NLS AUTHORS COPYING ChangeLog \
+-	INSTALL Makefile.am Makefile.in NEWS aclocal.m4 config.guess \
+-	config.h.in config.sub configure configure.in depcomp \
+-	install-sh ltmain.sh missing mkinstalldirs
++DIST_COMMON = README ABOUT-NLS AUTHORS COPYING ChangeLog INSTALL \
++	Makefile.am Makefile.in NEWS aclocal.m4 config.guess \
++	config.h.in config.rpath config.sub configure configure.in \
++	depcomp install-sh ltmain.sh missing mkinstalldirs
+ DIST_SUBDIRS = $(SUBDIRS)
+ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+ 
+ .SUFFIXES:
+ 
+-mostlyclean-libtool:
+-	-rm -f *.lo
+-
+-clean-libtool:
+-	-rm -rf .libs _libs
+-
+-distclean-libtool:
+-	-rm -f libtool
++am__CONFIG_DISTCLEAN_FILES = config.status config.cache config.log \
++ configure.lineno
+ $(srcdir)/Makefile.in:  Makefile.am  $(top_srcdir)/configure.in $(ACLOCAL_M4)
+ 	cd $(top_srcdir) && \
+ 	  $(AUTOMAKE) --gnu  Makefile
+ Makefile:  $(srcdir)/Makefile.in  $(top_builddir)/config.status
+-	cd $(top_builddir) && \
+-	  CONFIG_HEADERS= CONFIG_LINKS= \
+-	  CONFIG_FILES=$@ $(SHELL) ./config.status
++	cd $(top_builddir) && $(SHELL) ./config.status $@ $(am__depfiles_maybe)
+ 
+ $(top_builddir)/config.status: $(srcdir)/configure $(CONFIG_STATUS_DEPENDENCIES)
+ 	$(SHELL) ./config.status --recheck
+@@ -153,31 +153,32 @@
+ 
+ $(ACLOCAL_M4):  configure.in 
+ 	cd $(srcdir) && $(ACLOCAL) $(ACLOCAL_AMFLAGS)
+-config.h: stamp-h
+-	@if test ! -f $@; then \
+-		rm -f stamp-h; \
+-		$(MAKE) stamp-h; \
+-	else :; fi
+-stamp-h: $(srcdir)/config.h.in $(top_builddir)/config.status
+-	@rm -f stamp-h stamp-hT
+-	@echo timestamp > stamp-hT 2> /dev/null
+-	cd $(top_builddir) \
+-	  && CONFIG_FILES= CONFIG_HEADERS=config.h \
+-	     $(SHELL) ./config.status
+-	@mv stamp-hT stamp-h
+-$(srcdir)/config.h.in:  $(srcdir)/./stamp-h.in
++
++config.h: stamp-h1
+ 	@if test ! -f $@; then \
+-		rm -f $(srcdir)/./stamp-h.in; \
+-		$(MAKE) $(srcdir)/./stamp-h.in; \
++	  rm -f stamp-h1; \
++	  $(MAKE) stamp-h1; \
+ 	else :; fi
+-$(srcdir)/./stamp-h.in: $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+-	@rm -f $(srcdir)/./stamp-h.in $(srcdir)/./stamp-h.inT
+-	@echo timestamp > $(srcdir)/./stamp-h.inT 2> /dev/null
++
++stamp-h1: $(srcdir)/config.h.in $(top_builddir)/config.status
++	@rm -f stamp-h1
++	cd $(top_builddir) && $(SHELL) ./config.status config.h
++
++$(srcdir)/config.h.in:  $(top_srcdir)/configure.in $(ACLOCAL_M4) 
+ 	cd $(top_srcdir) && $(AUTOHEADER)
+-	@mv $(srcdir)/./stamp-h.inT $(srcdir)/./stamp-h.in
++	touch $(srcdir)/config.h.in
+ 
+ distclean-hdr:
+-	-rm -f config.h
++	-rm -f config.h stamp-h1
++
++mostlyclean-libtool:
++	-rm -f *.lo
++
++clean-libtool:
++	-rm -rf .libs _libs
++
++distclean-libtool:
++	-rm -f libtool
+ uninstall-info-am:
+ 
+ # This directory's subdirectories are mostly independent; you can cd
+@@ -187,7 +188,7 @@
+ #     (which will cause the Makefiles to be regenerated when you run `make');
+ # (2) otherwise, pass the desired values on the `make' command line.
+ $(RECURSIVE_TARGETS):
+-	@set fnord $(MAKEFLAGS); amf=$$2; \
++	@set fnord $$MAKEFLAGS; amf=$$2; \
+ 	dot_seen=no; \
+ 	target=`echo $@ | sed s/-recursive//`; \
+ 	list='$(SUBDIRS)'; for subdir in $$list; do \
+@@ -207,7 +208,7 @@
+ 
+ mostlyclean-recursive clean-recursive distclean-recursive \
+ maintainer-clean-recursive:
+-	@set fnord $(MAKEFLAGS); amf=$$2; \
++	@set fnord $$MAKEFLAGS; amf=$$2; \
+ 	dot_seen=no; \
+ 	case "$@" in \
+ 	  distclean-* | maintainer-clean-*) list='$(DIST_SUBDIRS)' ;; \
+@@ -235,16 +236,19 @@
+ 	  test "$$subdir" = . || (cd $$subdir && $(MAKE) $(AM_MAKEFLAGS) tags); \
+ 	done
+ 
++ETAGS = etags
++ETAGSFLAGS =
++
+ tags: TAGS
+ 
+ ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)
+-	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
++	list='$(SOURCES) $(HEADERS) $(LISP) $(TAGS_FILES)'; \
+ 	unique=`for i in $$list; do \
+ 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+ 	  done | \
+ 	  $(AWK) '    { files[$$0] = 1; } \
+ 	       END { for (i in files) print i; }'`; \
+-	mkid -fID $$unique $(LISP)
++	mkid -fID $$unique
+ 
+ TAGS: tags-recursive $(HEADERS) $(SOURCES) config.h.in $(TAGS_DEPENDENCIES) \
+ 		$(TAGS_FILES) $(LISP)
+@@ -255,51 +259,61 @@
+ 	    test -f $$subdir/TAGS && tags="$$tags -i $$here/$$subdir/TAGS"; \
+ 	  fi; \
+ 	done; \
+-	list='$(SOURCES) $(HEADERS) $(TAGS_FILES)'; \
++	list='$(SOURCES) $(HEADERS) config.h.in $(LISP) $(TAGS_FILES)'; \
+ 	unique=`for i in $$list; do \
+ 	    if test -f "$$i"; then echo $$i; else echo $(srcdir)/$$i; fi; \
+ 	  done | \
+ 	  $(AWK) '    { files[$$0] = 1; } \
+ 	       END { for (i in files) print i; }'`; \
+-	test -z "$(ETAGS_ARGS)config.h.in$$unique$(LISP)$$tags" \
+-	  || etags $(ETAGS_ARGS) $$tags config.h.in $$unique $(LISP)
++	test -z "$(ETAGS_ARGS)$$tags$$unique" \
++	  || $(ETAGS) $(ETAGSFLAGS) $(AM_ETAGSFLAGS) $(ETAGS_ARGS) \
++	     $$tags $$unique
+ 
+ GTAGS:
+-	here=`CDPATH=: && cd $(top_builddir) && pwd` \
++	here=`$(am__cd) $(top_builddir) && pwd` \
+ 	  && cd $(top_srcdir) \
+ 	  && gtags -i $(GTAGS_ARGS) $$here
+ 
+ distclean-tags:
+ 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH
+-
+ DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
+ 
+ top_distdir = .
+-# Avoid unsightly `./'.
+ distdir = $(PACKAGE)-$(VERSION)
+ 
++am__remove_distdir = \
++  { test ! -d $(distdir) \
++    || { find $(distdir) -type d ! -perm -200 -exec chmod u+w {} ';' \
++         && rm -fr $(distdir); }; }
++
+ GZIP_ENV = --best
++distcleancheck_listfiles = find . -type f -print
+ 
+ distdir: $(DISTFILES)
+-	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
++	$(am__remove_distdir)
+ 	mkdir $(distdir)
+ 	$(mkinstalldirs) $(distdir)/po
+-	@for file in $(DISTFILES); do \
+-	  if test -f $$file; then d=.; else d=$(srcdir); fi; \
++	@list='$(DISTFILES)'; for file in $$list; do \
++	  if test -f $$file || test -d $$file; then d=.; else d=$(srcdir); fi; \
+ 	  dir=`echo "$$file" | sed -e 's,/[^/]*$$,,'`; \
+ 	  if test "$$dir" != "$$file" && test "$$dir" != "."; then \
+-	    $(mkinstalldirs) "$(distdir)/$$dir"; \
++	    dir="/$$dir"; \
++	    $(mkinstalldirs) "$(distdir)$$dir"; \
++	  else \
++	    dir=''; \
+ 	  fi; \
+ 	  if test -d $$d/$$file; then \
+-	    cp -pR $$d/$$file $(distdir) \
+-	    || exit 1; \
++	    if test -d $(srcdir)/$$file && test $$d != $(srcdir); then \
++	      cp -pR $(srcdir)/$$file $(distdir)$$dir || exit 1; \
++	    fi; \
++	    cp -pR $$d/$$file $(distdir)$$dir || exit 1; \
+ 	  else \
+ 	    test -f $(distdir)/$$file \
+ 	    || cp -p $$d/$$file $(distdir)/$$file \
+ 	    || exit 1; \
+ 	  fi; \
+ 	done
+-	for subdir in $(SUBDIRS); do \
++	list='$(SUBDIRS)'; for subdir in $$list; do \
+ 	  if test "$$subdir" = .; then :; else \
+ 	    test -d $(distdir)/$$subdir \
+ 	    || mkdir $(distdir)/$$subdir \
+@@ -317,24 +331,29 @@
+ 	  ! -type d ! -perm -400 -exec chmod a+r {} \; -o \
+ 	  ! -type d ! -perm -444 -exec $(SHELL) $(install_sh) -c -m a+r {} {} \; \
+ 	|| chmod -R a+r $(distdir)
+-dist: distdir
++dist-gzip: distdir
+ 	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
+-	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
++	$(am__remove_distdir)
++
++dist dist-all: distdir
++	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
++	$(am__remove_distdir)
+ 
+ # This target untars the dist file and tries a VPATH configuration.  Then
+ # it guarantees that the distribution is self-contained by making another
+ # tarfile.
+ distcheck: dist
+-	-chmod -R a+w $(distdir) > /dev/null 2>&1; rm -rf $(distdir)
++	$(am__remove_distdir)
+ 	GZIP=$(GZIP_ENV) gunzip -c $(distdir).tar.gz | $(AMTAR) xf -
+ 	chmod -R a-w $(distdir); chmod a+w $(distdir)
+ 	mkdir $(distdir)/=build
+ 	mkdir $(distdir)/=inst
+ 	chmod a-w $(distdir)
+-	dc_install_base=`CDPATH=: && cd $(distdir)/=inst && pwd` \
++	dc_install_base=`$(am__cd) $(distdir)/=inst && pwd` \
+ 	  && cd $(distdir)/=build \
+ 	  && ../configure --srcdir=.. --prefix=$$dc_install_base \
+ 	    --with-included-gettext \
++	    $(DISTCHECK_CONFIGURE_FLAGS) \
+ 	  && $(MAKE) $(AM_MAKEFLAGS) \
+ 	  && $(MAKE) $(AM_MAKEFLAGS) dvi \
+ 	  && $(MAKE) $(AM_MAKEFLAGS) check \
+@@ -342,17 +361,24 @@
+ 	  && $(MAKE) $(AM_MAKEFLAGS) installcheck \
+ 	  && $(MAKE) $(AM_MAKEFLAGS) uninstall \
+ 	  && (test `find $$dc_install_base -type f -print | wc -l` -le 1 \
+-	     || (echo "Error: files left after uninstall" 1>&2; \
+-	         exit 1) ) \
+-	  && $(MAKE) $(AM_MAKEFLAGS) dist \
+-	  && $(MAKE) $(AM_MAKEFLAGS) distclean \
++	      || { echo "ERROR: files left after uninstall:" ; \
++	           find $$dc_install_base -type f -print ; \
++	           exit 1; } >&2 ) \
++	  && $(MAKE) $(AM_MAKEFLAGS) dist-gzip \
+ 	  && rm -f $(distdir).tar.gz \
+-	  && (test `find . -type f -print | wc -l` -eq 0 \
+-	     || (echo "Error: files left after distclean" 1>&2; \
+-	         exit 1) )
+-	-chmod -R a+w $(distdir) > /dev/null 2>&1; rm -rf $(distdir)
++	  && $(MAKE) $(AM_MAKEFLAGS) distcleancheck
++	$(am__remove_distdir)
+ 	@echo "$(distdir).tar.gz is ready for distribution" | \
+ 	  sed 'h;s/./=/g;p;x;p;x'
++distcleancheck: distclean
++	if test '$(srcdir)' = . ; then \
++	  echo "ERROR: distcleancheck can only run from a VPATH build" ; \
++	  exit 1 ; \
++	fi
++	test `$(distcleancheck_listfiles) | wc -l` -eq 0 \
++	  || { echo "ERROR: files left after distclean:" ; \
++	       $(distcleancheck_listfiles) ; \
++	       exit 1; } >&2
+ check-am: all-am
+ check: check-recursive
+ all-am: Makefile config.h
+@@ -370,6 +396,7 @@
+ installcheck: installcheck-recursive
+ install-strip:
+ 	$(MAKE) $(AM_MAKEFLAGS) INSTALL_PROGRAM="$(INSTALL_STRIP_PROGRAM)" \
++	  INSTALL_STRIP_FLAG=-s \
+ 	  `test -z '$(STRIP)' || \
+ 	    echo "INSTALL_PROGRAM_ENV=STRIPPROG='$(STRIP)'"` install
+ mostlyclean-generic:
+@@ -377,7 +404,7 @@
+ clean-generic:
+ 
+ distclean-generic:
+-	-rm -f Makefile $(CONFIG_CLEAN_FILES) stamp-h stamp-h[0-9]*
++	-rm -f Makefile $(CONFIG_CLEAN_FILES)
+ 
+ maintainer-clean-generic:
+ 	@echo "This command is intended for maintainers to use"
+@@ -386,11 +413,8 @@
+ 
+ clean-am: clean-generic clean-libtool mostlyclean-am
+ 
+-dist-all: distdir
+-	$(AMTAR) chof - $(distdir) | GZIP=$(GZIP_ENV) gzip -c >$(distdir).tar.gz
+-	-chmod -R a+w $(distdir) >/dev/null 2>&1; rm -rf $(distdir)
+ distclean: distclean-recursive
+-	-rm -f config.status config.cache config.log
++	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
+ distclean-am: clean-am distclean-generic distclean-hdr distclean-libtool \
+ 	distclean-tags
+ 
+@@ -413,7 +437,8 @@
+ installcheck-am:
+ 
+ maintainer-clean: maintainer-clean-recursive
+-
++	-rm -f $(am__CONFIG_DISTCLEAN_FILES)
++	-rm -rf autom4te.cache
+ maintainer-clean-am: distclean-am maintainer-clean-generic
+ 
+ mostlyclean: mostlyclean-recursive
+@@ -426,18 +451,18 @@
+ 
+ .PHONY: $(RECURSIVE_TARGETS) GTAGS all all-am check check-am clean \
+ 	clean-generic clean-libtool clean-recursive dist dist-all \
+-	distcheck distclean distclean-generic distclean-hdr \
+-	distclean-libtool distclean-recursive distclean-tags distdir \
+-	dvi dvi-am dvi-recursive info info-am info-recursive install \
+-	install-am install-data install-data-am install-data-recursive \
+-	install-exec install-exec-am install-exec-recursive \
+-	install-info install-info-am install-info-recursive install-man \
+-	install-recursive install-strip installcheck installcheck-am \
+-	installdirs installdirs-am installdirs-recursive \
+-	maintainer-clean maintainer-clean-generic \
+-	maintainer-clean-recursive mostlyclean mostlyclean-generic \
+-	mostlyclean-libtool mostlyclean-recursive tags tags-recursive \
+-	uninstall uninstall-am uninstall-info-am \
++	dist-gzip distcheck distclean distclean-generic distclean-hdr \
++	distclean-libtool distclean-recursive distclean-tags \
++	distcleancheck distdir dvi dvi-am dvi-recursive info info-am \
++	info-recursive install install-am install-data install-data-am \
++	install-data-recursive install-exec install-exec-am \
++	install-exec-recursive install-info install-info-am \
++	install-info-recursive install-man install-recursive \
++	install-strip installcheck installcheck-am installdirs \
++	installdirs-am installdirs-recursive maintainer-clean \
++	maintainer-clean-generic maintainer-clean-recursive mostlyclean \
++	mostlyclean-generic mostlyclean-libtool mostlyclean-recursive \
++	tags tags-recursive uninstall uninstall-am uninstall-info-am \
+ 	uninstall-info-recursive uninstall-recursive
+ 
+ # Tell versions [3.59,3.63) of GNU make to not export all variables.
