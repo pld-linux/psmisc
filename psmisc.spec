@@ -56,7 +56,7 @@ göndermek için gerekli programlarý içerir.
 
 %build
 %{__make} LDFLAGS="%{!?debug:-s}" \
-	OPTIMIZE="%{?debug:-O -g}%{!?debug:$RPM_OPT_FLAGS}"
+	OPTIMIZE="%{?debug:-O0 -g}%{!?debug:$RPM_OPT_FLAGS}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
