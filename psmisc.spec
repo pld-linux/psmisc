@@ -72,7 +72,7 @@ göndermek için gerekli programlarý içerir.
 rm -f missing
 gettextize --copy --force
 aclocal
-automake -a -c
+automake -a -c -f
 autoheader
 autoconf
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
