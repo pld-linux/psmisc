@@ -52,9 +52,9 @@ install -d $RPM_BUILD_ROOT/{bin,usr/{sbin,bin,man/man1}}
 install -s fuser $RPM_BUILD_ROOT/usr/sbin
 install -s {killall,pstree} $RPM_BUILD_ROOT/usr/bin
 
-install {fuser,killall,pstree}.1 $RPM_BUILD_ROOT/usr/man/man1
+install {fuser,killall,pstree}.1 $RPM_BUILD_ROOT%{_mandir}/man1
 
-gzip -9fn $RPM_BUILD_ROOT/usr/man/man1/*
+gzip -9fn $RPM_BUILD_ROOT%{_mandir}/man1/*
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -65,7 +65,7 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) /usr/sbin/fuser
 %attr(755,root,root) /usr/bin/*
 
-/usr/man/man1/*
+%{_mandir}/man1/*
 
 %changelog
 * Sat Mar 13 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
