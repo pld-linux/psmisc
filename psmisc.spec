@@ -7,12 +7,13 @@ Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	20.2
-Release:	3
+Release:	4
 License:	distributable
 Group:		Applications/System
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-make.patch
+Patch1:		%{name}-signal-names-glibc.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
 BuildRequires:	gettext-devel
@@ -67,6 +68,7 @@ göndermek için gerekli programlarý içerir.
 %prep
 %setup  -q
 %patch0 -p1 
+%patch1 -p1
 
 %build
 rm -f missing
