@@ -108,7 +108,7 @@ rm -f po/stamp-po
 %{__automake}
 %{__autoheader}
 %{__autoconf}
-CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I%{_includedir}/ncurses"
+CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure \
 	%{?with_selinux:--enable-selinux}
 %{__make}
