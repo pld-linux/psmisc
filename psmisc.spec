@@ -1,11 +1,11 @@
-Summary:	More ps type tools for /proc filesystem
+Summary:	Utilities for managing processes on your system
 Summary(de):	Mehr ps-artige Tools für das /proc-Dateisystem 
 Summary(fr):	Autres outils du type ps pour le système de fichiers /proc
-Summary(pl):	Narzêdzia do kontroli procesów korzystaj±ce z systemu /proc
+Summary(pl):	Narzêdzia do kontroli procesów
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	18
-Release:	3
+Release:	5
 Copyright:	distributable
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
@@ -15,9 +15,15 @@ Patch1:		psmisc-ncurses.patch
 BuildRequires:	ncurses-devel
 Buildroot:	/tmp/%{name}-%{version}-root
 
+%define		_sbindir	/sbin
+
 %description
-This package contains programs to display a tree of processes, find
-out what users have a file open, and send signals to processes by name.
+The psmisc package contains utilities for managing processes on your system:
+pstree, killall and fuser. The pstree command displays a tree structure of
+all of the running processes on your system. The killall command sends a
+specified signal (SIGTERM if nothing is specified) to processes identified
+by name. The fuser command identifies the PIDs of processes that are using
+specified files or filesystems.
 
 %description -l de
 Dieses Paket enthält Programme, die eine Baumstruktur der Prozesse 
