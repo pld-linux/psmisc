@@ -57,8 +57,6 @@ göndermek için gerekli programlarý içerir.
 %patch0 -p1 
 
 %build
-rm missing
-automake -a -c
 aclocal
 autoheader
 autoconf
