@@ -87,7 +87,7 @@ rm -f missing
 %{__gettextize}
 %{__aclocal}
 %{__automake}
-autoheader
+%{__autoheader}
 %{__autoconf}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I%{_includedir}/ncurses"
 %configure
