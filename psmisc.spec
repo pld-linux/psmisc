@@ -5,13 +5,14 @@ Summary(pl):	Narzêdzia do kontroli procesów korzystaj±ce z systemu /proc
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	18
-Release:	2
+Release:	3
 Copyright:	distributable
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
 Source:		ftp://lrcftp.epfl.ch/pub/linux/local/psmisc/%{name}-%{version}.tar.gz
 Patch0:		psmisc-opt.patch
 Patch1:		psmisc-ncurses.patch
+BuildPrereq:	ncurses-devel
 Buildroot:	/tmp/%{name}-%{version}-root
 
 %description
@@ -69,6 +70,10 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/*
 
 %changelog
+* Sat Jun 26 1999 Tomasz K³oczko <kloczek@rudy.mif.pg.gda.pl>
+  [18-3]
+- added BuildPrereq rules.
+
 * Sat Mar 13 1999 Wojtek ¦lusarczyk <wojtek@shadow.eu.org>
   [18-2]
 - fixed Group(pl),
