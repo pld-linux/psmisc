@@ -1,23 +1,24 @@
---- psmisc-21.3/doc/killall.1.selinux	2003-05-23 08:04:22.000000000 -0400
-+++ psmisc-21.3/doc/killall.1	2003-08-28 14:01:12.000000000 -0400
+--- psmisc-21.6/doc/killall.1.orig	2004-12-15 12:15:52.000000000 +0100
++++ psmisc-21.6/doc/killall.1	2005-03-20 22:22:36.420168640 +0100
 @@ -4,7 +4,6 @@
  .SH SYNOPSIS
  .ad l
  .B killall
 -.RB [ \-d , \-\-sid ]
- .RB [ \-c , \-\-context ] 
- .RB [ \-e , --exact ]
- .RB [ \-g , \-\-process-group ]
-@@ -67,12 +66,9 @@
+ .RB [ \-c , \-\-context ]
+ .RB [ \-e , \-\-exact ]
+ .RB [ \-g , \-\-process\-group ]
+@@ -70,13 +69,9 @@
  any of the killed processes still exist and only returns if none are left.
  Note that \fBkillall\fP may wait forever if the signal was ignored, had no
  effect, or if the process stays in zombie state.
 -.IP \fB\-d\fP
 -(Flask only) Specify SID: kill only processes with given SID. Mutually exclusive
--with \fB-c\fP argument.  Must precede other arguments on command line.
+-with \fB\-c\fP argument. Must precede other arguments on command line.
 -.IP \fB\-c\fP
--(Flask only) Specify security context: kill only processes with given security context.
--Mutually exclusive with \fB-d\fP.  Must precede other arguments on the command line.
+-(Flask only) Specify security context: kill only processes with given security
+-context. Mutually exclusive with \fB\-d\fP. Must precede other arguments on
+-the command line.
 +.IP \fB\-Z\fP
 +(SELinux Only) Specify security context: kill only processes with given security context.
 +Must precede other arguments on the command line.
@@ -47,8 +48,8 @@
  .SH FILES
  .nf
  /proc	location of the proc file system
---- psmisc-21.5/src/killall.c.orig	2004-07-16 07:49:07.227309312 +0200
-+++ psmisc-21.5/src/killall.c	2004-07-16 07:58:59.775228336 +0200
+--- psmisc-21.6/src/killall.c.orig	2004-12-10 12:31:29.000000000 +0100
++++ psmisc-21.6/src/killall.c	2005-03-20 22:28:07.514834600 +0100
 @@ -21,10 +21,11 @@
  #include <sys/types.h>
  #include <sys/stat.h>
@@ -58,15 +59,15 @@
 -#include <selinux/ss.h>
 -#endif /*FLASK_LINUX*/
 +
++
 +#ifdef WITH_SELINUX
 +#include <selinux/selinux.h>
 +#endif /*WITH_SELINUX*/
-+
- #ifdef ENABLE_NLS
- #include <libintl.h>
- #include <locale.h>
-@@ -68,13 +69,13 @@
-   return ch == 'y' || ch == 'Y';
+ 
+ #include "i18n.h"
+ #include "comm.h"
+@@ -70,13 +71,13 @@
+   /* Never should get here */
  }
  
 -#ifdef FLASK_LINUX
@@ -83,7 +84,7 @@
  {
    DIR *dir;
    struct dirent *de;
-@@ -89,11 +90,11 @@
+@@ -91,11 +92,11 @@
    int empty, i, j, okay, length, got_long, error;
    int pids, max_pids, pids_killed;
    unsigned long found;
@@ -98,7 +99,7 @@
  
    if (!(name_len = malloc (sizeof (int) * names)))
      {
-@@ -106,19 +107,14 @@
+@@ -108,19 +109,14 @@
  	sts[i].st_dev = 0;
  	name_len[i] = strlen (namelist[i]);
        }
@@ -126,7 +127,7 @@
    self = getpid ();
    found = 0;
    if (!(dir = opendir (PROC_BASE)))
-@@ -268,37 +264,39 @@
+@@ -270,37 +266,39 @@
  	      else if (got_long ? strcmp (namelist[j], command) :
  		       strncmp (namelist[j], comm, COMM_LEN - 1))
  		continue;
@@ -184,40 +185,43 @@
  
  	      if (sts[j].st_dev != st.st_dev || sts[j].st_ino != st.st_ino)
  		continue;
-@@ -395,13 +393,16 @@
+@@ -397,13 +395,13 @@
  static void
  usage_killall (void)
  {
 -#ifdef FLASK_LINUX
--  fprintf(stderr,_("Usage: killall [-s sid] [-c context] [ -egiqvw ] [ -signal ] name ...\n"));
++#ifdef WITH_SELINUX
+   fprintf(stderr, _(
+-    "usage: killall [-s sid] [-c context] [ -egiqvw ] [ -signal ] name ...\n"));
 -#else  /*FLASK_LINUX*/
-+#ifdef WITH_SELINUX
-+  fprintf(stderr,_("Usage: killall [-Z context] [ -egiqvw ] [ -signal ] name ...\n"));
++    "usage: killall [-Z context] [ -egiqvw ] [ -signal ] name ...\n"));
 +#else  /*WITH_SELINUX*/
-   fprintf (stderr, _("usage: killall [ OPTIONS ] [ -- ] name ...\n"));
+   fprintf(stderr, _(
+     "usage: killall [ OPTIONS ] [ -- ] name ...\n"));
 -#endif /*FLASK_LINUX*/
 +#endif /*WITH_SELINUX*/
-   fprintf (stderr, _("       killall -l, --list\n"));
-   fprintf (stderr, _("       killall -V --version\n\n"));
-+#ifdef WITH_SELINUX
-+  fprintf (stderr, _("  -Z,--context        kill only process(es) having scontext\n"));
-+#endif /*WITH_SELINUX*/
-   fprintf (stderr, _("  -e,--exact          require exact match for very long names\n"));
-   fprintf (stderr, _("  -I,--ignore-case-   case insensitive process name match\n"));
-   fprintf (stderr, _("  -g,--process-group  kill process group instead of process\n"));
-@@ -412,11 +413,6 @@
-   fprintf (stderr, _("  -v,--verbose        report if the signal was successfully sent\n"));
-   fprintf (stderr, _("  -V,--version        display version information\n"));
-   fprintf (stderr, _("  -w,--wait           wait for processes to die\n\n"));
+   fprintf(stderr, _(
+     "       killall -l, --list\n"
+     "       killall -V --version\n\n"
+@@ -417,13 +415,12 @@
+     "  -v,--verbose        report if the signal was successfully sent\n"
+     "  -V,--version        display version information\n"
+     "  -w,--wait           wait for processes to die\n\n"));
 -#ifdef FLASK_LINUX
--  fprintf (stderr, _("  -d,--sid            kill only process(es) having sid\n"));
--  fprintf (stderr, _("  -c,--context        kill only process(es) having scontext\n"));
--  fprintf(stderr, _("   (-s, -c are mutually exclusive and must precede other arguments)\n\n"));
++#ifdef WITH_SELINUX
+   fprintf(stderr, _(
+-    "  -d,--sid            kill only process(es) having sid\n"
+-    "  -c,--context        kill only process(es) having scontext\n"
+-    "   (-s, -c are mutually exclusive and must precede other arguments)\n\n"
++    "  -Z,--context        kill only process(es) having scontext\n"
++    "   (-Z must precede other arguments)\n\n"
+     ));
 -#endif /*FLASK_LINUX*/
++#endif /*WITH_SELINUX*/
  }
  
  
-@@ -459,18 +455,17 @@
+@@ -468,18 +465,17 @@
      {"signal", 1, NULL, 's'},
      {"verbose", 0, NULL, 'v'},
      {"wait", 0, NULL, 'w'},
@@ -241,7 +245,7 @@
  
    name = strrchr (*argv, '/');
    if (name)
-@@ -488,8 +483,8 @@
+@@ -497,8 +493,8 @@
  #endif
  
    opterr = 0;
@@ -252,7 +256,7 @@
  #else
    while ( (optc = getopt_long_only(argc,argv,"egilqs:vwVI",options,NULL)) != EOF) {
  #endif
-@@ -536,48 +531,14 @@
+@@ -545,50 +541,14 @@
          print_version();
          return 0;
          break;
@@ -271,7 +275,8 @@
 -
 -	  lsid = strtol(optarg, buf, 0);
 -          if ( **buf ) {
--              (void) fprintf(stderr, _("%s: SID (%s) must be numeric\n"), name, *argv);
+-              (void) fprintf(stderr, _("%s: SID (%s) must be numeric\n"),
+-			     name, *argv);
 -              (void) fflush(stderr);
 -              return( 1 );
 -          }
@@ -281,7 +286,8 @@
 -          len = strlen(optarg);
 -          rv = security_sid_to_context(sid, buf, &len);
 -          if ( rv < 0 && (errno != ENOSPC) ) {
--              (void) fprintf(stderr, "%s: security_sid_to_context(%d) %s\n", name, (int) sid, strerror(errno));
+-              (void) fprintf(stderr, "%s: security_sid_to_context(%d) %s\n",
+-			     name, (int) sid, strerror(errno));
 -              (void) fflush(stderr);
 -              free(buf);
 -              return( 1 );
@@ -309,7 +315,7 @@
        case '?':
          /* Signal names are in uppercase, so check to see if the argv
           * is upper case */
-@@ -609,9 +570,9 @@
+@@ -616,9 +576,9 @@
      }
    argv = argv + myoptind;
    /*printf("sending signal %d to procs\n", sig_num);*/
@@ -323,26 +329,26 @@
 -#endif /*FLASK_LINUX*/
 +#endif /*WITH_SELINUX*/
  }
---- psmisc-21.4/src/Makefile.am.orig	2003-11-28 12:22:16.000000000 +0100
-+++ psmisc-21.4/src/Makefile.am	2003-12-11 00:27:12.834735104 +0100
-@@ -9,11 +9,11 @@
+--- psmisc-21.6/src/Makefile.am.orig	2005-02-23 03:25:00.000000000 +0100
++++ psmisc-21.6/src/Makefile.am	2005-03-20 22:29:19.228932400 +0100
+@@ -7,11 +7,11 @@
  
- killall_SOURCES = killall.c comm.h signals.c signals.h signames.h
+ killall_SOURCES = killall.c comm.h signals.c signals.h i18n.h
  
 -killall_LDADD = @FLASK_LIB@
 +killall_LDADD = @SELINUX_LIB@
  
- pstree_SOURCES = pstree.c comm.h
+ pstree_SOURCES = pstree.c comm.h i18n.h
  
 -pstree_LDADD = @TERMCAP_LIB@ @FLASK_LIB@
 +pstree_LDADD = @TERMCAP_LIB@ @SELINUX_LIB@
  
  BUILT_SOURCES = signames.h
  
---- psmisc-21.5/src/pstree.c.orig	2004-07-16 07:49:07.232308552 +0200
-+++ psmisc-21.5/src/pstree.c	2004-07-16 07:59:51.907303056 +0200
-@@ -33,9 +33,9 @@
- 
+--- psmisc-21.6/src/pstree.c.orig	2004-12-15 12:15:52.000000000 +0100
++++ psmisc-21.6/src/pstree.c	2005-03-20 22:31:36.737027992 +0100
+@@ -26,9 +26,9 @@
+ #include "i18n.h"
  #include "comm.h"
  
 -#ifdef FLASK_LINUX
@@ -354,7 +360,7 @@
  
  #ifndef MAX_DEPTH
  #define MAX_DEPTH    100
-@@ -64,9 +64,9 @@
+@@ -57,9 +57,9 @@
    int argc;			/* with -a   : number of arguments, -1 if swapped    */
    pid_t pid;
    uid_t uid;
@@ -367,7 +373,7 @@
    int highlight;
    struct _child *children;
    struct _proc *parent;
-@@ -114,10 +114,9 @@
+@@ -107,10 +107,9 @@
  static int width[MAX_DEPTH], more[MAX_DEPTH];
  static int print_args = 0, compact = 1, user_change = 0, pids = 0, by_pid = 0,
    trunc = 1, wait_end = 0;
@@ -380,25 +386,25 @@
  static int output_width = 132;
  static int cur_x = 1;
  static char last_char = 0;
-@@ -167,38 +166,16 @@
+@@ -160,38 +159,16 @@
    return digits;
  }
  
 -#ifdef FLASK_LINUX
-+#ifdef WITH_SELINUX
- static void 
+-static void 
 -out_sid ( security_id_t sid )
-+out_scontext ( security_context_t scontext )
- {
+-{
 -  if ( (int) sid >= 0 )
 -    out_int((int) sid);
 -  else
 -    out_string("??");
 -}
 -
--static void 
++#ifdef WITH_SELINUX
+ static void 
 -out_scontext ( security_id_t sid )
--{
++out_scontext ( security_context_t scontext )
+ {
 -  static char buf[256];
 -  int security_sid_to_context();
 -  int len = sizeof(buf);
@@ -425,7 +431,7 @@
  
  static void
  out_newline (void)
-@@ -222,13 +199,13 @@
+@@ -215,13 +192,13 @@
    return walk;
  }
  
@@ -443,7 +449,7 @@
  {
    PROC *new;
  
-@@ -241,9 +218,9 @@
+@@ -234,9 +211,9 @@
    new->pid = pid;
    new->uid = uid;
    new->highlight = 0;
@@ -456,7 +462,7 @@
    new->children = NULL;
    new->parent = NULL;
    new->next = list;
-@@ -312,24 +289,24 @@
+@@ -305,24 +282,24 @@
      this->argv[i] = start = strchr (start, 0) + 1;
  }
  
@@ -489,7 +495,7 @@
    else
      {
        strcpy (this->comm, comm);
-@@ -340,11 +317,11 @@
+@@ -333,11 +310,11 @@
    if (pid == ppid)
      ppid = 0;
    if (!(parent = find_proc (ppid)))
@@ -505,7 +511,7 @@
    add_child (parent, this);
    this->parent = parent;
  }
-@@ -436,25 +413,17 @@
+@@ -429,25 +406,17 @@
        else
  	(void) out_int (current->uid);
      }
@@ -534,7 +540,7 @@
      {
        for (i = 0; i < current->argc; i++)
  	{
-@@ -479,20 +448,20 @@
+@@ -472,20 +441,20 @@
  	    }
  	}
      }
@@ -561,7 +567,7 @@
  	{
  	  more[level] = !last;
  	  width[level] = swapped + (comm_len > 1 ? 0 : -1);
-@@ -582,9 +551,10 @@
+@@ -575,9 +544,10 @@
    pid_t pid, ppid;
    int fd, size;
    int empty;
@@ -575,7 +581,7 @@
  
    if (!print_args)
      buffer = NULL;
-@@ -609,11 +579,15 @@
+@@ -602,11 +572,15 @@
  	  {
  	    empty = 0;
  	    sprintf (path, "%s/%d", PROC_BASE, pid);
@@ -595,7 +601,7 @@
  	    {
  		perror (path);
  		exit (1);
-@@ -638,11 +612,11 @@
+@@ -631,11 +605,11 @@
  		 &ppid) == 4)
   */
  		if (!print_args)
@@ -611,7 +617,7 @@
  		else
  		  {
  		    sprintf (path, "%s/%d/cmdline", PROC_BASE, pid);
-@@ -659,11 +633,11 @@
+@@ -652,11 +626,11 @@
  		    (void) close (fd);
  		    if (size)
  		      buffer[size++] = 0;
@@ -627,7 +633,7 @@
  		  }
  		}
  	      }
-@@ -702,11 +676,11 @@
+@@ -695,11 +669,11 @@
  	cmd = comm;
        if (*cmd == '-')
  	cmd++;
@@ -643,20 +649,16 @@
      }
  }
  
-@@ -729,10 +703,9 @@
-   fprintf (stderr, _("    -n     sort output by PID\n"));
-   fprintf (stderr, _("    -p     show PIDs; implies -c\n"));
-   fprintf (stderr, _("    -u     show uid transitions\n"));
--#ifdef FLASK_LINUX
--  fprintf (stderr, _("    -s     show Flask SIDs\n"));
--  fprintf (stderr, _("    -x     show Flask security contexts\n"));
--#endif /*FLASK_LINUX*/
-+#ifdef WITH_SELINUX
-+  fprintf (stderr, _("    -Z     show SELinux security contexts\n"));
-+#endif /*WITH_SELINUX*/
-   fprintf (stderr, _("    -U     use UTF-8 (Unicode) line drawing characters\n"));
-   fprintf (stderr, _("    -V     display version information\n"));
-   fprintf (stderr, _("    pid    start at pid, default 1 (init)\n"));
+@@ -725,8 +699,7 @@
+     "    -u     show uid transitions\n"));
+ #ifdef FLASK_LINUX
+   fprintf (stderr, _(
+-    "    -s     show Flask SIDs\n"
+-    "    -x     show Flask security contexts\n"));
++    "    -Z     show SELinux security contexts\n"));
+ #endif /*FLASK_LINUX*/
+   fprintf (stderr, _(
+     "    -U     use UTF-8 (Unicode) line drawing characters\n"
 @@ -802,11 +775,11 @@
      sym = &sym_ascii;
    }
@@ -695,122 +697,241 @@
        default:
  	usage ();
        }
---- psmisc-21.3/configure.in.selinux	2003-05-28 19:45:24.000000000 -0400
-+++ psmisc-21.3/configure.in	2003-08-28 14:00:20.000000000 -0400
-@@ -9,14 +9,14 @@
- AM_PROG_LIBTOOL
+--- psmisc-21.6/configure.in.orig	2005-03-20 22:16:22.860958272 +0100
++++ psmisc-21.6/configure.in	2005-03-20 22:34:25.650349264 +0100
+@@ -12,17 +12,17 @@
+ AC_PROG_LN_S
  
  dnl checks for options
--AC_SUBST(FLASK_LINUX)
--AC_ARG_ENABLE(flask,[  --enable-flask  Enable Security-Enhanced Linux features],
--	AC_DEFINE([FLASK_LINUX],1,[Use Security-Enhanced Linux features])
--	AC_CHECK_LIB(secure, avc_toggle, FLASK_LIB=-lsecure,
--	   AC_MSG_ERROR(Cannot find selinux/ secure static library)
-+AC_SUBST(WITH_SELINUX)
-+AC_ARG_ENABLE(selinux,[  --enable-selinux  Enable Security-Enhanced Linux features],
-+	AC_DEFINE([WITH_SELINUX],1,[Use Security-Enhanced Linux features])
-+	AC_CHECK_LIB(selinux,getfilecon, SELINUX_LIB=-lselinux,
-+	   AC_MSG_ERROR(Cannot find selinux secure static library)
- 	)
- ,)
--AC_SUBST(FLASK_LIB)
-+AC_SUBST(SELINUX_LIB)
+-AC_SUBST([FLASK_LINUX])
+-AC_ARG_ENABLE([flask],
+-  [AS_HELP_STRING([--enable-flask], [Enable Security-Enhanced Linux features])],
+-  [enable_flask=$enableval],
+-  [enable_flask="no"])
+-if test "$enable_flask" = "yes"; then
+-  AC_DEFINE([FLASK_LINUX], [1], [Use Security-Enhanced Linux features])
+-  AC_CHECK_LIB([secure], [avc_toggle], [FLASK_LIB=-lsecure], [
+-     AC_MSG_ERROR([Cannot find selinux/ secure static library]) ])
++AC_SUBST([WITH_SELINUX])
++AC_ARG_ENABLE([selinux],
++  [AS_HELP_STRING([--enable-selinux], [Enable Security-Enhanced Linux features])],
++  [enable_selinux=$enableval],
++  [enable_selinux="no"])
++if test "$enable_selinux" = "yes"; then
++  AC_DEFINE([WITH_SELINUX], [1], [Use Security-Enhanced Linux features])
++  AC_CHECK_LIB([selinux], [getfilecon], [SELINUX_LIB=-lselinux], [
++     AC_MSG_ERROR([Cannot find selinux library]) ])
+ fi
+-AC_SUBST([FLASK_LIB])
++AC_SUBST([SELINUX_LIB])
  
  dnl Checks for libraries.
- AC_CHECK_LIB(ncurses, tgetent, TERMCAP_LIB=-lncurses,
---- psmisc-21.5/po/pl.po.orig	2004-07-16 19:28:31.239809728 +0200
-+++ psmisc-21.5/po/pl.po	2004-07-16 20:06:27.193812128 +0200
-@@ -79,8 +79,8 @@
+ AC_CHECK_LIB([tinfo], [tgetent], [TERMCAP_LIB=-ltinfo], [
+--- psmisc-21.6/po/pl.po.orig	2005-03-11 11:34:41.000000000 +0100
++++ psmisc-21.6/po/pl.po	2005-03-20 22:42:27.770055928 +0100
+@@ -7,7 +7,7 @@
+ msgstr ""
+ "Project-Id-Version: psmisc 21.6pre1\n"
+ "Report-Msgid-Bugs-To: csmall@small.dropbear.id.au\n"
+-"POT-Creation-Date: 2005-02-23 14:46+1100\n"
++"POT-Creation-Date: 2005-03-20 22:40+0100\n"
+ "PO-Revision-Date: 2005-02-23 20:40+0100\n"
+ "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+@@ -15,32 +15,32 @@
+ "Content-Type: text/plain; charset=ISO-8859-2\n"
+ "Content-Transfer-Encoding: 8bit\n"
  
- #: src/killall.c:399
+-#: src/killall.c:53
++#: src/killall.c:54
  #, c-format
--msgid "Usage: killall [-s sid] [-c context] [ -egiqvw ] [ -signal ] name ...\n"
--msgstr "Sk³adnia: killall [-s sid] [-c kontekst] [ -egiqvw ] [ -sygna³ ] nazwa ...\n"
-+msgid "Usage: killall [-Z context] [ -egiqvw ] [ -signal ] name ...\n"
-+msgstr "Sk³adnia: killall [-Z kontekst] [ -egiqvw ] [ -sygna³ ] nazwa ...\n"
+ msgid "Kill %s(%s%d) ? (y/N) "
+ msgstr "Zabiæ %s(%s%d)? (t/N) "
  
- #: src/killall.c:401
+-#: src/killall.c:245
++#: src/killall.c:241
  #, c-format
-@@ -101,6 +101,11 @@
- "       killall -V --version\n"
+ msgid "skipping partial match %s(%d)\n"
+ msgstr "pominiêto czê¶ciowe dopasowanie %s(%d)\n"
+ 
+-#: src/killall.c:339
++#: src/killall.c:337
+ #, c-format
+ msgid "Killed %s(%s%d) with signal %d\n"
+ msgstr "Zabito %s(%s%d) sygna³em %d\n"
+ 
+-#: src/killall.c:351 src/fuser.c:494 src/pstree.c:673
++#: src/killall.c:349 src/fuser.c:494 src/pstree.c:647
+ #, c-format
+ msgid "%s is empty (not mounted ?)\n"
+ msgstr "%s jest pusty (nie podmontowany?)\n"
+ 
+-#: src/killall.c:357
++#: src/killall.c:355
+ #, c-format
+ msgid "%s: no process killed\n"
+ msgstr "%s: nie zabito ¿adnego procesu\n"
+ 
+-#: src/killall.c:388
++#: src/killall.c:386
+ #, c-format
+ msgid ""
+ "usage: pidof [ -eg ] name ...\n"
+@@ -61,18 +61,17 @@
+ "    -V    wy¶wietlenie informacji o wersji\n"
  "\n"
  
-+#: src/killall.c:404
-+#, c-format
-+msgid "  -Z,--context        kill only process(es) having scontext\n"
-+msgstr "  -Z,--context        zabicie tylko procesu(ów) maj±cych dany kontekst bezp.\n"
-+
- #: src/killall.c:405
+-#: src/killall.c:402
++#: src/killall.c:400
  #, c-format
- msgid "  -e,--exact          require exact match for very long names\n"
-@@ -155,25 +160,6 @@
+-msgid "usage: killall [-s sid] [-c context] [ -egiqvw ] [ -signal ] name ...\n"
+-msgstr ""
+-"sk³adnia: killall [-s sid] [-c kontekst] [ -egiqvw ] [ -sygna³ ] nazwa ...\n"
++msgid "usage: killall [-Z context] [ -egiqvw ] [ -signal ] name ...\n"
++msgstr "sk³adnia: killall [-Z kontekst] [ -egiqvw ] [ -sygna³ ] nazwa ...\n"
+ 
+-#: src/killall.c:405
++#: src/killall.c:403
+ #, c-format
+ msgid "usage: killall [ OPTIONS ] [ -- ] name ...\n"
+ msgstr "sk³adnia: killall [ OPCJE ] [ -- ] nazwa ...\n"
+ 
+-#: src/killall.c:408
++#: src/killall.c:406
+ #, c-format
+ msgid ""
+ "       killall -l, --list\n"
+@@ -107,20 +106,18 @@
  "  -w,--wait           zaczekanie na ¶mieræ procesu\n"
  "\n"
  
--#: src/killall.c:416
--#, c-format
--msgid "  -d,--sid            kill only process(es) having sid\n"
--msgstr "  -d,--sid            zabicie tylko procesu(ów) maj±cych dany sid\n"
--
--#: src/killall.c:417
--#, c-format
--msgid "  -c,--context        kill only process(es) having scontext\n"
--msgstr "  -c,--context        zabicie tylko procesu(ów) maj±cych dany kontekst bezp.\n"
--
--#: src/killall.c:418
--#, c-format
--msgid ""
--"   (-s, -c are mutually exclusive and must precede other arguments)\n"
--"\n"
--msgstr ""
--"   (-s i -c wzajemnie siê wykluczaj± i musz± poprzedzaæ inne argumenty)\n"
--"\n"
--
- #: src/killall.c:436 src/pstree.c:746
+-#: src/killall.c:422
++#: src/killall.c:420
  #, c-format
  msgid ""
-@@ -203,10 +189,10 @@
- msgid "For more information about these matters, see the files named COPYING.\n"
- msgstr "Wiêcej informacji znajduje siê w pliku o nazwie COPYING.\n"
+-"  -d,--sid            kill only process(es) having sid\n"
+-"  -c,--context        kill only process(es) having scontext\n"
+-"   (-s, -c are mutually exclusive and must precede other arguments)\n"
++"  -Z,--context        kill only process(es) having scontext\n"
++"   (-Z must precede other arguments)\n"
+ "\n"
+ msgstr ""
+-"  -d,--sid            zabicie tylko procesu(ów) maj±cych dany sid\n"
+-"  -c,--context        zabicie tylko procesu(ów) maj±cych dany kontekst "
+-"bezp.\n"
+-"   (-s i -c wzajemnie siê wykluczaj± i musz± poprzedzaæ inne argumenty)\n"
++"  -Z,--context        zabicie tylko procesu(ów) maj±cych dany kontekst bezp.\n"
++"   (-Z musi poprzedzaæ inne argumenty)\n"
++"\n"
  
--#: src/killall.c:554
-+#: src/killall.c:539
+-#: src/killall.c:444 src/fuser.c:989 src/pstree.c:743
++#: src/killall.c:441 src/fuser.c:989 src/pstree.c:716
+ #, c-format
+ msgid ""
+ "Copyright (C) 1993-2002 Werner Almesberger and Craig Small\n"
+@@ -129,7 +126,7 @@
+ "Copyright (C) 1993-2002 Werner Almesberger i Craig Small\n"
+ "\n"
+ 
+-#: src/killall.c:446 src/fuser.c:991 src/pstree.c:745
++#: src/killall.c:443 src/fuser.c:991 src/pstree.c:718
+ #, c-format
+ msgid ""
+ "PSmisc comes with ABSOLUTELY NO WARRANTY.\n"
+@@ -142,12 +139,12 @@
+ "Powszechnej Licencji Publicznej GNU (General Public License).\n"
+ "Wiêcej informacji znajduje siê w pliku o nazwie COPYING.\n"
+ 
+-#: src/killall.c:563
++#: src/killall.c:549
  #, c-format
 -msgid "%s: SID (%s) must be numeric\n"
 -msgstr "%s: SID (%s) musi byæ liczb±\n"
 +msgid "Warning: -Z (--context) ignored. Requires an SELinux enabled kernel\n"
 +msgstr "Uwaga: -Z (--context) zignorowane. Ta opcja wymaga j±dra z w³±czonym SELinuksem\n"
  
- #: src/killall.c:607
+-#: src/killall.c:614
++#: src/killall.c:574
  #, c-format
-@@ -436,15 +422,10 @@
- msgid "    -u     show uid transitions\n"
- msgstr "    -u     wy¶wietlanie zmian uidów\n"
+ msgid "Maximum number of names is %d\n"
+ msgstr "Maksymalna liczba nazw to %d\n"
+@@ -285,12 +282,12 @@
+ msgid "%s/%s: invalid specification\n"
+ msgstr "%s/%s: b³êdne okre¶lenie\n"
  
--#: src/pstree.c:733
-+#: src/pstree.c:707
+-#: src/pstree.c:377
++#: src/pstree.c:354
  #, c-format
--msgid "    -s     show Flask SIDs\n"
--msgstr "    -s     wy¶wietlanie SID-ów Flask\n"
--
--#: src/pstree.c:734
--#, c-format
--msgid "    -x     show Flask security contexts\n"
--msgstr "    -x     wy¶wietlanie kontekstów bezpieczeñstwa Flask\n"
+ msgid "MAX_DEPTH not big enough.\n"
+ msgstr "MAX_DEPTH jest zbyt ma³e.\n"
+ 
+-#: src/pstree.c:713
++#: src/pstree.c:687
+ #, c-format
+ msgid ""
+ "usage: pstree [ -a ] [ -c ] [ -h | -H pid ] [ -l ] [ -n ] [ -p ] [ -u ]\n"
+@@ -323,16 +320,12 @@
+ "    -p     wy¶wietlanie PID-ów; w³±cza tak¿e -c\n"
+ "    -u     wy¶wietlanie zmian uidów\n"
+ 
+-#: src/pstree.c:728
++#: src/pstree.c:702
+ #, c-format
+-msgid ""
+-"    -s     show Flask SIDs\n"
+-"    -x     show Flask security contexts\n"
+-msgstr ""
+-"    -s     wy¶wietlanie SID-ów Flask\n"
+-"    -x     wy¶wietlanie kontekstów bezpieczeñstwa Flask\n"
 +msgid "    -Z     show SELinux security contexts\n"
 +msgstr "    -Z     wy¶wietlanie kontekstów bezpieczeñstwa SELinuksa\n"
  
- #: src/pstree.c:736
+-#: src/pstree.c:732
++#: src/pstree.c:705
  #, c-format
-@@ -490,6 +471,11 @@
+ msgid ""
+ "    -U     use UTF-8 (Unicode) line drawing characters\n"
+@@ -347,32 +340,37 @@
+ " u¿ytkownik  tylko drzewa zaczynaj±ce siê od procesów tego u¿ytkownika\n"
+ "\n"
+ 
+-#: src/pstree.c:741
++#: src/pstree.c:714
+ #, c-format
+ msgid "pstree (psmisc) %s\n"
+ msgstr "pstree (psmisc) %s\n"
+ 
+-#: src/pstree.c:835
++#: src/pstree.c:809
+ #, c-format
+ msgid "TERM is not set\n"
+ msgstr "TERM nie ustawiony\n"
+ 
+-#: src/pstree.c:840
++#: src/pstree.c:814
+ #, c-format
  msgid "Can't get terminal capabilities\n"
  msgstr "Nie mo¿na odczytaæ mo¿liwo¶ci terminala\n"
  
-+#: src/pstree.c:843
+-#: src/pstree.c:884
++#: src/pstree.c:844
 +#, c-format
 +msgid "Warning: -Z ignored. Requires an SELinux enabled kernel\n"
 +msgstr "Uwaga: -Z zignorowane. Ta opcja wymaga j±dra z w³±czonym SELinuksem\n"
 +
- #: src/pstree.c:884
++#: src/pstree.c:858
  #, c-format
  msgid "No such user name: %s\n"
+ msgstr "Nie ma u¿ytkownika o takiej nazwie: %s\n"
+ 
+-#: src/pstree.c:900
++#: src/pstree.c:874
+ #, c-format
+ msgid "No processes found.\n"
+ msgstr "Nie znaleziono procesów.\n"
+ 
+-#: src/pstree.c:905
++#: src/pstree.c:879
+ #, c-format
+ msgid "Press return to close\n"
+ msgstr "Naci¶niêcie return zamknie program\n"
