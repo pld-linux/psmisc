@@ -13,8 +13,6 @@ Group(pl):	Aplikacje/System
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Patch0:		%{name}-make.patch
 BuildRequires:	ncurses-devel >= 5.0
-BuildRequires:	autoconf
-BuildRequires:	automake
 URL:		http://psmisc.sourceforge.net/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
@@ -57,11 +55,8 @@ göndermek için gerekli programlarý içerir.
 %patch0 -p1 
 
 %build
-aclocal
-autoheader
-autoconf
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE" ; export CFLAGS
-%configure
+%configure2_13
 %{__make} CFLAGS="%{rpmcflags} -D_GNU_SOURCE"
 
 %install
