@@ -1,5 +1,5 @@
 Summary:	Utilities for managing processes on your system
-Summary(de):	Mehr ps-artige Tools für das /proc-Dateisystem 
+Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
 Summary(fr):	Autres outils du type ps pour le système de fichiers /proc
 Summary(pl):	Narzêdzia do kontroli procesów
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
@@ -26,9 +26,12 @@ by name. The fuser command identifies the PIDs of processes that are using
 specified files or filesystems.
 
 %description -l de
-Dieses Paket enthält Programme, die eine Baumstruktur der Prozesse 
-aufzeigen, herausfinden, welche Benutzer eine Datei geöffnet halten und 
-Signale (anhand von Namen) an Prozesse ausgeben. 
+Das psmisc-Paket enthält Utilities zum Verwalten vom Prozessen auf Ihrem
+System: pstree, killall und fuser. Der pstree-Befehl zeigt eine Baumstruktur
+von allen laufenden Prozessen an. killall schickt angegebenen Programmen ein
+Signal (SIGTERM, falls nichts anderes angegeben wird). fuser identifiziert
+die PIDs (Prozess-IDs) von Prozessen, die bestimmte Dateien oder
+Dateisysteme benutzen.
 
 %description -l fr
 Ce paquetage contient les programmes pour afficher une arborescence de
