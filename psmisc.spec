@@ -17,9 +17,10 @@ Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 # Source0-md5:	8449269fdc8ae5d7d494df745e1180d3
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
-Patch0:		%{name}-pl.po.patch
-Patch1:		%{name}-tinfo.patch
-Patch2:		%{name}-selinux.patch
+Patch0:		%{name}-missing-nls.patch
+Patch1:		%{name}-pl.po.patch
+Patch2:		%{name}-tinfo.patch
+Patch3:		%{name}-selinux.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -88,6 +89,10 @@ göndermek için gerekli programlarý içerir.
 %patch0 -p1
 %patch1 -p1
 %patch2 -p1
+%patch3 -p1
+
+# allow *.gmo rebuilding
+rm -f po/stamp-po
 
 %build
 %{__libtoolize}
