@@ -718,46 +718,46 @@
  
  dnl Checks for libraries.
  AC_CHECK_LIB(ncurses, tgetent, TERMCAP_LIB=-lncurses,
---- psmisc-21.4/po/pl.po.orig	2003-12-11 23:09:41.636028296 +0100
-+++ psmisc-21.4/po/pl.po	2003-12-11 23:19:44.653355728 +0100
-@@ -80,8 +80,8 @@
+--- psmisc-21.5/po/pl.po.orig	2004-07-16 19:28:31.239809728 +0200
++++ psmisc-21.5/po/pl.po	2004-07-16 20:06:27.193812128 +0200
+@@ -79,8 +79,8 @@
  
- #: src/killall.c:387
+ #: src/killall.c:399
  #, c-format
 -msgid "Usage: killall [-s sid] [-c context] [ -egiqvw ] [ -signal ] name ...\n"
 -msgstr "Sk³adnia: killall [-s sid] [-c kontekst] [ -egiqvw ] [ -sygna³ ] nazwa ...\n"
 +msgid "Usage: killall [-Z context] [ -egiqvw ] [ -signal ] name ...\n"
 +msgstr "Sk³adnia: killall [-Z kontekst] [ -egiqvw ] [ -sygna³ ] nazwa ...\n"
  
- #: src/killall.c:389
+ #: src/killall.c:401
  #, c-format
-@@ -102,6 +102,11 @@
+@@ -101,6 +101,11 @@
  "       killall -V --version\n"
  "\n"
  
-+#: src/killall.c:392
++#: src/killall.c:404
 +#, c-format
 +msgid "  -Z,--context        kill only process(es) having scontext\n"
 +msgstr "  -Z,--context        zabicie tylko procesu(ów) maj±cych dany kontekst bezp.\n"
 +
- #: src/killall.c:393
+ #: src/killall.c:405
  #, c-format
  msgid "  -e,--exact          require exact match for very long names\n"
-@@ -151,25 +156,6 @@
+@@ -155,25 +160,6 @@
  "  -w,--wait           zaczekanie na ¶mieræ procesu\n"
  "\n"
  
--#: src/killall.c:403
+-#: src/killall.c:416
 -#, c-format
 -msgid "  -d,--sid            kill only process(es) having sid\n"
 -msgstr "  -d,--sid            zabicie tylko procesu(ów) maj±cych dany sid\n"
 -
--#: src/killall.c:404
+-#: src/killall.c:417
 -#, c-format
 -msgid "  -c,--context        kill only process(es) having scontext\n"
 -msgstr "  -c,--context        zabicie tylko procesu(ów) maj±cych dany kontekst bezp.\n"
 -
--#: src/killall.c:405
+-#: src/killall.c:418
 -#, c-format
 -msgid ""
 -"   (-s, -c are mutually exclusive and must precede other arguments)\n"
@@ -766,36 +766,51 @@
 -"   (-s i -c wzajemnie siê wykluczaj± i musz± poprzedzaæ inne argumenty)\n"
 -"\n"
 -
- #: src/killall.c:423 src/pstree.c:739
+ #: src/killall.c:436 src/pstree.c:746
  #, c-format
  msgid ""
-@@ -199,10 +185,10 @@
+@@ -203,10 +189,10 @@
  msgid "For more information about these matters, see the files named COPYING.\n"
  msgstr "Wiêcej informacji znajduje siê w pliku o nazwie COPYING.\n"
  
--#: src/killall.c:535
-+#: src/killall.c:520, src/pstree.c:813
+-#: src/killall.c:554
++#: src/killall.c:539
  #, c-format
 -msgid "%s: SID (%s) must be numeric\n"
 -msgstr "%s: SID (%s) musi byæ liczb±\n"
 +msgid "Warning: -Z (--context) ignored. Requires an SELinux enabled kernel\n"
-+msgstr "Uwaga: -Z (--context) zignorowane. Ta opcja wymaga j±dra z w³±czonym SELinux\n"
++msgstr "Uwaga: -Z (--context) zignorowane. Ta opcja wymaga j±dra z w³±czonym SELinuksem\n"
  
- #: src/killall.c:588
+ #: src/killall.c:607
  #, c-format
-@@ -430,13 +416,8 @@
+@@ -436,15 +422,10 @@
+ msgid "    -u     show uid transitions\n"
+ msgstr "    -u     wy¶wietlanie zmian uidów\n"
  
- #: src/pstree.c:726
+-#: src/pstree.c:733
++#: src/pstree.c:707
  #, c-format
 -msgid "    -s     show Flask SIDs\n"
 -msgstr "    -s     wy¶wietlanie SID-ów Flask\n"
 -
--#: src/pstree.c:727
+-#: src/pstree.c:734
 -#, c-format
 -msgid "    -x     show Flask security contexts\n"
 -msgstr "    -x     wy¶wietlanie kontekstów bezpieczeñstwa Flask\n"
 +msgid "    -Z     show SELinux security contexts\n"
-+msgstr "    -Z     wy¶wietlanie kontekstów bezpieczeñstwa SELinux\n"
++msgstr "    -Z     wy¶wietlanie kontekstów bezpieczeñstwa SELinuksa\n"
  
- #: src/pstree.c:729
+ #: src/pstree.c:736
  #, c-format
+@@ -490,6 +471,11 @@
+ msgid "Can't get terminal capabilities\n"
+ msgstr "Nie mo¿na odczytaæ mo¿liwo¶ci terminala\n"
+ 
++#: src/pstree.c:843
++#, c-format
++msgid "Warning: -Z ignored. Requires an SELinux enabled kernel\n"
++msgstr "Uwaga: -Z zignorowane. Ta opcja wymaga j±dra z w³±czonym SELinuksem\n"
++
+ #: src/pstree.c:884
+ #, c-format
+ msgid "No such user name: %s\n"
