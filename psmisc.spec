@@ -14,7 +14,7 @@ Summary(tr):	/proc dosya sistemi iГin ps tipi araГlar
 Summary(uk):	Утил╕ти роботи з процесами
 Name:		psmisc
 Version:	21.5
-Release:	0.1
+Release:	1
 License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
@@ -22,10 +22,9 @@ Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 Patch0:		%{name}-missing-nls.patch
-# needs update
 Patch1:		%{name}-pl.po.patch
 Patch2:		%{name}-tinfo.patch
-# needs update
+# based on http://www.nsa.gov/selinux/patches/psmisc-selinux.patch.gz
 Patch3:		%{name}-selinux.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
