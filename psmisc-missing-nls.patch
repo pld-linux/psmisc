@@ -1,6 +1,6 @@
---- psmisc-21.4/src/killall.c.orig	2003-09-16 13:00:22.000000000 +0200
-+++ psmisc-21.4/src/killall.c	2003-12-11 22:28:24.451617568 +0100
-@@ -370,13 +370,13 @@
+--- psmisc-21.5/src/killall.c.orig	2004-04-23 15:51:26.000000000 +0200
++++ psmisc-21.5/src/killall.c	2004-07-16 00:44:55.655536344 +0200
+@@ -382,13 +382,13 @@
  static void
  usage_pidof (void)
  {
@@ -20,7 +20,7 @@
  }
  
  
-@@ -384,25 +384,25 @@
+@@ -396,26 +396,26 @@
  usage_killall (void)
  {
  #ifdef FLASK_LINUX
@@ -33,6 +33,7 @@
 -  fprintf (stderr, "       killall -l, --list\n");
 -  fprintf (stderr, "       killall -V --version\n\n");
 -  fprintf (stderr, "  -e,--exact          require exact match for very long names\n");
+-  fprintf (stderr, "  -I,--ignore-case-   case insensitive process name match\n");
 -  fprintf (stderr, "  -g,--process-group  kill process group instead of process\n");
 -  fprintf (stderr, "  -i,--interactive    ask for confirmation before killing\n");
 -  fprintf (stderr, "  -l,--list           list all known signal names\n");
@@ -48,6 +49,7 @@
 +  fprintf (stderr, _("       killall -l, --list\n"));
 +  fprintf (stderr, _("       killall -V --version\n\n"));
 +  fprintf (stderr, _("  -e,--exact          require exact match for very long names\n"));
++  fprintf (stderr, _("  -I,--ignore-case-   case insensitive process name match\n"));
 +  fprintf (stderr, _("  -g,--process-group  kill process group instead of process\n"));
 +  fprintf (stderr, _("  -i,--interactive    ask for confirmation before killing\n"));
 +  fprintf (stderr, _("  -l,--list           list all known signal names\n"));
@@ -63,7 +65,7 @@
  #endif /*FLASK_LINUX*/
  }
  
-@@ -420,11 +420,11 @@
+@@ -433,11 +433,11 @@
  void print_version()
  {
    fprintf(stderr, "%s (psmisc) %s\n", pidof ? "pidof" : "killall", VERSION);
@@ -80,7 +82,7 @@
  }
  
  int
-@@ -532,7 +532,7 @@
+@@ -551,7 +551,7 @@
  
  	  lsid = strtol(optarg, buf, 0);
            if ( **buf ) {
@@ -89,26 +91,17 @@
                (void) fflush(stderr);
                return( 1 );
            }
---- psmisc-21.4/src/fuser.c.orig	2003-10-08 02:10:47.000000000 +0200
-+++ psmisc-21.4/src/fuser.c	2003-12-11 22:24:53.234727416 +0100
-@@ -663,7 +663,7 @@
+--- psmisc-21.5/src/fuser.c.orig	2004-04-30 07:25:09.000000000 +0200
++++ psmisc-21.5/src/fuser.c	2004-07-16 00:46:11.442015048 +0200
+@@ -659,7 +659,7 @@
        {
  	if (header && (file->flags & FLAG_VERB))
  	  {
--	    printf ("\n%*s USER        PID ACCESS COMMAND\n", NAME_FIELD, "");
-+	    printf (_("\n%*s USER        PID ACCESS COMMAND\n"), NAME_FIELD, "");
+-	    fprintf (stderr, "\n%*s USER        PID ACCESS COMMAND\n", NAME_FIELD, "");
++	    fprintf (stderr, _("\n%*s USER        PID ACCESS COMMAND\n"), NAME_FIELD, "");
  	    header = 0;
  	  }
  	length = 0;
-@@ -889,7 +889,7 @@
-   address_match = 0;
-   for (here = s; here; here = next ? next + 1 : NULL)
-     {
--      printf("here: %s\n", here);
-+      printf(_("here: %s\n"), here);
-       next = strchr (here, ',');
-       if (next)
- 	*next = 0;
 --- psmisc-21.4/src/pstree.c.orig	2003-09-26 15:42:43.000000000 +0200
 +++ psmisc-21.4/src/pstree.c	2003-12-11 22:30:22.626652232 +0100
 @@ -726,9 +726,9 @@
@@ -144,26 +137,27 @@
 +  fprintf (stderr, _("%s: unknown signal; %s -l lists signals.\n"), name, cmd);
    exit (1);
  }
---- psmisc-21.4/po/sv.po.orig	2003-12-11 22:32:45.665906960 +0100
-+++ psmisc-21.4/po/sv.po	2003-12-11 22:37:34.758958136 +0100
-@@ -257,16 +257,16 @@
- msgstr "    -x     visa Flask säkerhetssammanhang\n"
+--- psmisc-21.5/po/sv.po.orig	2004-04-30 05:39:16.000000000 +0200
++++ psmisc-21.5/po/sv.po	2004-07-16 00:46:45.057904656 +0200
+@@ -285,8 +285,8 @@
  
- #: src/pstree.c:729
+ #: src/pstree.c:736
+ #, c-format
 -msgid "    -U     use UTF-8 (Unicode)) line drawing characters\n"
 -msgstr "    -U     använd UTF-8 (Unicode)) linjeritningssymboler\n"
 +msgid "    -U     use UTF-8 (Unicode) line drawing characters\n"
 +msgstr "    -U     använd UTF-8 (Unicode) linjeritningssymboler\n"
  
- #: src/pstree.c:730
- msgid "    -V     display version information\n"
- msgstr "    -V     visa versionsinformation\n"
+ #: src/pstree.c:737
+ #, c-format
+@@ -295,8 +295,8 @@
  
- #: src/pstree.c:731
+ #: src/pstree.c:738
+ #, c-format
 -msgid "    pid    start at pid, default 1 (init))\n"
 -msgstr "    pid    börja vid pid, standardvärde 1 (init))\n"
 +msgid "    pid    start at pid, default 1 (init)\n"
 +msgstr "    pid    börja vid pid, standardvärde 1 (init)\n"
  
- #: src/pstree.c:732
- msgid ""
+ #: src/pstree.c:739
+ #, c-format
