@@ -12,17 +12,16 @@ Summary(ru):	ı‘…Ã…‘Ÿ “¡¬œ‘Ÿ ” –“œ√≈””¡Õ…
 Summary(tr):	/proc dosya sistemi iÁin ps tipi araÁlar
 Summary(uk):	ı‘…Ã¶‘… “œ¬œ‘… ⁄ –“œ√≈”¡Õ…
 Name:		psmisc
-Version:	21.2
-Release:	2
+Version:	21.3
+Release:	0.1
 License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
-# Source0-md5: 0749017f500b171f053d7c1fd72df537
+# Source0-md5:	df5aef7438a00d4f41bc0c5e91e4ec7d
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
-# Source1-md5: 9add7665e440bbd6b0b4f9293ba8b86d
-Patch0:		%{name}-make.patch
-Patch1:		%{name}-pl.po.patch
-Patch2:		%{name}-selinux.patch
+# Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
+Patch0:		%{name}-pl.po.patch
+Patch1:		%{name}-selinux.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -89,8 +88,7 @@ gˆndermek iÁin gerekli programlar˝ iÁerir.
 %prep
 %setup  -q
 %patch0 -p1
-%patch1 -p1
-%{?_with_selinux:%patch2 -p1}
+%{?_with_selinux:%patch1 -p1}
 
 %build
 rm -f missing
@@ -110,6 +108,9 @@ rm -rf $RPM_BUILD_ROOT
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+mkdir $RPM_BUILD_ROOT/sbin
+mv $RPM_BUILD_ROOT/bin/fuser $RPM_BUILD_ROOT/sbin
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 
