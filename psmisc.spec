@@ -10,7 +10,8 @@ Copyright:	distributable
 Group:		Utilities/System
 Group(pl):	Narzêdzia/System
 Source:		ftp://lrcftp.epfl.ch/pub/linux/local/%{name}-%{version}.tar.gz
-Patch0:		%{name}.patch
+Patch0:		%{name}-opt.patch
+Patch1:		%{name}-ncurses.patch
 Buildroot:	/tmp/%{name}-%{version}-root
 
 %description
@@ -38,8 +39,9 @@ dosyasý olduðunu bulmak ve süreçlere isimleri ile sinyal göndermek için
 gerekli programlarý içerir.
 
 %prep
-%setup -q -n %{name}
-%patch -p1 
+%setup  -q -n %{name}
+%patch0 -p1 
+%patch1 -p1
 
 %build
 make 'LDFLAGS=-s' OPTIMIZE="$RPM_OPT_FLAGS"
@@ -47,7 +49,7 @@ make 'LDFLAGS=-s' OPTIMIZE="$RPM_OPT_FLAGS"
 %install
 rm -rf $RPM_BUILD_ROOT
 
-install -d $RPM_BUILD_ROOT/{bin,usr/{sbin,bin,man/man1}}
+install -d $RPM_BUILD_ROOT/{bin,usr/{sbin,bin,share/man/man1}}
 
 install -s fuser $RPM_BUILD_ROOT%{_sbindir}
 install -s {killall,pstree} $RPM_BUILD_ROOT%{_bindir}
