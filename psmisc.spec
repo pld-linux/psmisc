@@ -15,7 +15,8 @@ License:	distributable
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 # Source0-md5:	0749017f500b171f053d7c1fd72df537
-Source1:	%{name}-non-english-man-pages.tar.bz2
+Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
+# Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 Patch0:		%{name}-make.patch
 Patch1:		%{name}-pl.po.patch
 URL:		http://psmisc.sourceforge.net/
