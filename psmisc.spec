@@ -4,8 +4,8 @@ Summary(es):	MАs herramientas de tipo ps para el sistema de archivos /proc
 Summary(fr):	Autres outils du type ps pour le systХme de fichiers /proc
 Summary(pl):	NarzЙdzia do kontroli procesСw
 Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
-Summary(tr):	/proc dosya sistemi iГin ps tipi araГlar
 Summary(ru):	Утилиты работы с процессами
+Summary(tr):	/proc dosya sistemi iГin ps tipi araГlar
 Summary(uk):	Утил╕ти роботи з процесами
 Name:		psmisc
 Version:	21
@@ -61,15 +61,15 @@ Este pacote contИm programas para mostrar uma Аrvore de processos,
 saber quais usuАrios tЙm arquivo aberto e mandar sinais aos processos
 por nome.
 
-%description -l tr
-Bu paket, sЭreГlerin aПaГ yapЩsЩnЩ gЖstermek, hangi kullanЩcЩlarЩn
-aГЩk dosyasЩ olduПunu bulmak ve sЭreГlere isimleri ile sinyal
-gЖndermek iГin gerekli programlarЩ iГerir.
-
 %description -l ru
 В этот пакет включены программы для отображения дерева процессов,
 получения информации о том, кем открыт файл и для посылки сигналов
 процессам по имени процесса.
+
+%description -l tr
+Bu paket, sЭreГlerin aПaГ yapЩsЩnЩ gЖstermek, hangi kullanЩcЩlarЩn
+aГЩk dosyasЩ olduПunu bulmak ve sЭreГlere isimleri ile sinyal
+gЖndermek iГin gerekli programlarЩ iГerir.
 
 %description -l uk
 Цей пакет м╕стить програми для в╕дображення дерева процес╕в, посилки
@@ -98,8 +98,6 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-gzip -9nf AUTHORS Chang* NEWS README
-
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
 
 %find_lang %{name}
@@ -109,7 +107,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc *.gz
+%doc AUTHORS Chang* NEWS README
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
