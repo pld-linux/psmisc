@@ -1,7 +1,7 @@
 Summary:     More ps type tools for /proc filesystem
 Summary(de): Mehr ps-artige Tools für das /proc-Dateisystem 
 Summary(fr): Autres outils du type ps pour le système de fichiers /proc
-Summary(pl): Narzêdzia do kontroli procesów korzystaj±ce z systemu /proc.
+Summary(pl): Narzêdzia do kontroli procesów korzystaj±ce z systemu plików /proc.
 Summary(tr): /proc dosya sistemi için ps tipi araçlar
 Name:        psmisc
 Version:     17
