@@ -10,8 +10,8 @@
  
  dnl Checks for library functions.
 --- psmisc-21.4/po/pl.po.orig	1970-01-01 01:00:00.000000000 +0100
-+++ psmisc-21.4/po/pl.po	2003-12-11 00:49:17.253392864 +0100
-@@ -0,0 +1,344 @@
++++ psmisc-21.4/po/pl.po	2003-12-11 23:09:07.268252992 +0100
+@@ -0,0 +1,498 @@
 +# Polish translations for psmisc.
 +# Copyright (C) 2003 Free Software Foundation, Inc.
 +# This file is distributed under the same license as the psmisc package.
@@ -19,9 +19,9 @@
 +#
 +msgid ""
 +msgstr ""
-+"Project-Id-Version: psmisc 21.2\n"
-+"POT-Creation-Date: 2003-12-11 00:33+0100\n"
-+"PO-Revision-Date: 2003-12-11 00:35+0100\n"
++"Project-Id-Version: psmisc 21.4\n"
++"POT-Creation-Date: 2003-12-11 22:43+0100\n"
++"PO-Revision-Date: 2003-12-11 22:54+0100\n"
 +"Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
 +"Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
 +"MIME-Version: 1.0\n"
@@ -53,6 +53,170 @@
 +#, c-format
 +msgid "%s: no process killed\n"
 +msgstr "%s: nie zabito ¿adnego procesu\n"
++
++#: src/killall.c:373
++#, c-format
++msgid "usage: pidof [ -eg ] name ...\n"
++msgstr "sk³adnia: pidof [ -eg ] nazwa ...\n"
++
++#: src/killall.c:374
++#, c-format
++msgid ""
++"       pidof -V\n"
++"\n"
++msgstr ""
++"       pidof -V\n"
++"\n"
++
++#: src/killall.c:375
++#, c-format
++msgid "    -e      require exact match for very long names;\n"
++msgstr "    -e      wymaganie dok³adnego dopasowania dla bardzo d³ugich nazw;\n"
++
++#: src/killall.c:376
++#, c-format
++msgid "            skip if the command line is unavailable\n"
++msgstr "            pomijane je¶li linia poleceñ nie jest dostêpna\n"
++
++#: src/killall.c:378
++#, c-format
++msgid "    -g      show process group ID instead of process ID\n"
++msgstr "    -g      wy¶wietlanie ID grup procesów zamiast ID procesów\n"
++
++#: src/killall.c:379
++#, c-format
++msgid ""
++"    -V      display version information\n"
++"\n"
++msgstr ""
++"    -V      wy¶wietlenie informacji o wersji\n"
++"\n"
++
++#: src/killall.c:387
++#, c-format
++msgid "Usage: killall [-s sid] [-c context] [ -egiqvw ] [ -signal ] name ...\n"
++msgstr "Sk³adnia: killall [-s sid] [-c kontekst] [ -egiqvw ] [ -sygna³ ] nazwa ...\n"
++
++#: src/killall.c:389
++#, c-format
++msgid "usage: killall [ OPTIONS ] [ -- ] name ...\n"
++msgstr "sk³adnia: killalll [ OPCJE ] [ -- ] nazwa ...\n"
++
++#: src/killall.c:391
++#, c-format
++msgid "       killall -l, --list\n"
++msgstr "       killall -l, --list\n"
++
++#: src/killall.c:392
++#, c-format
++msgid ""
++"       killall -V --version\n"
++"\n"
++msgstr ""
++"       killall -V --version\n"
++"\n"
++
++#: src/killall.c:393
++#, c-format
++msgid "  -e,--exact          require exact match for very long names\n"
++msgstr "  -e,--exact          wymaganie dok³adnego dopasowania dla bardzo d³ugich nazw\n"
++
++#: src/killall.c:394
++#, c-format
++msgid "  -g,--process-group  kill process group instead of process\n"
++msgstr "  -g,--process-group  zabicie grupy procesów zamiast procesu\n"
++
++#: src/killall.c:395
++#, c-format
++msgid "  -i,--interactive    ask for confirmation before killing\n"
++msgstr "  -i,--interactive    pytanie o potwierdzenie przed zabiciem\n"
++
++#: src/killall.c:396
++#, c-format
++msgid "  -l,--list           list all known signal names\n"
++msgstr "  -l,--list           wypisanie wszystkich znanych nazw sygna³ów\n"
++
++#: src/killall.c:397
++#, c-format
++msgid "  -q,--quiet          don't print complaints\n"
++msgstr "  -q,--quiet          nie wy¶wietlanie narzekañ\n"
++
++#: src/killall.c:398
++#, c-format
++msgid "  -s,--signal         send signal instead of SIGTERM\n"
++msgstr "  -s,--signal         wys³anie podanego sygna³u zamiast SIGTERM\n"
++
++#: src/killall.c:399
++#, c-format
++msgid "  -v,--verbose        report if the signal was successfully sent\n"
++msgstr "  -v,--verbose        informacja czy wys³anie sygna³u siê powiod³o\n"
++
++#: src/killall.c:400
++#, c-format
++msgid "  -V,--version        display version information\n"
++msgstr "  -V,--version        wy¶wietlenie informacji o wersji\n"
++
++#: src/killall.c:401
++#, c-format
++msgid ""
++"  -w,--wait           wait for processes to die\n"
++"\n"
++msgstr ""
++"  -w,--wait           zaczekanie na ¶mieræ procesu\n"
++"\n"
++
++#: src/killall.c:403
++#, c-format
++msgid "  -d,--sid            kill only process(es) having sid\n"
++msgstr "  -d,--sid            zabicie tylko procesu(ów) maj±cych dany sid\n"
++
++#: src/killall.c:404
++#, c-format
++msgid "  -c,--context        kill only process(es) having scontext\n"
++msgstr "  -c,--context        zabicie tylko procesu(ów) maj±cych dany kontekst bezp.\n"
++
++#: src/killall.c:405
++#, c-format
++msgid ""
++"   (-s, -c are mutually exclusive and must precede other arguments)\n"
++"\n"
++msgstr ""
++"   (-s i -c wzajemnie siê wykluczaj± i musz± poprzedzaæ inne argumenty)\n"
++"\n"
++
++#: src/killall.c:423 src/pstree.c:739
++#, c-format
++msgid ""
++"Copyright (C) 1993-2002 Werner Almesberger and Craig Small\n"
++"\n"
++msgstr ""
++"Copyright (C) 1993-2002 Werner Almesberger i Craig Small\n"
++"\n"
++
++#: src/killall.c:424
++#, c-format
++msgid "PSmisc comes with ABSOLUTELY NO WARRANTY.\n"
++msgstr "PSmisc jest rozpowszechniane BEZ ¯ADNEJ GWARANCJI.\n"
++
++#: src/killall.c:425 src/pstree.c:741
++#, c-format
++msgid "This is free software, and you are welcome to redistribute it under the terms\n"
++msgstr "To oprogramowanie jest darmowe i mo¿e byæ dystrybuowane na warunkach\n"
++
++#: src/killall.c:426 src/pstree.c:742
++#, c-format
++msgid "of the GNU General Public License.\n"
++msgstr "Powszechnej Licencji Publicznej GNU (General Public License).\n"
++
++#: src/killall.c:427 src/pstree.c:743
++#, c-format
++msgid "For more information about these matters, see the files named COPYING.\n"
++msgstr "Wiêcej informacji znajduje siê w pliku o nazwie COPYING.\n"
++
++#: src/killall.c:535
++#, c-format
++msgid "%s: SID (%s) must be numeric\n"
++msgstr "%s: SID (%s) musi byæ liczb±\n"
 +
 +#: src/killall.c:588
 +#, c-format
@@ -89,6 +253,15 @@
 +msgid "No automatic removal. Please use  swapoff %s\n"
 +msgstr "Nie usuniêto automatycznie. Proszê u¿yæ  swapoff %s\n"
 +
++#: src/fuser.c:666
++#, c-format
++msgid ""
++"\n"
++"%*s USER        PID ACCESS COMMAND\n"
++msgstr ""
++"\n"
++"%*s U¯YTKOWNIK  PID DOSTÊP POLECENIE\n"
++
 +#: src/fuser.c:755
 +#, c-format
 +msgid "Internal error (type %d)\n"
@@ -108,6 +281,11 @@
 +#, c-format
 +msgid "kernel swap   "
 +msgstr "kernel swap   "
++
++#: src/fuser.c:892
++#, c-format
++msgid "here: %s\n"
++msgstr "tutaj: %s\n"
 +
 +#: src/fuser.c:954
 +#, c-format
@@ -276,7 +454,7 @@
 +
 +#: src/pstree.c:729
 +#, c-format
-+msgid "    -U     use UTF-8 (Unicode)) line drawing characters\n"
++msgid "    -U     use UTF-8 (Unicode) line drawing characters\n"
 +msgstr "    -U     u¿ycie znaków ramek UTF-8 (Unicode)\n"
 +
 +#: src/pstree.c:730
@@ -286,7 +464,7 @@
 +
 +#: src/pstree.c:731
 +#, c-format
-+msgid "    pid    start at pid, default 1 (init))\n"
++msgid "    pid    start at pid, default 1 (init)\n"
 +msgstr "    pid    rozpoczêcie od tego pida, domy¶lnie 1 (init)\n"
 +
 +#: src/pstree.c:732
@@ -303,34 +481,10 @@
 +msgid "pstree (psmisc) %s\n"
 +msgstr "pstree (psmisc) %s\n"
 +
-+#: src/pstree.c:739
-+#, c-format
-+msgid ""
-+"Copyright (C) 1993-2002 Werner Almesberger and Craig Small\n"
-+"\n"
-+msgstr ""
-+"Copyright (C) 1993-2002 Werner Almesberger i Craig Small\n"
-+"\n"
-+
 +#: src/pstree.c:740
 +#, c-format
 +msgid "pstree comes with ABSOLUTELY NO WARRANTY.\n"
 +msgstr "pstree jest rozpowszechniane BEZ ¯ADNEJ GWARANCJI.\n"
-+
-+#: src/pstree.c:741
-+#, c-format
-+msgid "This is free software, and you are welcome to redistribute it under the terms\n"
-+msgstr "To oprogramowanie jest darmowe i mo¿e byæ dystrybuowane na warunkach\n"
-+
-+#: src/pstree.c:742
-+#, c-format
-+msgid "of the GNU General Public License.\n"
-+msgstr "Powszechnej Licencji Publicznej GNU (General Public License).\n"
-+
-+#: src/pstree.c:743
-+#, c-format
-+msgid "For more information about these matters, see the files named COPYING.\n"
-+msgstr "Wiêcej informacji znajduje siê w pliku o nazwie COPYING.\n"
 +
 +#: src/pstree.c:803
 +#, c-format
