@@ -2,6 +2,7 @@ Summary:	Utilities for managing processes on your system
 Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
 Summary(es):	Más herramientas de tipo ps para el sistema de archivos /proc
 Summary(fr):	Autres outils du type ps pour le système de fichiers /proc
+Summary(ko):	½Ã½ºÅÛ¿¡¼­ ÇÁ·Î¼¼¼­¸¦ °ü¸®ÇÏ´Â µµ±¸
 Summary(pl):	Narzêdzia do kontroli procesów
 Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
 Summary(ru):	õÔÉÌÉÔÙ ÒÁÂÏÔÙ Ó ĞÒÏÃÅÓÓÁÍÉ
