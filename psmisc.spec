@@ -7,12 +7,13 @@ Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
 Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Name:		psmisc
 Version:	20.2
-Release:	2
+Release:	3
 License:	Distributable
 Group:		Applications/System
 Group(de):	Applikationen/System
 Group(pl):	Aplikacje/System
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
+Source1:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-make.patch
 BuildRequires:	autoconf
 BuildRequires:	automake
@@ -99,3 +100,11 @@ rm -rf $RPM_BUILD_ROOT
 %attr(755,root,root) %{_sbindir}/*
 %attr(755,root,root) %{_bindir}/*
 %{_mandir}/man1/*
+%lang(fi) %{_mandir}//man1/*
+%lang(fr) %{_mandir}//man1/*
+%lang(hu) %{_mandir}//man1/*
+%lang(it) %{_mandir}//man1/*
+%lang(ja) %{_mandir}//man1/*
+%lang(ko) %{_mandir}//man1/*
+%lang(nl) %{_mandir}//man1/*
+%lang(pl) %{_mandir}//man1/*
