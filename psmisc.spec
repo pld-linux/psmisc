@@ -10,8 +10,6 @@ Version:	20.2
 Release:	3
 License:	distributable
 Group:		Applications/System
-Group(de):	Applikationen/System
-Group(pl):	Aplikacje/System
 Source0:	http://prdownloads.sourceforge.net/%{name}/%{name}-%{version}.tar.gz
 Source1:	%{name}-non-english-man-pages.tar.bz2
 Patch0:		%{name}-make.patch
