@@ -1,0 +1,75 @@
+--- psmisc-21.7/po/pl.po.orig	2005-11-01 00:47:58.000000000 +0100
++++ psmisc-21.7/po/pl.po	2005-11-04 08:48:55.536557816 +0100
+@@ -5,10 +5,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: psmisc 21.7-pre1\n"
++"Project-Id-Version: psmisc 21.7\n"
+ "Report-Msgid-Bugs-To: csmall@small.dropbear.id.au\n"
+ "POT-Creation-Date: 2005-11-01 10:47+1100\n"
+-"PO-Revision-Date: 2005-10-10 18:09+0100\n"
++"PO-Revision-Date: 2005-11-04 08:40+0100\n"
+ "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+ "MIME-Version: 1.0\n"
+@@ -165,7 +165,7 @@
+ msgstr "%s jest pusty (nie podmontowany?)\n"
+ 
+ #: src/fuser.c:79
+-#, fuzzy, c-format
++#, c-format
+ msgid ""
+ "Usage: fuser [ -a | -s | -c ] [ -n SPACE ] [ -SIGNAL ] [ -kimuv ] NAME...\n"
+ "             [ - ] [ -n SPACE ] [ -SIGNAL ] [ -kimuv ] NAME...\n"
+@@ -252,7 +252,7 @@
+ msgstr "Nie mo¿na rozwi±zaæ portu lokalnego %s: %s\n"
+ 
+ #: src/fuser.c:435
+-#, fuzzy, c-format
++#, c-format
+ msgid "Unknown local port AF %d\n"
+ msgstr "Nieznana rodzina adresów portu lokalnego %d\n"
+ 
+@@ -286,7 +286,6 @@
+ msgstr "opcja wszystkich plików nie mo¿e byæ u¿yta z opcj± ciszy."
+ 
+ #: src/fuser.c:753
+-#, fuzzy
+ msgid "You cannot search for only IPv4 and only IPv6 sockets at the same time"
+ msgstr "Nie mo¿na naraz szukaæ gniazd wy³±cznie IPv4 i wy³±cznie IPv6"
+ 
+@@ -324,7 +323,7 @@
+ msgstr "MAX_DEPTH jest zbyt ma³e.\n"
+ 
+ #: src/pstree.c:744
+-#, fuzzy, c-format
++#, c-format
+ msgid ""
+ "Usage: pstree [ -a ] [ -c ] [ -h | -H PID ] [ -l ] [ -n ] [ -p ] [ -u ]\n"
+ "              [ -A | -G | -U ] [ PID | USER ]\n"
+@@ -359,6 +358,8 @@
+ "    -n     sortowanie wyj¶cia wg PID-u\n"
+ "    -p     wy¶wietlanie PID-ów; w³±cza tak¿e -c\n"
+ "    -u     wy¶wietlanie zmian uidów\n"
++"    -U     u¿ycie znaków ramek UTF-8 (Unicode)\n"
++"    -V     wy¶wietlenie informacji o wersji\n"
+ 
+ #: src/pstree.c:762
+ #, c-format
+@@ -366,14 +367,12 @@
+ msgstr "    -Z     wy¶wietlanie kontekstów bezpieczeñstwa SELinuksa\n"
+ 
+ #: src/pstree.c:765
+-#, fuzzy, c-format
++#, c-format
+ msgid ""
+ "    PID    start at this PID; default is 1 (init)\n"
+ "    USER   show only trees rooted at processes of this user\n"
+ "\n"
+ msgstr ""
+-"    -U     u¿ycie znaków ramek UTF-8 (Unicode)\n"
+-"    -V     wy¶wietlenie informacji o wersji\n"
+ "    PID    rozpoczêcie od tego PID-u, domy¶lnie 1 (init)\n"
+ " U¯YTKOWNIK  tylko drzewa zaczynaj±ce siê od procesów tego u¿ytkownika\n"
+ "\n"
