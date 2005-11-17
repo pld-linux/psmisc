@@ -13,12 +13,12 @@ Summary(ru):	Утилиты работы с процессами
 Summary(tr):	/proc dosya sistemi iГin ps tipi araГlar
 Summary(uk):	Утил╕ти роботи з процесами
 Name:		psmisc
-Version:	21.7
+Version:	21.8
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
-# Source0-md5:	328f85a74b172939f5ab6b459223ef98
+# Source0-md5:	d6276e071c10ddf4b0d98856e5573e1a
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 Patch0:		%{name}-pl.po-update.patch
