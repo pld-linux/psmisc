@@ -1,0 +1,63 @@
+diff -ur psmisc-21.9.org/src/fuser.c psmisc-21.9/src/fuser.c
+--- psmisc-21.9.org/src/fuser.c	2005-12-14 23:20:06.000000000 +0100
++++ psmisc-21.9/src/fuser.c	2005-12-25 02:34:17.000000000 +0100
+@@ -629,7 +629,7 @@
+ #endif
+ 	struct inode_list *match_inodes = NULL;
+ 	struct names *names_head, *this_name, *names_tail;
+-	int optc;
++	int optc, skip;
+ 	char *option;
+ 	char *nsptr;
+ 
+@@ -638,6 +638,7 @@
+ #endif
+ 	names_head = this_name = names_tail = NULL;
+ 	opts = 0;
++	skip = 0;
+ 	sig_number = SIGKILL;
+ 
+ 	netdev = get_netdev();
+@@ -655,7 +656,8 @@
+ 				/* FIXME longopts */
+ 				continue;
+ 			}
+-			while (*option) switch(*option++) {
++			while (*option) {
++				switch(*option) {
+ #ifdef WITH_IPV6
+ 				case '4':
+ 					ipv4_only = 1;
+@@ -714,16 +716,25 @@
+ 				case 'V':
+ 					print_version();
+ 					return 0;
++				case ' ':
++					skip = 0;
++					break;
+ 				default:
+-					if ( isupper(*option) || isdigit(*option) ) {
+-						sig_number = get_signal(option,"fuser");
+-						break;
+-					}
+-					fprintf(stderr,"%s: Invalid option %c\n",argv[0] , argv[optc][1]);
++					if (!skip) {
++						if ( isupper(*option) || isdigit(*option) ) {
++							sig_number = get_signal(option,"fuser");
++							printf("elemele %d\n", sig_number);
++							skip++;
++							break;
++						}
++						fprintf(stderr,"%s: Invalid option %c\n",argv[0] , argv[optc][1]);
+ 
+-					usage(NULL);
++						usage(NULL);
++					}
+ 					break;
+-			} /* switch */
++				} /* switch */
++				option++;
++			}
+ 			continue;
+ 		}
+ 		/* File specifications */
