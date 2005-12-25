@@ -44,7 +44,7 @@ diff -ur psmisc-21.9.org/src/fuser.c psmisc-21.9/src/fuser.c
 +					if (!skip) {
 +						if ( isupper(*option) || isdigit(*option) ) {
 +							sig_number = get_signal(option,"fuser");
-+							printf("elemele %d\n", sig_number);
++							
 +							skip++;
 +							break;
 +						}
