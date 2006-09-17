@@ -107,6 +107,7 @@ mkdir $RPM_BUILD_ROOT%{_sbindir}
 mv $RPM_BUILD_ROOT%{_bindir}/fuser $RPM_BUILD_ROOT%{_sbindir}
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
+rm -f $RPM_BUILD_ROOT%{_mandir}/README.psmisc-non-english-man-pages
 
 %find_lang %{name}
 
