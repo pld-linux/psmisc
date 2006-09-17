@@ -1,0 +1,1 @@
+- relese 2: fix: killall, pstree to %{_bindir} and fusers to %{_sbindir}.
