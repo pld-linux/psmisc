@@ -3,15 +3,15 @@
 %bcond_without	selinux		# build without SELinux support
 #
 Summary:	Utilities for managing processes on your system
-Summary(de):	Utilities zum Verwalten der Prozesse auf Ihrem System
-Summary(es):	MАs herramientas de tipo ps para el sistema de archivos /proc
-Summary(fr):	Autres outils du type ps pour le systХme de fichiers /proc
-Summary(ko):	╫ц╫╨еш©║╪╜ га╥н╪╪╪╜╦╕ ╟Э╦╝го╢б ╣╣╠╦
-Summary(pl):	NarzЙdzia do kontroli procesСw
-Summary(pt_BR):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
-Summary(ru):	Утилиты работы с процессами
-Summary(tr):	/proc dosya sistemi iГin ps tipi araГlar
-Summary(uk):	Утил╕ти роботи з процесами
+Summary(de.UTF-8):   Utilities zum Verwalten der Prozesse auf Ihrem System
+Summary(es.UTF-8):   Mц║s herramientas de tipo ps para el sistema de archivos /proc
+Summary(fr.UTF-8):   Autres outils du type ps pour le systц╗me de fichiers /proc
+Summary(ko.UTF-8):   Л▀°Л┼╓М┘°Л≈░Л└° М■└К║°Л└╦Л└°К╔╪ Й╢─К╕╛М∙≤К┼■ К▐└Й╣╛
+Summary(pl.UTF-8):   Narzд≥dzia do kontroli procesцЁw
+Summary(pt_BR.UTF-8):   Mais ferramentas do tipo ps para o sistema de arquivos /proc
+Summary(ru.UTF-8):   пёя┌п╦п╩п╦я┌я▀ я─п╟п╠п╬я┌я▀ я│ п©я─п╬я├п╣я│я│п╟п╪п╦
+Summary(tr.UTF-8):   /proc dosya sistemi iц╖in ps tipi araц╖lar
+Summary(uk.UTF-8):   пёя┌п╦п╩я√я┌п╦ я─п╬п╠п╬я┌п╦ п╥ п©я─п╬я├п╣я│п╟п╪п╦
 Name:		psmisc
 Version:	22.3
 Release:	1
@@ -40,48 +40,48 @@ command sends a specified signal (SIGTERM if nothing is specified) to
 processes identified by name. The fuser command identifies the PIDs of
 processes that are using specified files or filesystems.
 
-%description -l de
-Das psmisc-Paket enthДlt Utilities zum Verwalten vom Prozessen auf
+%description -l de.UTF-8
+Das psmisc-Paket enthц╓lt Utilities zum Verwalten vom Prozessen auf
 Ihrem System: pstree, killall und fuser. Der pstree-Befehl zeigt eine
 Baumstruktur von allen laufenden Prozessen an. killall schickt
 angegebenen Programmen ein Signal (SIGTERM, falls nichts anderes
 angegeben wird). fuser identifiziert die PIDs (Prozess-IDs) von
 Prozessen, die bestimmte Dateien oder Dateisysteme benutzen.
 
-%description -l es
-Este paquete contiene programas para enseЯar un Аrbol de procesos,
-saber que usuarios tienen archivo abierto y mandar seЯales a los
+%description -l es.UTF-8
+Este paquete contiene programas para enseц╠ar un ц║rbol de procesos,
+saber que usuarios tienen archivo abierto y mandar seц╠ales a los
 procesos por nombre.
 
-%description -l fr
+%description -l fr.UTF-8
 Ce paquetage contient les programmes pour afficher une arborescence de
 processus, trouver quel utilisateur a un fichier ouvert et envoyer des
 signaux aux processes par leurs noms.
 
-%description -l pl
-Ten pakiet zawiera programy umo©liwiaj╠ce wy╤wietlenie drzewa
-procesСw, znalezienie u©ytkownika, ktСry otworzyЁ dany plik i wysЁanie
-sygnaЁu do procesu o zadanej nazwie.
+%description -l pl.UTF-8
+Ten pakiet zawiera programy umoе╪liwiajд┘ce wyе⌡wietlenie drzewa
+procesцЁw, znalezienie uе╪ytkownika, ktцЁry otworzyе┌ dany plik i wysе┌anie
+sygnaе┌u do procesu o zadanej nazwie.
 
-%description -l pt_BR
-Este pacote contИm programas para mostrar uma Аrvore de processos,
-saber quais usuАrios tЙm arquivo aberto e mandar sinais aos processos
+%description -l pt_BR.UTF-8
+Este pacote contц╘m programas para mostrar uma ц║rvore de processos,
+saber quais usuц║rios tц╙m arquivo aberto e mandar sinais aos processos
 por nome.
 
-%description -l ru
-В этот пакет включены программы для отображения дерева процессов,
-получения информации о том, кем открыт файл и для посылки сигналов
-процессам по имени процесса.
+%description -l ru.UTF-8
+п▓ я█я┌п╬я┌ п©п╟п╨п╣я┌ п╡п╨п╩я▌я┤п╣п╫я▀ п©я─п╬пЁя─п╟п╪п╪я▀ п╢п╩я▐ п╬я┌п╬п╠я─п╟п╤п╣п╫п╦я▐ п╢п╣я─п╣п╡п╟ п©я─п╬я├п╣я│я│п╬п╡,
+п©п╬п╩я┐я┤п╣п╫п╦я▐ п╦п╫я└п╬я─п╪п╟я├п╦п╦ п╬ я┌п╬п╪, п╨п╣п╪ п╬я┌п╨я─я▀я┌ я└п╟п╧п╩ п╦ п╢п╩я▐ п©п╬я│я▀п╩п╨п╦ я│п╦пЁп╫п╟п╩п╬п╡
+п©я─п╬я├п╣я│я│п╟п╪ п©п╬ п╦п╪п╣п╫п╦ п©я─п╬я├п╣я│я│п╟.
 
-%description -l tr
-Bu paket, sЭreГlerin aПaГ yapЩsЩnЩ gЖstermek, hangi kullanЩcЩlarЩn
-aГЩk dosyasЩ olduПunu bulmak ve sЭreГlere isimleri ile sinyal
-gЖndermek iГin gerekli programlarЩ iГerir.
+%description -l tr.UTF-8
+Bu paket, sц╪reц╖lerin aд÷aц╖ yapд╠sд╠nд╠ gц╤stermek, hangi kullanд╠cд╠larд╠n
+aц╖д╠k dosyasд╠ olduд÷unu bulmak ve sц╪reц╖lere isimleri ile sinyal
+gц╤ndermek iц╖in gerekli programlarд╠ iц╖erir.
 
-%description -l uk
-Цей пакет м╕стить програми для в╕дображення дерева процес╕в, посилки
-сигнал╕в процесам по ╕мен╕ процеса та отримання ╕нформац╕╖ про те, хто
-в╕дкрив файл.
+%description -l uk.UTF-8
+п╕п╣п╧ п©п╟п╨п╣я┌ п╪я√я│я┌п╦я┌я▄ п©я─п╬пЁя─п╟п╪п╦ п╢п╩я▐ п╡я√п╢п╬п╠я─п╟п╤п╣п╫п╫я▐ п╢п╣я─п╣п╡п╟ п©я─п╬я├п╣я│я√п╡, п©п╬я│п╦п╩п╨п╦
+я│п╦пЁп╫п╟п╩я√п╡ п©я─п╬я├п╣я│п╟п╪ п©п╬ я√п╪п╣п╫я√ п©я─п╬я├п╣я│п╟ я┌п╟ п╬я┌я─п╦п╪п╟п╫п╫я▐ я√п╫я└п╬я─п╪п╟я├я√я≈ п©я─п╬ я┌п╣, я┘я┌п╬
+п╡я√п╢п╨я─п╦п╡ я└п╟п╧п╩.
 
 %prep
 %setup -q
