@@ -3,15 +3,15 @@
 %bcond_without	selinux		# build without SELinux support
 #
 Summary:	Utilities for managing processes on your system
-Summary(de.UTF-8):   Utilities zum Verwalten der Prozesse auf Ihrem System
-Summary(es.UTF-8):   Más herramientas de tipo ps para el sistema de archivos /proc
-Summary(fr.UTF-8):   Autres outils du type ps pour le système de fichiers /proc
-Summary(ko.UTF-8):   시스템에서 프로세서를 관리하는 도구
-Summary(pl.UTF-8):   Narzędzia do kontroli procesów
-Summary(pt_BR.UTF-8):   Mais ferramentas do tipo ps para o sistema de arquivos /proc
-Summary(ru.UTF-8):   Утилиты работы с процессами
-Summary(tr.UTF-8):   /proc dosya sistemi için ps tipi araçlar
-Summary(uk.UTF-8):   Утиліти роботи з процесами
+Summary(de.UTF-8):	Utilities zum Verwalten der Prozesse auf Ihrem System
+Summary(es.UTF-8):	Más herramientas de tipo ps para el sistema de archivos /proc
+Summary(fr.UTF-8):	Autres outils du type ps pour le système de fichiers /proc
+Summary(ko.UTF-8):	시스템에서 프로세서를 관리하는 도구
+Summary(pl.UTF-8):	Narzędzia do kontroli procesów
+Summary(pt_BR.UTF-8):	Mais ferramentas do tipo ps para o sistema de arquivos /proc
+Summary(ru.UTF-8):	Утилиты работы с процессами
+Summary(tr.UTF-8):	/proc dosya sistemi için ps tipi araçlar
+Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
 Version:	22.3
 Release:	1
