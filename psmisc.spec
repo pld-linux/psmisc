@@ -13,17 +13,18 @@ Summary(ru.UTF-8):	Утилиты работы с процессами
 Summary(tr.UTF-8):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
-Version:	22.3
+Version:	22.4
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
-# Source0-md5:	0c44b995d068a221daf35d23e13db419
+# Source0-md5:	793587f2418c1bd63d7571fbe195f4f1
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
+Patch0:		%{name}-pl.po-update.patch
 URL:		http://psmisc.sourceforge.net/
-BuildRequires:	autoconf >= 2.59
-BuildRequires:	automake >= 1.6
+BuildRequires:	autoconf >= 2.61
+BuildRequires:	automake >= 1:1.10
 BuildRequires:	gettext-devel >= 0.14.1
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	ncurses-devel >= 5.0
@@ -85,13 +86,16 @@ göndermek için gerekli programları içerir.
 
 %prep
 %setup -q
+%patch0 -p1
+
+rm -f po/stamp-po
 
 %build
 %{__gettextize}
 %{__aclocal}
-%{__automake}
-%{__autoheader}
 %{__autoconf}
+%{__autoheader}
+%{__automake}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure \
 	%{?with_selinux:--enable-selinux}
