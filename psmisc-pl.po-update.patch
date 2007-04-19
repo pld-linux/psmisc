@@ -1,0 +1,75 @@
+--- psmisc-22.4/po/pl.po.orig	2007-04-12 07:03:47.000000000 +0200
++++ psmisc-22.4/po/pl.po	2007-04-19 21:14:24.592664436 +0200
+@@ -1,14 +1,14 @@
+ # Polish translations for psmisc.
+ # Copyright (C) 2004, 2005 Free Software Foundation, Inc.
+ # This file is distributed under the same license as the psmisc package.
+-# Jakub Bogusz <qboosh@pld-linux.org>, 2003-2005.
++# Jakub Bogusz <qboosh@pld-linux.org>, 2003-2007.
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: psmisc 22.2pre1\n"
++"Project-Id-Version: psmisc 22.4\n"
+ "Report-Msgid-Bugs-To: csmall@small.dropbear.id.au\n"
+ "POT-Creation-Date: 2007-04-12 15:03+1000\n"
+-"PO-Revision-Date: 2006-03-06 18:01+0100\n"
++"PO-Revision-Date: 2007-04-19 21:10+0200\n"
+ "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+ "MIME-Version: 1.0\n"
+@@ -290,11 +290,9 @@
+ msgstr "Nie mo¿na naraz szukaæ gniazd wy³±cznie IPv4 i wy³±cznie IPv6"
+ 
+ #: src/fuser.c:892
+-#, fuzzy, c-format
++#, c-format
+ msgid "%*s USER        PID ACCESS COMMAND\n"
+-msgstr ""
+-"\n"
+-"%*s U¯YTKOWNIK  PID DOSTÊP POLECENIE\n"
++msgstr "%*s U¯YTKOWNIK  PID DOSTÊP POLECENIE\n"
+ 
+ #: src/fuser.c:917 src/fuser.c:942
+ msgid "(unknown)"
+@@ -338,12 +336,12 @@
+ #: src/peekfd.c:49
+ #, c-format
+ msgid "Error attaching to pid %i\n"
+-msgstr ""
++msgstr "B³±d podczas pod³±czania do procesu %i\n"
+ 
+ #: src/peekfd.c:57
+-#, fuzzy, c-format
++#, c-format
+ msgid "peekfd (PSmisc) %s\n"
+-msgstr "pstree (PSmisc) %s\n"
++msgstr "peekfd (PSmisc) %s\n"
+ 
+ #: src/peekfd.c:59
+ #, c-format
+@@ -351,6 +349,8 @@
+ "Copyright (C) 2007 Trent Waddington\n"
+ "\n"
+ msgstr ""
++"Copyright (C) 2007 Trent Waddington\n"
++"\n"
+ 
+ #: src/peekfd.c:69
+ #, c-format
+@@ -365,6 +365,15 @@
+ "\n"
+ "  Press CTRL-C to end output.\n"
+ msgstr ""
++"Sk³adnia: peekfd [-8] [-n] [-c] [-d] [-V] [-h] <pid> [<fd> ..]\n"
++"    -8 wypisywanie strumieni czysto 8-bitowych.\n"
++"    -n nie wy¶wietlanie nag³ówków odczytu/zapisu z deskryptora.\n"
++"    -c podgl±danie tak¿e nowych procesów potomnych.\n"
++"    -d usuwanie z wyj¶cia powtórzonych odczytów/zapisów.\n"
++"    -V wypisanie informacji o wersji.\n"
++"    -h wypisanie tego opisu.\n"
++"\n"
++"  Ctrl-C koñczy wyj¶cie.\n"
+ 
+ #: src/pstree.c:374
+ #, c-format
