@@ -13,12 +13,12 @@ Summary(ru.UTF-8):	Утилиты работы с процессами
 Summary(tr.UTF-8):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
-Version:	22.4
+Version:	22.5
 Release:	1
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
-# Source0-md5:	793587f2418c1bd63d7571fbe195f4f1
+# Source0-md5:	09c20fd899c2c1bd2dce02a510f99fab
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 Patch0:		%{name}-pl.po-update.patch
