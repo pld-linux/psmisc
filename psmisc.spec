@@ -89,9 +89,9 @@ göndermek için gerekli programlarý içerir.
 %build
 %{__gettextize}
 %{__aclocal}
-%{__automake}
-%{__autoheader}
 %{__autoconf}
+%{__autoheader}
+%{__automake}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure \
 	%{?with_selinux:--enable-selinux}
