@@ -14,13 +14,14 @@ Summary(tr):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk):	õÔÉÌ¦ÔÉ ÒÏÂÏÔÉ Ú ÐÒÏÃÅÓÁÍÉ
 Name:		psmisc
 Version:	22.3
-Release:	2
+Release:	3
 License:	GPL
 Group:		Applications/System
 Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
 # Source0-md5:	0c44b995d068a221daf35d23e13db419
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
+Patch0:		%{name}-AM_INTL.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf >= 2.59
 BuildRequires:	automake >= 1.6
@@ -85,11 +86,12 @@ göndermek için gerekli programlarý içerir.
 
 %prep
 %setup -q
+%patch0 -p0
 
 %build
 %{__gettextize}
 %{__aclocal}
-%{__autoconf}
+%{__autoconf} -I m4
 %{__autoheader}
 %{__automake}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
