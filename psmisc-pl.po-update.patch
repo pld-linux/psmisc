@@ -1,0 +1,69 @@
+--- psmisc-22.6/po/pl.po.orig	2007-11-04 07:27:50.000000000 +0100
++++ psmisc-22.6/po/pl.po	2007-11-06 17:58:50.504168937 +0100
+@@ -5,10 +5,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: psmisc 22.5\n"
++"Project-Id-Version: psmisc 22.6\n"
+ "Report-Msgid-Bugs-To: csmall@small.dropbear.id.au\n"
+ "POT-Creation-Date: 2007-11-04 17:27+1100\n"
+-"PO-Revision-Date: 2007-05-30 17:34+0200\n"
++"PO-Revision-Date: 2007-11-06 17:35+0100\n"
+ "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+ "MIME-Version: 1.0\n"
+@@ -21,9 +21,9 @@
+ msgstr "Zabiæ %s(%s%d)? (t/N) "
+ 
+ #: src/killall.c:77
+-#, fuzzy, c-format
++#, c-format
+ msgid "Signal %s(%s%d) ? (y/N) "
+-msgstr "Zabiæ %s(%s%d)? (t/N) "
++msgstr "Wys³aæ sygna³ do %s(%s%d)? (t/N) "
+ 
+ #: src/killall.c:121
+ #, c-format
+@@ -170,7 +170,7 @@
+ msgstr "%s jest pusty (nie podmontowany?)\n"
+ 
+ #: src/fuser.c:89
+-#, fuzzy, c-format
++#, c-format
+ msgid ""
+ "Usage: fuser [ -a | -s | -c ] [ -n SPACE ] [ -SIGNAL ] [ -kimuv ] NAME...\n"
+ "             [ - ] [ -n SPACE ] [ -SIGNAL ] [ -kimuv ] NAME...\n"
+@@ -213,12 +213,6 @@
+ "    -u             wy¶wietlenie identyfikatorów u¿ytkowników\n"
+ "    -v             podanie wiêkszej ilo¶ci informacji\n"
+ "    -V             wy¶wietlenie informacji o wersji\n"
+-"    -4             szukanie tylko gniazd IPv4\n"
+-"    -6             szukanie tylko gniazd IPv6\n"
+-"    -              wyzerowanie opcji\n"
+-"\n"
+-"  nazwy tcp/udp: [port_lokalny][,[zdalny_host][,[port_zdalny]]]\n"
+-"\n"
+ 
+ #: src/fuser.c:109
+ #, c-format
+@@ -226,6 +220,8 @@
+ "    -4        search IPv4 sockets only\n"
+ "    -6        search IPv6 sockets only\n"
+ msgstr ""
++"    -4             szukanie tylko gniazd IPv4\n"
++"    -6             szukanie tylko gniazd IPv6\n"
+ 
+ #: src/fuser.c:113
+ #, c-format
+@@ -235,6 +231,10 @@
+ "  udp/tcp names: [local_port][,[rmt_host][,[rmt_port]]]\n"
+ "\n"
+ msgstr ""
++"    -              wyzerowanie opcji\n"
++"\n"
++"  nazwy tcp/udp: [port_lokalny][,[zdalny_host][,[port_zdalny]]]\n"
++"\n"
+ 
+ #: src/fuser.c:120
+ #, c-format
