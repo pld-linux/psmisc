@@ -28,6 +28,7 @@ BuildRequires:	automake >= 1:1.10
 BuildRequires:	gettext-devel >= 0.14.1
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	ncurses-devel >= 5.0
+BuildRequires:	sed >= 4.0
 Conflicts:	heartbeat < 2.0.8-0.2
 Conflicts:	rc-scripts < 0.4.1.6-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -89,6 +90,7 @@ göndermek için gerekli programları içerir.
 %setup -q
 %patch0 -p1
 
+sed '/AC_PROG_CXX/d' -i configure.ac
 rm -f po/stamp-po
 
 %build
