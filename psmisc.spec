@@ -15,7 +15,7 @@ Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
 Version:	22.11
 Release:	1
-License:	GPL
+License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
 # Source0-md5:	b5d32aa285b75c59dee96d3ea26a4881
