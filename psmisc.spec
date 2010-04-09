@@ -13,19 +13,18 @@ Summary(ru.UTF-8):	Утилиты работы с процессами
 Summary(tr.UTF-8):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
-Version:	22.7
+Version:	22.11
 Release:	1
 License:	GPL
 Group:		Applications/System
-Source0:	http://dl.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
-# Source0-md5:	ee9ec3b60fe45057ec4cec19c94a2d15
+Source0:	http://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
+# Source0-md5:	b5d32aa285b75c59dee96d3ea26a4881
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
-Patch0:		%{name}-pl.po-update.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake >= 1:1.10
-BuildRequires:	gettext-devel >= 0.14.1
+BuildRequires:	gettext-devel >= 0.16.1
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	ncurses-devel >= 5.0
 BuildRequires:	sed >= 4.0
@@ -88,10 +87,6 @@ göndermek için gerekli programları içerir.
 
 %prep
 %setup -q
-%patch0 -p1
-
-sed '/AC_PROG_CXX/d' -i configure.ac
-rm -f po/stamp-po
 
 %build
 %{__gettextize}
@@ -121,8 +116,17 @@ rm -rf $RPM_BUILD_ROOT
 %files -f %{name}.lang
 %defattr(644,root,root,755)
 %doc AUTHORS Chang* NEWS README
-%attr(755,root,root) %{_bindir}/*
-%{_mandir}/man1/*
+%attr(755,root,root) %{_bindir}/fuser
+%attr(755,root,root) %{_bindir}/killall
+%attr(755,root,root) %{_bindir}/peekfd
+%attr(755,root,root) %{_bindir}/prtstat
+%attr(755,root,root) %{_bindir}/pstree
+%attr(755,root,root) %{_bindir}/pstree.x11
+%{_mandir}/man1/fuser.1*
+%{_mandir}/man1/killall.1*
+%{_mandir}/man1/peekfd.1*
+%{_mandir}/man1/prtstat.1*
+%{_mandir}/man1/pstree.1*
 %lang(fi) %{_mandir}/fi/man1/*
 %lang(fr) %{_mandir}/fr/man1/*
 %lang(hu) %{_mandir}/hu/man1/*
