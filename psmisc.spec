@@ -13,21 +13,21 @@ Summary(ru.UTF-8):	Утилиты работы с процессами
 Summary(tr.UTF-8):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
-Version:	22.13
+Version:	22.14
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
-# Source0-md5:	e2c339e6b65b730042084023784a729e
+# Source0-md5:	ba3f4e971895c92bba7770d81c981503
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
+Patch0:		%{name}-pl.po-update.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf >= 2.61
 BuildRequires:	automake >= 1:1.10
 BuildRequires:	gettext-devel >= 0.16.1
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	ncurses-devel >= 5.0
-BuildRequires:	sed >= 4.0
 Conflicts:	heartbeat < 2.0.8-0.2
 Conflicts:	rc-scripts < 0.4.1.6-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -87,6 +87,7 @@ göndermek için gerekli programları içerir.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 %{__gettextize}
@@ -106,7 +107,7 @@ rm -rf $RPM_BUILD_ROOT
 	DESTDIR=$RPM_BUILD_ROOT
 
 bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
-rm -f $RPM_BUILD_ROOT%{_mandir}/README.psmisc-non-english-man-pages
+%{__rm} $RPM_BUILD_ROOT%{_mandir}/README.psmisc-non-english-man-pages
 
 %find_lang %{name}
 
@@ -115,7 +116,7 @@ rm -rf $RPM_BUILD_ROOT
 
 %files -f %{name}.lang
 %defattr(644,root,root,755)
-%doc AUTHORS Chang* NEWS README
+%doc AUTHORS ChangeLog README
 %attr(755,root,root) %{_bindir}/fuser
 %attr(755,root,root) %{_bindir}/killall
 %attr(755,root,root) %{_bindir}/peekfd

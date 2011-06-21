@@ -1,0 +1,61 @@
+--- psmisc-22.14/po/pl.po.orig	2011-06-20 13:47:45.000000000 +0200
++++ psmisc-22.14/po/pl.po	2011-06-21 17:54:32.507783061 +0200
+@@ -5,10 +5,10 @@
+ #
+ msgid ""
+ msgstr ""
+-"Project-Id-Version: psmisc 22.11-pre1\n"
++"Project-Id-Version: psmisc 22.14\n"
+ "Report-Msgid-Bugs-To: csmall@small.dropbear.id.au\n"
+ "POT-Creation-Date: 2011-06-20 21:47+1000\n"
+-"PO-Revision-Date: 2010-03-28 19:24+0200\n"
++"PO-Revision-Date: 2011-06-21 17:45+0200\n"
+ "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
+ "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
+ "Language: pl\n"
+@@ -17,7 +17,7 @@
+ "Content-Transfer-Encoding: 8bit\n"
+ 
+ #: src/fuser.c:118
+-#, fuzzy, c-format
++#, c-format
+ msgid ""
+ "Usage: fuser [-fMuv] [-a|-s] [-4|-6] [-c|-m|-n SPACE] [-k [-i] [-SIGNAL]] "
+ "NAME...\n"
+@@ -61,6 +61,7 @@
+ "  -SYGNA£               wys³anie podanego sygna³u zamiast SIGKILL\n"
+ "  -u,--user             wy¶wietlenie identyfikatorów u¿ytkowników\n"
+ "  -v,--verbose          podanie wiêkszej ilo¶ci informacji\n"
++"  -w,--writeonly        zabicie tylko procesów z prawem zapisu\n"
+ "  -V,--version          wy¶wietlenie informacji o wersji\n"
+ 
+ #: src/fuser.c:136
+@@ -361,9 +362,9 @@
+ msgstr "Maksymalna liczba nazw to %d\n"
+ 
+ #: src/killall.c:874
+-#, fuzzy, c-format
++#, c-format
+ msgid "%s lacks process entries (not mounted ?)\n"
+-msgstr "%s jest pusty (nie podmontowany?)\n"
++msgstr "%s nie zawiera wpisów procesów (nie zamontowany?)\n"
+ 
+ #: src/peekfd.c:96
+ #, c-format
+@@ -573,7 +574,7 @@
+ msgstr "%s jest pusty (nie podmontowany?)\n"
+ 
+ #: src/pstree.c:791
+-#, fuzzy, c-format
++#, c-format
+ msgid ""
+ "Usage: pstree [ -a ] [ -c ] [ -h | -H PID ] [ -l ] [ -n ] [ -p ] [ -u ]\n"
+ "              [ -A | -G | -U ] [ PID | USER ]\n"
+@@ -610,6 +611,7 @@
+ "  -l, --long          nie obcinanie d³ugich linii\n"
+ "  -n, --numeric-sort  sortowanie wyj¶cia wg PID-u\n"
+ "  -p, --show-pids     wy¶wietlanie PID-ów; w³±cza tak¿e -c\n"
++"  -s, --show-parents  wy¶wietlanie rodziców wybranych procesów\n"
+ "  -u, --uid-changes   wy¶wietlanie zmian uidów\n"
+ "  -U, --unicode       u¿ycie znaków ramek UTF-8 (Unicode)\n"
+ "  -V, --version       wy¶wietlenie informacji o wersji\n"
