@@ -14,7 +14,7 @@ Summary(tr.UTF-8):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
 Version:	22.14
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	http://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.gz
