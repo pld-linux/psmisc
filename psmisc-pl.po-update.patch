@@ -1,25 +1,24 @@
---- psmisc-22.14/po/pl.po.orig	2011-06-20 13:47:45.000000000 +0200
-+++ psmisc-22.14/po/pl.po	2011-06-21 17:54:32.507783061 +0200
-@@ -2,14 +2,15 @@
+--- psmisc-22.16/po/pl.po.orig	2012-02-25 23:03:54.000000000 +0100
++++ psmisc-22.16/po/pl.po	2012-02-27 18:20:22.589479517 +0100
+@@ -1,14 +1,14 @@
+ # Polish translations for psmisc.
  # Copyright (C) 2004, 2005, 2007, 2009, 2010 Free Software Foundation, Inc.
  # This file is distributed under the same license as the psmisc package.
- # Jakub Bogusz <qboosh@pld-linux.org>, 2003-2010.
-+# Adam Go³êbiowski <adamg@pld-linux.org>, 2012
+-# Jakub Bogusz <qboosh@pld-linux.org>, 2003-2010.
++# Jakub Bogusz <qboosh@pld-linux.org>, 2003-2012.
  #
  msgid ""
  msgstr ""
 -"Project-Id-Version: psmisc 22.11-pre1\n"
-+"Project-Id-Version: psmisc 22.15\n"
++"Project-Id-Version: psmisc 22.16\n"
  "Report-Msgid-Bugs-To: csmall@small.dropbear.id.au\n"
- "POT-Creation-Date: 2012-01-25 22:02+1100\n"
+ "POT-Creation-Date: 2012-02-26 09:03+1100\n"
 -"PO-Revision-Date: 2010-03-28 19:24+0200\n"
--"Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
-+"PO-Revision-Date: 2012-01-29 14:43+0100\n"
-+"Last-Translator: Adam Go³êbiowski <adamg@pld-linux.org>\n"
++"PO-Revision-Date: 2012-02-27 18:15+0100\n"
+ "Last-Translator: Jakub Bogusz <qboosh@pld-linux.org>\n"
  "Language-Team: Polish <translation-team-pl@lists.sourceforge.net>\n"
  "Language: pl\n"
- "MIME-Version: 1.0\n"
-@@ -17,7 +18,7 @@
+@@ -17,7 +17,7 @@
  "Content-Transfer-Encoding: 8bit\n"
  
  #: src/fuser.c:128
@@ -28,7 +27,7 @@
  msgid ""
  "Usage: fuser [-fMuv] [-a|-s] [-4|-6] [-c|-m|-n SPACE] [-k [-i] [-SIGNAL]] "
  "NAME...\n"
-@@ -61,6 +62,7 @@
+@@ -61,6 +61,7 @@
  "  -SYGNA£               wys³anie podanego sygna³u zamiast SIGKILL\n"
  "  -u,--user             wy¶wietlenie identyfikatorów u¿ytkowników\n"
  "  -v,--verbose          podanie wiêkszej ilo¶ci informacji\n"
@@ -36,32 +35,40 @@
  "  -V,--version          wy¶wietlenie informacji o wersji\n"
  
  #: src/fuser.c:146
-@@ -361,9 +363,9 @@
+@@ -361,9 +362,9 @@
  msgstr "Maksymalna liczba nazw to %d\n"
  
- #: src/killall.c:874
+ #: src/killall.c:876
 -#, fuzzy, c-format
 +#, c-format
  msgid "%s lacks process entries (not mounted ?)\n"
 -msgstr "%s jest pusty (nie podmontowany?)\n"
-+msgstr "%s nie zawiera wpisów procesów (nie zamontowany?)\n"
++msgstr "%s nie zawiera wpisów procesów (nie jest zamontowany?)\n"
  
  #: src/peekfd.c:96
  #, c-format
-@@ -573,7 +575,7 @@
- msgstr "%s jest pusty (nie podmontowany?)\n"
+@@ -570,10 +571,10 @@
+ #: src/pstree.c:755
+ #, c-format
+ msgid "%s is empty (not mounted ?)\n"
+-msgstr "%s jest pusty (nie podmontowany?)\n"
++msgstr "%s jest pusty (nie jest zamontowany?)\n"
  
- #: src/pstree.c:791
+ #: src/pstree.c:793
 -#, fuzzy, c-format
 +#, c-format
  msgid ""
  "Usage: pstree [ -a ] [ -c ] [ -h | -H PID ] [ -l ] [ -n ] [ -p ] [ -u ]\n"
  "              [ -A | -G | -U ] [ PID | USER ]\n"
-@@ -610,6 +612,7 @@
+@@ -609,8 +610,9 @@
+ "  -G, --vt100         u¿ycie znaków ramek VT100\n"
  "  -l, --long          nie obcinanie d³ugich linii\n"
  "  -n, --numeric-sort  sortowanie wyj¶cia wg PID-u\n"
- "  -p, --show-pids     wy¶wietlanie PID-ów; w³±cza tak¿e -c\n"
-+"  -s, --show-parents  wy¶wietlanie rodziców wybranych procesów\n"
- "  -u, --uid-changes   wy¶wietlanie zmian uidów\n"
+-"  -p, --show-pids     wy¶wietlanie PID-ów; w³±cza tak¿e -c\n"
+-"  -u, --uid-changes   wy¶wietlanie zmian uidów\n"
++"  -p, --show-pids     wy¶wietlenie PID-ów; w³±cza tak¿e -c\n"
++"  -s, --show-parents  wy¶wietlenie rodziców wybranego procesu\n"
++"  -u, --uid-changes   wy¶wietlenie zmian uidów\n"
  "  -U, --unicode       u¿ycie znaków ramek UTF-8 (Unicode)\n"
  "  -V, --version       wy¶wietlenie informacji o wersji\n"
+ 

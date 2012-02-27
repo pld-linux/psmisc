@@ -23,7 +23,7 @@ Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-ma
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 Patch0:		%{name}-pl.po-update.patch
 URL:		http://psmisc.sourceforge.net/
-BuildRequires:	autoconf >= 2.61
+BuildRequires:	autoconf >= 2.68
 BuildRequires:	automake >= 1:1.10
 BuildRequires:	gettext-devel >= 0.16.1
 %{?with_selinux:BuildRequires:	libselinux-devel}
@@ -87,7 +87,7 @@ göndermek için gerekli programları içerir.
 
 %prep
 %setup -q
-#%patch0 -p1
+%patch0 -p1
 
 %build
 %{__gettextize}
