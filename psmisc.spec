@@ -97,6 +97,7 @@ göndermek için gerekli programları içerir.
 %{__automake}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure \
+	--enable-timeout-stat \
 	%{?with_selinux:--enable-selinux}
 %{__make}
 
