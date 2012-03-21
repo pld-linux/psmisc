@@ -21,9 +21,9 @@ diff -urN psmisc-22.16.org/src/pstree.c psmisc-22.16/src/pstree.c
 +#else                                /*WITH_SELINUX */
 +		root = new_proc("?", 1, 0);
 +#endif
++		add_child(root, parent);
++		parent->parent = root;
 +	}
-+	add_child(root, parent);
-+	parent->parent = root;
 +    }
      add_child(parent, this);
      this->parent = parent;
