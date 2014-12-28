@@ -26,7 +26,7 @@ Patch1:		%{name}-pstree.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf >= 2.68
 BuildRequires:	automake >= 1:1.10
-BuildRequires:	gettext-devel >= 0.16.1
+BuildRequires:	gettext-tools >= 0.16.1
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	ncurses-devel >= 5.0
 Conflicts:	heartbeat < 2.0.8-0.2
