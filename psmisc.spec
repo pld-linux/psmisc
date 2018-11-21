@@ -21,11 +21,12 @@ Source0:	http://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.xz
 # Source0-md5:	0524258861f00be1a02d27d39d8e5e62
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
-Patch0:		%{name}-pl.po-update.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf >= 2.68
 BuildRequires:	automake >= 1:1.10
 BuildRequires:	gettext-tools >= 0.16.1
+# for %ms scanf format
+BuildRequires:	glibc-devel >= 6:2.7
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	ncurses-devel >= 5.0
 Conflicts:	heartbeat < 2.0.8-0.2
@@ -87,7 +88,6 @@ göndermek için gerekli programları içerir.
 
 %prep
 %setup -q
-#%patch0 -p1
 
 %build
 install -d misc; echo -n '#!/bin/sh\necho -n %{version}' > misc/git-version-gen; chmod +x misc/git-version-gen
