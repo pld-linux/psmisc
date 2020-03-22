@@ -22,9 +22,9 @@ Source0:	http://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.xz
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 URL:		http://psmisc.sourceforge.net/
-BuildRequires:	autoconf >= 2.68
-BuildRequires:	automake >= 1:1.10
-BuildRequires:	gettext-tools >= 0.16.1
+BuildRequires:	autoconf >= 2.69
+BuildRequires:	automake >= 1:1.11
+BuildRequires:	gettext-tools >= 0.19.3
 # for %ms scanf format
 BuildRequires:	glibc-devel >= 6:2.7
 %{?with_selinux:BuildRequires:	libselinux-devel}
