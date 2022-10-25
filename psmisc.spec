@@ -17,18 +17,19 @@ Version:	23.5
 Release:	1
 License:	GPL v2+
 Group:		Applications/System
-Source0:	http://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.xz
+Source0:	https://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.xz
 # Source0-md5:	014f0b5d5ab32478a2c57812ad01e1fb
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
 URL:		http://psmisc.sourceforge.net/
-BuildRequires:	autoconf >= 2.69
+BuildRequires:	autoconf >= 2.71
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	gettext-tools >= 0.19.3
 # for %ms scanf format
 BuildRequires:	glibc-devel >= 6:2.7
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	ncurses-devel >= 5.0
+BuildRequires:	po4a
 Conflicts:	heartbeat < 2.0.8-0.2
 Conflicts:	rc-scripts < 0.4.1.6-2
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
@@ -98,8 +99,10 @@ install -d misc; echo -n '#!/bin/sh\necho -n %{version}' > misc/git-version-gen;
 %{__automake}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure \
-	--enable-timeout-stat=static \
-	%{?with_selinux:--enable-selinux}
+	%{?with_selinux:--enable-selinux} \
+	--disable-silent-rules \
+	--enable-timeout-stat=static
+
 %{__make}
 
 %install
@@ -132,6 +135,7 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/pslog.1*
 %{_mandir}/man1/prtstat.1*
 %{_mandir}/man1/pstree.1*
+%lang(de) %{_mandir}/de/man1/*
 %lang(fi) %{_mandir}/fi/man1/*
 %lang(fr) %{_mandir}/fr/man1/*
 %lang(hu) %{_mandir}/hu/man1/*
@@ -140,3 +144,6 @@ rm -rf $RPM_BUILD_ROOT
 %lang(ko) %{_mandir}/ko/man1/*
 %lang(nl) %{_mandir}/nl/man1/*
 %lang(pl) %{_mandir}/pl/man1/*
+%lang(pt_BR) %{_mandir}/pt_BR/man1/*
+%lang(ru) %{_mandir}/ru/man1/*
+%lang(uk) %{_mandir}/uk/man1/*
