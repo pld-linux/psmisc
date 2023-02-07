@@ -14,13 +14,14 @@ Summary(tr.UTF-8):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
 Version:	23.5
-Release:	1
+Release:	2
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.xz
 # Source0-md5:	014f0b5d5ab32478a2c57812ad01e1fb
 Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
+Patch0:         kill.patch
 URL:		http://psmisc.sourceforge.net/
 BuildRequires:	autoconf >= 2.71
 BuildRequires:	automake >= 1:1.11
@@ -89,6 +90,7 @@ göndermek için gerekli programları içerir.
 
 %prep
 %setup -q
+%patch0 -p1
 
 %build
 install -d misc; echo -n '#!/bin/sh\necho -n %{version}' > misc/git-version-gen; chmod +x misc/git-version-gen
