@@ -1,6 +1,7 @@
 #
 # Conditional build:
-%bcond_without	selinux		# build without SELinux support
+%bcond_without	apparmor	# AppArmor features
+%bcond_without	selinux		# SELinux features
 #
 Summary:	Utilities for managing processes on your system
 Summary(de.UTF-8):	Utilities zum Verwalten der Prozesse auf Ihrem System
@@ -13,21 +14,21 @@ Summary(ru.UTF-8):	Утилиты работы с процессами
 Summary(tr.UTF-8):	/proc dosya sistemi için ps tipi araçlar
 Summary(uk.UTF-8):	Утиліти роботи з процесами
 Name:		psmisc
-Version:	23.5
-Release:	2
+Version:	23.6
+Release:	1
 License:	GPL v2+
 Group:		Applications/System
 Source0:	https://downloads.sourceforge.net/psmisc/%{name}-%{version}.tar.xz
-# Source0-md5:	014f0b5d5ab32478a2c57812ad01e1fb
-Source1:	http://www.mif.pg.gda.pl/homepages/ankry/man-PLD/%{name}-non-english-man-pages.tar.bz2
+# Source0-md5:	ed3206da1184ce9e82d607dc56c52633
+Source1:	%{name}-non-english-man-pages.tar.bz2
 # Source1-md5:	9add7665e440bbd6b0b4f9293ba8b86d
-Patch0:         kill.patch
-URL:		http://psmisc.sourceforge.net/
+URL:		https://gitlab.com/psmisc/psmisc
 BuildRequires:	autoconf >= 2.71
 BuildRequires:	automake >= 1:1.11
 BuildRequires:	gettext-tools >= 0.19.3
 # for %ms scanf format
 BuildRequires:	glibc-devel >= 6:2.7
+%{?with_apparmor:BuildRequires:	libapparmor-devel}
 %{?with_selinux:BuildRequires:	libselinux-devel}
 BuildRequires:	ncurses-devel >= 5.0
 BuildRequires:	po4a
@@ -90,10 +91,14 @@ göndermek için gerekli programları içerir.
 
 %prep
 %setup -q
-%patch0 -p1
+
+cat >git-version-gen <<EOF
+#!/bin/sh
+printf '%{version}'
+EOF
+chmod +x misc/git-version-gen
 
 %build
-install -d misc; echo -n '#!/bin/sh\necho -n %{version}' > misc/git-version-gen; chmod +x misc/git-version-gen
 %{__gettextize}
 %{__aclocal} -I m4
 %{__autoconf}
@@ -101,6 +106,7 @@ install -d misc; echo -n '#!/bin/sh\necho -n %{version}' > misc/git-version-gen;
 %{__automake}
 CFLAGS="%{rpmcflags} -D_GNU_SOURCE -I/usr/include/ncurses"
 %configure \
+	%{?with_apparmor:--enable-apparmor} \
 	%{?with_selinux:--enable-selinux} \
 	--disable-silent-rules \
 	--enable-timeout-stat=static
@@ -113,8 +119,8 @@ rm -rf $RPM_BUILD_ROOT
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir}
-%{__rm} $RPM_BUILD_ROOT%{_mandir}/README.psmisc-non-english-man-pages
+# fr, ko already covered by man-po, so don't overwrite with outdated content
+bzip2 -dc %{SOURCE1} | tar xf - -C $RPM_BUILD_ROOT%{_mandir} fi hu it ja nl pl
 
 %find_lang %{name}
 
@@ -137,9 +143,11 @@ rm -rf $RPM_BUILD_ROOT
 %{_mandir}/man1/pslog.1*
 %{_mandir}/man1/prtstat.1*
 %{_mandir}/man1/pstree.1*
+%lang(da) %{_mandir}/da/man1/*
 %lang(de) %{_mandir}/de/man1/*
 %lang(fi) %{_mandir}/fi/man1/*
 %lang(fr) %{_mandir}/fr/man1/*
+%lang(hr) %{_mandir}/hr/man1/*
 %lang(hu) %{_mandir}/hu/man1/*
 %lang(it) %{_mandir}/it/man1/*
 %lang(ja) %{_mandir}/ja/man1/*
@@ -147,5 +155,8 @@ rm -rf $RPM_BUILD_ROOT
 %lang(nl) %{_mandir}/nl/man1/*
 %lang(pl) %{_mandir}/pl/man1/*
 %lang(pt_BR) %{_mandir}/pt_BR/man1/*
+%lang(ro) %{_mandir}/ro/man1/*
 %lang(ru) %{_mandir}/ru/man1/*
+%lang(sr) %{_mandir}/sr/man1/*
+%lang(sv) %{_mandir}/sv/man1/*
 %lang(uk) %{_mandir}/uk/man1/*
