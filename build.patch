@@ -1,0 +1,10 @@
+--- psmisc-v23.7/configure.ac~	2024-03-03 11:57:39.000000000 +0100
++++ psmisc-v23.7/configure.ac	2024-04-14 15:17:18.389999643 +0200
+@@ -227,7 +227,6 @@ AC_SUBST(DEJAGNU)
+ AC_CONFIG_FILES([Makefile
+ 		 doc/Makefile
+ 		 icons/Makefile
+-		 po/Makefile.in
+ 		 man-po/Makefile
+ 		 testsuite/Makefile])
+ AC_OUTPUT
